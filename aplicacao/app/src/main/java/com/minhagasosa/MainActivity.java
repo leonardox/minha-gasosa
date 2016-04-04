@@ -3,6 +3,9 @@ package com.minhagasosa;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.CarroDao;
@@ -24,6 +27,11 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
+    Spinner spinnerMarca;
+    Spinner spinnerModelo;
+    Spinner spinnerVersao;
+    EditText textPotencia;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,21 @@ public class MainActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         final DaoSession session = daoMaster.newSession();
         final ModeloDao mDao = session.getModeloDao();
+
+        spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
+        spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
+        spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
+        textPotencia = (EditText) findViewById(R.id.textPotencia);
+
+        // POPULANDO OS SPINNERS
+        ArrayAdapter adapterMarca = ArrayAdapter.createFromResource(this,R.array.marcas, android.R.layout.simple_spinner_item);
+        ArrayAdapter adapterModelo = ArrayAdapter.createFromResource(this,R.array.modelos, android.R.layout.simple_spinner_item);
+        ArrayAdapter adapterVersao = ArrayAdapter.createFromResource(this,R.array.versoes, android.R.layout.simple_spinner_item);
+
+        spinnerMarca.setAdapter(adapterMarca);
+        spinnerModelo.setAdapter(adapterModelo);
+        spinnerVersao.setAdapter(adapterVersao);
+        // POPULANDO OS SPINNERS
 
         if(mDao.count() == 0){
             jobManager.addJobInBackground(new Job(new Params(1)) {
