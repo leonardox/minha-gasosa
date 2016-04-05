@@ -37,4 +37,9 @@ public class Modelo {
         this.MODELO = MODELO;
     }
 
+    @Override
+    public String toString(){
+        return  getMODELO();
+    }
+
 }

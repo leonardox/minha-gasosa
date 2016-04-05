@@ -185,4 +185,9 @@ public class Carro {
         myDao.refresh(this);
     }
 
+    @Override
+    public String toString(){
+        return getVersion();
+    }
+
 }

@@ -10,27 +10,11 @@
     <string name="previsoes">Previsões</string>
     <string name="adicionarRota">Adicionar Rota</string>
 
-    <!-- DADOS FICTICIOS ENQUANTO NÃO É PEGADO DO BD -->
-    <string-array name="marcas">
-        <item>FIAT</item>
-        <item>Ford</item>
-        <item>Volkswagen</item>
-        <item>Chevrolet</item>
-    </string-array>
+    <!--Shared Preferences-->
+    <string name="is_flex">is_flex</string>
+    <string name="consumoUrbanoPrimario">consumoUrbanoPrimario</string>
+    <string name="consumoRodoviarioPrimario">consumoRodoviarioPrimario</string>
+    <string name="consumoUrbanoSecundario">consumoUrbanoSecundario</string>
+    <string name="consumoRodoviarioSecundario">consumoRodoviarioSecundario</string>
 
-    <string-array name="modelos">
-        <item>Palio</item>
-        <item>Focus</item>
-        <item>Golf</item>
-        <item>S10</item>
-    </string-array>
-
-    <string-array name="versoes">
-        <item>Economy</item>
-        <item>Classic</item>
-        <item>Sport</item>
-        <item>Rodeio</item>
-    </string-array>
-
-    <!-- DADOS FICTICIOS ENQUANTO NÃO É PEGADO DO BD -->
 </resources>
