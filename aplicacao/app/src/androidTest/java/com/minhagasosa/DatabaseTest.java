@@ -12,19 +12,8 @@ import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.ModeloDao;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.JobManager;
-import com.path.android.jobqueue.Params;
 
 import junit.framework.Assert;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.BeforeClass;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class DatabaseTest extends AndroidTestCase {
     private final String LOT_TAG_TEST = "TAG_DATABASE_TEST";
@@ -45,7 +34,6 @@ public class DatabaseTest extends AndroidTestCase {
     private ModeloDao modeloDao;
     private CarroDao carroDao;
 
-    @BeforeClass
     protected void setUp() throws Exception {
         super.setUp();
         Log.d(LOT_TAG_TEST, "entrou no setUp");
@@ -123,21 +111,21 @@ public class DatabaseTest extends AndroidTestCase {
     public void testAddDenovo() {
         try {
             carroDao.insert(fusca);
-            Assert.fail("Deveria ter quebrado.");
+            Assert.fail("Deveria ter lançado exceção.");
         } catch (SQLiteConstraintException e) {
             //success
         }
 
         try {
             carroDao.insert(hilux);
-            Assert.fail("Deveria ter quebrado.");
+            Assert.fail("Deveria ter lançado exceção.");
         } catch (SQLiteConstraintException e) {
             //success
         }
 
         try {
             carroDao.insert(fusca);
-            Assert.fail("Deveria ter quebrado.");
+            Assert.fail("Deveria ter lançado exceção.");
         } catch (SQLiteConstraintException e) {
             //success
         }
@@ -181,12 +169,6 @@ public class DatabaseTest extends AndroidTestCase {
         clearDB();
     }
 
-    public void testRealLoadDataTest() {
-        inicializaCarros();
-        inicializaModelos();
-        populateBD(session);
-    }
-
     private void populateDaos() {
         modeloDao.insert(modeloFusca);
         modeloDao.insert(modeloFiesta);
@@ -204,101 +186,5 @@ public class DatabaseTest extends AndroidTestCase {
     private void clearDB() {
         modeloDao.deleteAll();
         carroDao.deleteAll();
-    }
-
-    private void populateBD(final DaoSession session) {
-        Log.d(LOT_TAG_TEST, "entrou no polulateBD");
-        JobManager jobManager = new JobManager(getContext());
-        if (modeloDao.count() == 0) {
-            jobManager.addJobInBackground(new Job(new Params(1)) {
-                @Override
-                public void onAdded() {
-                    Log.d(LOT_TAG_TEST, "Terminou de preencher o banco");
-                    Log.d(LOT_TAG_TEST, "num de modelos no modeloDao: " + modeloDao.count());
-                    Log.d(LOT_TAG_TEST, "num de modelos no carroDao: " + carroDao.count());
-                }
-
-                @Override
-                public void onRun() throws Throwable {
-                    CarroDao cDao = session.getCarroDao();
-                    populateCars(modeloDao, cDao);
-                }
-
-                @Override
-                protected void onCancel() {
-
-                }
-            });
-            System.out.println("Populating...");
-
-        }
-        carroDao = session.getCarroDao();
-    }
-
-    private String loadJSONFromAsset(String fileName) {
-        String json = null;
-        try {
-
-            InputStream is = getContext().getAssets().open(fileName);
-
-            int size = is.available();
-
-            byte[] buffer = new byte[size];
-
-            is.read(buffer);
-
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
-
-    }
-
-    private void populateCars(ModeloDao mDao, CarroDao cDao) {
-        Log.d(LOT_TAG_TEST, "chamou o populateCars");
-        String jsonModelos = loadJSONFromAsset("Modelos.json");
-        String jsonCarros = loadJSONFromAsset("carrosminhagasosa.json");
-        try {
-            JSONArray modelos = new JSONArray(jsonModelos);
-            Log.d(LOT_TAG_TEST, "num de modelos no jSon: " + modelos.length());
-            for (int i = 0; i < modelos.length(); i++) {
-                JSONObject modeloJson = modelos.getJSONObject(i);
-                Modelo modelo = new Modelo(modeloJson.getLong("ID"), modeloJson.getString("MODELO"));
-                Log.d(LOT_TAG_TEST, "Adding model: " + modeloJson.getString("MODELO"));
-                //System.out.println();
-                mDao.insert(modelo);
-            }
-            JSONArray carros = new JSONArray(jsonCarros);
-            Log.d(LOT_TAG_TEST, "num de carros no jSon: " + modelos.length());
-            for (int i = 0; i < carros.length(); i++) {
-                JSONObject cj = carros.getJSONObject(i);
-                if (cj.getInt("FLEX") == 1) {
-                    Carro c = new Carro();
-                    c.setId(cj.getLong("id"));
-                    c.setMarca(cj.getString("marca"));
-                    c.setAno(cj.getString("ano"));
-                    c.setConsumoUrbanoGasolina((float) cj.getDouble("urbano"));
-                    c.setConsumoRodoviarioGasolina((float) cj.getDouble("rodoviario"));
-                    c.setVersion(cj.getString("VERSION"));
-                    c.setModeloId(cj.getLong("MODEL"));
-                    if (cj.getInt("FLEX") == 1) {
-                        c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
-                        c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
-                    }
-                    Log.d(LOT_TAG_TEST, "Inserting car: " + c.getVersion() + " | " + i);
-                    cDao.insert(c);
-                }
-
-            }
-        } catch (JSONException e) {
-            System.out.print("TRETAOO");
-            e.printStackTrace();
-        }
     }
 }
