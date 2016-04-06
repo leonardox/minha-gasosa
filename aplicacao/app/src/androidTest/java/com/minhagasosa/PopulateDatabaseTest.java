@@ -27,6 +27,7 @@ public class PopulateDatabaseTest extends AndroidTestCase {
     private ModeloDao modeloDao;
     private CarroDao carroDao;
     private DaoSession session;
+    private static boolean isFirstTime = true;
 
     @BeforeClass
     protected void setUp() throws Exception {
@@ -39,6 +40,12 @@ public class PopulateDatabaseTest extends AndroidTestCase {
         session = daoMaster.newSession();
         modeloDao = session.getModeloDao();
         carroDao = session.getCarroDao();
+
+        if (isFirstTime) {
+            modeloDao.deleteAll();
+            carroDao.deleteAll();
+            isFirstTime = false;
+        }
     }
 
     public void testPopulateBD() {

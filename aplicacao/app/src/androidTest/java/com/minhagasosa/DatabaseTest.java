@@ -34,6 +34,8 @@ public class DatabaseTest extends AndroidTestCase {
     private ModeloDao modeloDao;
     private CarroDao carroDao;
 
+    private static boolean isFirstTime = true;
+
     protected void setUp() throws Exception {
         super.setUp();
         Log.d(LOT_TAG_TEST, "entrou no setUp");
@@ -44,6 +46,14 @@ public class DatabaseTest extends AndroidTestCase {
         session = daoMaster.newSession();
         modeloDao = session.getModeloDao();
         carroDao = session.getCarroDao();
+
+        if (isFirstTime) {
+            Log.d(LOT_TAG_TEST, "entrou no if de apagar");
+            modeloDao.deleteAll();
+            carroDao.deleteAll();
+            isFirstTime = false;
+        }
+
 
         inicializaModelos();
         inicializaCarros();
