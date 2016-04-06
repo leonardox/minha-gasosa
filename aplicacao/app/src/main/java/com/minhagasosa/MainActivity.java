@@ -1,5 +1,7 @@
 package com.minhagasosa;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -45,12 +47,14 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerModelo;
     Spinner spinnerVersao;
     EditText textPotencia;
-
+    private ProgressDialog progress;
+    public static Activity self;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "casosa-db", null);
+        self = this;
         JobManager jobManager = new JobManager(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -102,6 +106,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (mDao.count() == 0) {
+            setFinishOnTouchOutside(false);
+            progress=new ProgressDialog(this);
+            progress.setCancelable(false);
+            progress.setCanceledOnTouchOutside(false);
+            progress.setMessage("Populando carros, isso so sera feito uma vez");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setProgress(0);
+            progress.show();
+            final int totalProgressTime = 100;
+
             jobManager.addJobInBackground(new Job(new Params(1)) {
                 @Override
                 public void onAdded() {
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             System.out.println("Populating...");
+
 
         }
         CarroDao dao = session.getCarroDao();
@@ -230,26 +246,31 @@ public class MainActivity extends AppCompatActivity {
                 mDao.insert(modelo);
             }
             JSONArray carros = new JSONArray(jsonCarros);
+            int progressPercent = 0;
             for (int i = 0; i < carros.length(); i++) {
                 JSONObject cj = carros.getJSONObject(i);
+                Carro c = new Carro();
+                c.setId(cj.getLong("id"));
+                c.setMarca(cj.getString("marca"));
+                c.setAno(cj.getString("ano"));
+                c.setConsumoUrbanoGasolina((float) cj.getDouble("urbano"));
+                c.setConsumoRodoviarioGasolina((float) cj.getDouble("rodoviario"));
+                c.setVersion(cj.getString("VERSION"));
+                c.setModeloId(cj.getLong("MODEL"));
                 if (cj.getInt("FLEX") == 1) {
-                    Carro c = new Carro();
-                    c.setId(cj.getLong("id"));
-                    c.setMarca(cj.getString("marca"));
-                    c.setAno(cj.getString("ano"));
-                    c.setConsumoUrbanoGasolina((float) cj.getDouble("urbano"));
-                    c.setConsumoRodoviarioGasolina((float) cj.getDouble("rodoviario"));
-                    c.setVersion(cj.getString("VERSION"));
-                    c.setModeloId(cj.getLong("MODEL"));
-                    if (cj.getInt("FLEX") == 1) {
-                        c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
-                        c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
-                    }
-                    System.out.println("Inserting car: " + c.getVersion() + " | " + i);
-                    cDao.insert(c);
+                    c.setIsFlex(true);
+                    c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
+                    c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
+                }else{
+                    c.setIsFlex(false);
                 }
+                System.out.println("Inserting car: " + c.getVersion() + " | " + i);
+                cDao.insert(c);
 
             }
+            progress.hide();
+            self.finish();
+            self.startActivity(getIntent());
         } catch (JSONException e) {
             System.out.print("TRETAOO");
             e.printStackTrace();
