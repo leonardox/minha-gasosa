@@ -1,6 +1,7 @@
 package com.minhagasosa;
 
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.util.Log;
@@ -15,9 +16,12 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.Params;
 
+import junit.framework.Assert;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.BeforeClass;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,10 +45,10 @@ public class DatabaseTest extends AndroidTestCase {
     private ModeloDao modeloDao;
     private CarroDao carroDao;
 
-
-    @Override
+    @BeforeClass
     protected void setUp() throws Exception {
         super.setUp();
+        Log.d(LOT_TAG_TEST, "entrou no setUp");
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -55,8 +59,6 @@ public class DatabaseTest extends AndroidTestCase {
 
         inicializaModelos();
         inicializaCarros();
-        modeloDao.deleteAll();
-        carroDao.deleteAll();
     }
 
     private void inicializaCarros() {
@@ -116,9 +118,59 @@ public class DatabaseTest extends AndroidTestCase {
         assertEquals(4, carroDao.count());
         carroDao.insert(fusca);
         assertEquals(5, carroDao.count());
-
     }
 
+    public void testAddDenovo() {
+        try {
+            carroDao.insert(fusca);
+            Assert.fail("Deveria ter quebrado.");
+        } catch (SQLiteConstraintException e) {
+            //success
+        }
+
+        try {
+            carroDao.insert(hilux);
+            Assert.fail("Deveria ter quebrado.");
+        } catch (SQLiteConstraintException e) {
+            //success
+        }
+
+        try {
+            carroDao.insert(fusca);
+            Assert.fail("Deveria ter quebrado.");
+        } catch (SQLiteConstraintException e) {
+            //success
+        }
+    }
+
+    public void testDelete() {
+        assertEquals(5, modeloDao.count());
+        assertEquals(5, carroDao.count());
+
+        carroDao.delete(fusca);
+        assertEquals(4, carroDao.count());
+
+        carroDao.delete(fusca);
+        assertEquals(4, carroDao.count());
+
+        // O que acontece se eu deletar todos os modelos?
+        modeloDao.deleteAll();
+        assertEquals(0, modeloDao.count());
+
+        // verifica se os objetos DAO retornados pela session estão atualizados.
+        modeloDao = session.getModeloDao();
+        carroDao = session.getCarroDao();
+
+        assertEquals(0, modeloDao.count());
+        assertEquals(4, carroDao.count());
+
+        carroDao.deleteAll();
+        assertEquals(0, carroDao.count());
+    }
+
+    public void testEdit() {
+        clearDB();
+    }
 
     private void clearDB() {
         modeloDao.deleteAll();
