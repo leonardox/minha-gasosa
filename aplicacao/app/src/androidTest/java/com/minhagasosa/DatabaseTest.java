@@ -169,7 +169,36 @@ public class DatabaseTest extends AndroidTestCase {
     }
 
     public void testEdit() {
+        populateDaos();
+
+        fusca.setMarca("Toyota");
+        carroDao.update(fusca);
+        assertEquals("Toyota", fusca.getMarca());
+
+        Carro newFusca = carroDao.load(fusca.getId());
+        assertEquals("Toyota", newFusca.getMarca());
+
         clearDB();
+    }
+
+    public void testRealLoadDataTest() {
+        inicializaCarros();
+        inicializaModelos();
+        populateBD(session);
+    }
+
+    private void populateDaos() {
+        modeloDao.insert(modeloFusca);
+        modeloDao.insert(modeloFiesta);
+        modeloDao.insert(modeloGolf);
+        modeloDao.insert(modeloHb20);
+        modeloDao.insert(modeloHilux);
+
+        carroDao.insert(fusca);
+        carroDao.insert(fiesta);
+        carroDao.insert(golf);
+        carroDao.insert(hb20);
+        carroDao.insert(hilux);
     }
 
     private void clearDB() {
@@ -241,7 +270,8 @@ public class DatabaseTest extends AndroidTestCase {
             for (int i = 0; i < modelos.length(); i++) {
                 JSONObject modeloJson = modelos.getJSONObject(i);
                 Modelo modelo = new Modelo(modeloJson.getLong("ID"), modeloJson.getString("MODELO"));
-                System.out.println("Adding model: " + modeloJson.getString("MODELO"));
+                Log.d(LOT_TAG_TEST, "Adding model: " + modeloJson.getString("MODELO"));
+                //System.out.println();
                 mDao.insert(modelo);
             }
             JSONArray carros = new JSONArray(jsonCarros);
@@ -261,7 +291,7 @@ public class DatabaseTest extends AndroidTestCase {
                         c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
                         c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
                     }
-                    System.out.println("Inserting car: " + c.getVersion() + " | " + i);
+                    Log.d(LOT_TAG_TEST, "Inserting car: " + c.getVersion() + " | " + i);
                     cDao.insert(c);
                 }
 
