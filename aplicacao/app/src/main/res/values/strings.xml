@@ -16,5 +16,10 @@
     <string name="consumoRodoviarioPrimario">consumoRodoviarioPrimario</string>
     <string name="consumoUrbanoSecundario">consumoUrbanoSecundario</string>
     <string name="consumoRodoviarioSecundario">consumoRodoviarioSecundario</string>
+    <string name="com_potencia">com_potencia</string>
+    <string name="sharedPotencia">sharedPotencia</string>
+
+
+
 
 </resources>
