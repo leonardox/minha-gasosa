@@ -7,9 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -19,6 +23,7 @@ import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.ModeloDao;
+import com.minhagasosa.preferences.MinhaGasosaPreference;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.Params;
@@ -118,6 +123,42 @@ public class MainActivity extends AppCompatActivity {
 
         }
         CarroDao dao = session.getCarroDao();
+
+        textPotencia.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //empty
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //empty
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                if(s.toString().isEmpty()){
+                    MinhaGasosaPreference.putWithPotency(false, getApplicationContext());
+                    MinhaGasosaPreference.putPotency(0, getApplicationContext());
+                } else{
+                    MinhaGasosaPreference.putWithPotency(true, getApplicationContext());
+                    MinhaGasosaPreference.putPotency(Integer.valueOf(s.toString()),
+                            getApplicationContext());
+                }
+            }
+        });
+
+        final Button btnPrevisoes = (Button) findViewById(R.id.btnPrevisoes);
+        btnPrevisoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public final void onClick(final View v) {
+                // Potency value at sharedPreferences
+                Log.e("MinhaGasosa", "ValorArmazenadoPotencia = " + String.valueOf(MinhaGasosaPreference.getPotency(
+                        getApplicationContext())));
+                Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
+                        getApplicationContext())));
+            }
+        });
     }
 
     private void salvarInformacoesCarro(CarroDao cDao) {
@@ -258,4 +299,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return result;
     }
+
+
 }
