@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/set_car"
+        android:icon="@drawable/ic_time_to_leave_white_24dp"
+        android:title="send"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/action_settings" android:title="Set"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>

@@ -3,6 +3,7 @@ package com.minhagasosa;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerVersao;
     EditText textPotencia;
     private ProgressDialog progress;
+    private int check = 0;
     public static Activity self;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,12 @@ public class MainActivity extends AppCompatActivity {
         final DaoSession session = daoMaster.newSession();
         final ModeloDao mDao = session.getModeloDao();
         final CarroDao cDao = session.getCarroDao();
-
+        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
+        if(preferences.getBoolean("done",false) && !getIntent().getBooleanExtra("fromHome",false)){
+            Intent i = new Intent(this, HomeActivity.class);
+            this.startActivity(i);
+            return;
+        }
         spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
         spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
         spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
@@ -86,17 +93,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 popularVersoes(cDao);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spinnerVersao.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                salvarInformacoesCarro(cDao);
             }
 
             @Override
@@ -173,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                         getApplicationContext())));
                 Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
                         getApplicationContext())));
+                salvarInformacoesCarro(cDao);
             }
         });
     }
@@ -209,7 +206,10 @@ public class MainActivity extends AppCompatActivity {
             editor.putFloat(getString(R.string.consumoRodoviarioSecundario),
                     carro.getConsumoRodoviarioAlcool());
         }
+        editor.putBoolean("done", true);
         editor.commit();
+        Intent i = new Intent(this, HomeActivity.class);
+        this.startActivity(i);
     }
 
     private void popularVersoes(CarroDao cDao) {
@@ -269,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
             progress.hide();
-            self.finish();
-            self.startActivity(getIntent());
+            Intent i = new Intent(self, MainActivity.class);
+            self.startActivity(i);
         } catch (JSONException e) {
             System.out.print("TRETAOO");
             e.printStackTrace();
