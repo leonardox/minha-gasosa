@@ -20,6 +20,7 @@
     <string name="sharedPotencia">sharedPotencia</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
+    <string name="shared_price">shared_price</string>
 
 
 </resources>

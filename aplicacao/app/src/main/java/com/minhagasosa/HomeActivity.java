@@ -6,13 +6,21 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.minhagasosa.preferences.MinhaGasosaPreference;
+
 public class HomeActivity extends AppCompatActivity {
+    EditText priceFuelEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,29 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(HomeActivity.this, "Ação de adicionar rota aqui...", Toast.LENGTH_SHORT).show();
             }
         });
+        priceFuelEditText = (EditText) findViewById(R.id.editTextPrice);
+        priceFuelEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //empty
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //empty
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                if (s.toString().isEmpty()) {
+                    MinhaGasosaPreference.putPrice(0, getApplicationContext());
+                } else {
+                    MinhaGasosaPreference.putPrice(Float.valueOf(s.toString()),
+                            getApplicationContext());
+                }
+            }
+        });
+
     }
 
     @Override

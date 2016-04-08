@@ -77,7 +77,7 @@
         android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/editText" />
+        android:layout_alignBottom="@+id/editTextPrice" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
         android:inputType="numberDecimal"
         android:ems="10"
         android:layout_marginTop="6dp"
-        android:id="@+id/editText"
+        android:id="@+id/editTextPrice"
         android:layout_below="@+id/textView4"
         android:layout_toRightOf="@+id/textView5"
         android:layout_toEndOf="@+id/textView5" />
