@@ -20,6 +20,13 @@
     <string name="sharedPotencia">sharedPotencia</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
+    <string name="title_activity_routes">RoutesActivity</string>
+    <string name="dist_km">Distância em KM</string>
+    <string name="times_routes_week">Percore quantas vezes por semana?</string>
+    <string name="route_only_going">Rota de ida</string>
+    <string name="route_with_come_back">Rota de volta</string>
+    <string name="choise_from_map">A partir do mapa</string>
+    <string name="type_route">Qual o tipo da sua rota?</string>
 
 
 </resources>
