@@ -27,6 +27,6 @@
     <string name="route_with_come_back">Rota de volta</string>
     <string name="choise_from_map">A partir do mapa</string>
     <string name="type_route">Qual o tipo da sua rota?</string>
-
+    <string name="shared_price">shared_price</string>
 
 </resources>

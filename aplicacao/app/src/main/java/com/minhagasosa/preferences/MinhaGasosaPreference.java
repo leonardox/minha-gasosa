@@ -44,4 +44,17 @@ public class MinhaGasosaPreference {
         return preferences.getInt(context.getString(R.string.sharedPotencia), -1);
     }
 
+
+    public static void putPrice(float price, Context context){
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putFloat(context.getString(R.string.shared_price), price);
+        editor.commit();
+    }
+
+    public static float getPrice(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getFloat(context.getString(R.string.shared_price), -1);
+
+    }
 }

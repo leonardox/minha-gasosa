@@ -26,6 +26,8 @@ import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.ModeloDao;
+import com.minhagasosa.dao.Rota;
+import com.minhagasosa.dao.RotaDao;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.JobManager;
@@ -63,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         final DaoSession session = daoMaster.newSession();
         final ModeloDao mDao = session.getModeloDao();
         final CarroDao cDao = session.getCarroDao();
+
+        //ADIÇÃO DE ALGUMAS ROTAS FICTICIAS
+        //rDao.insert(new Rota((long)1, "Olar", true, (float)10.5, (float)5.5, false, 0));
+        //rDao.insert(new Rota((long)2, "Olar2", true, (float)5.5, (float)5.5, true, 1));
+        //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
+        //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
+
         SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
         if(preferences.getBoolean("done",false) && !getIntent().getBooleanExtra("fromHome",false)){
             Intent i = new Intent(this, HomeActivity.class);
@@ -222,6 +231,60 @@ public class MainActivity extends AppCompatActivity {
         }
         spinnerVersao.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, listaVersoes));
+    }
+
+    /**
+     * Metodo que retorna a soma das rotas cadastradas no sistema
+     * @param session
+     * @return
+     */
+    private double calculaDistanciaTotal(DaoSession session) {
+        String marca = (String) spinnerMarca.getSelectedItem();
+        //String select = "SELECT IDA_EVOLTA, DISTANCIA_IDA, DISTANCIA_VOLTA, REPETE_SEMANA, REPETOICOES FROM ROTA";
+        String select = "SELECT * FROM ROTA";
+        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
+
+        double soma = 0;
+        for (int i = 0; i < listaRotas.size(); i++) {
+            double atual;
+            if (listaRotas.get(i).getIdaEVolta()) {
+                atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
+                if (listaRotas.get(i).getRepeteSemana()) {
+                    atual = atual * listaRotas.get(i).getRepetoicoes();
+                }
+            }else {
+                atual = listaRotas.get(i).getDistanciaIda();
+                if(listaRotas.get(i).getRepeteSemana()) {
+                    atual = atual * listaRotas.get(i).getRepetoicoes();
+                }
+            }
+            soma += atual;
+        }
+        return soma;
+    }
+
+    private static List<Rota> listRotas(DaoSession session, String select) {
+        ArrayList<Rota> result = new ArrayList<Rota>();
+        Cursor c = session.getDatabase().rawQuery(select, null);
+        RotaDao rDao = session.getRotaDao();
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    Rota r = new Rota();
+                    r.setId(c.getLong(0));
+                    r.setNome(c.getString(1));
+                    r.setIdaEVolta(c.getInt(2)!=0);
+                    r.setDistanciaIda(c.getFloat(3));
+                    r.setDistanciaVolta(c.getFloat(4));
+                    r.setRepeteSemana(c.getInt(5)!=0);
+                    r.setRepetoicoes(c.getInt(6));
+                    result.add(r);
+                } while (c.moveToNext());
+            }
+        } finally {
+            c.close();
+        }
+        return result;
     }
 
     private void popularModelos(DaoSession session) {
