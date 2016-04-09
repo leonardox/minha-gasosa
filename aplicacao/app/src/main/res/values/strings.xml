@@ -21,12 +21,19 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
     <string name="title_activity_routes">RoutesActivity</string>
-    <string name="dist_km">Distância em KM</string>
+    <string name="dist_going">Distância em KM (ida)</string>
+    <string name="dist_come_back">Distância em KM (volta)</string>
     <string name="times_routes_week">Percore quantas vezes por semana?</string>
     <string name="route_only_going">Rota de ida</string>
     <string name="route_with_come_back">Rota de volta</string>
     <string name="choise_from_map">A partir do mapa</string>
     <string name="type_route">Qual o tipo da sua rota?</string>
     <string name="shared_price">shared_price</string>
+    <string name="route_title">Nome dessa rota</string>
+    <string name="going_and_back">De ida e volta</string>
+    <string name="repeat_wekly">É repetida semanalmente</string>
+    <string name="invalid_name">Nome Inválido</string>
+    <string name="invalid_distance">Distância Inválida</string>
+    <string name="invalid_value">Valor Inválido</string>
 
 </resources>

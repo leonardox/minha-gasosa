@@ -13,6 +13,20 @@
     tools:context="com.minhagasosa.RoutesActivity"
     tools:showIn="@layout/activity_routes">
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/route_title_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <EditText
+            android:id="@+id/et_route_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/route_title"
+            android:inputType="textShortMessage" />
+    </android.support.design.widget.TextInputLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,45 +34,68 @@
         android:text="@string/type_route"
         android:textSize="16sp" />
 
-    <RadioGroup
-        android:id="@+id/route_group"
+    <!--    <RadioGroup
+            android:id="@+id/route_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <RadioButton
+                android:id="@+id/radio_only_going"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/route_only_going" />
+
+            <RadioButton
+                android:id="@+id/radio_with_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/route_with_come_back" />
+        </RadioGroup>   -->
+
+
+    <CheckBox
+        android:id="@+id/check_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-
-        <RadioButton
-            android:id="@+id/radio_only_going"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/route_only_going" />
-
-        <RadioButton
-            android:id="@+id/radio_with_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/route_with_come_back" />
-    </RadioGroup>
-
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/choise_from_map" />
+        android:checked="true"
+        android:text="@string/going_and_back" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/distance_wrapper"
+        android:id="@+id/distance_going_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp">
 
         <EditText
-            android:id="@+id/et_distance"
+            android:id="@+id/et_distance_going"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/dist_km"
+            android:hint="@string/dist_going"
             android:inputType="numberDecimal" />
     </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/distance_comeback_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <EditText
+            android:id="@+id/et_distance_comeback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dist_come_back"
+            android:inputType="numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/check_repeats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/repeat_wekly" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/times_routes_wraper"
@@ -67,11 +104,19 @@
         android:layout_marginTop="16dp">
 
         <EditText
-            android:id="@+id/times_routes"
+            android:id="@+id/ed_times_routes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="@string/times_routes_week"
             android:inputType="numberDecimal" />
     </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="@string/choise_from_map" />
 
 </LinearLayout>
