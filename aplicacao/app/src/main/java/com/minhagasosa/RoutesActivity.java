@@ -1,5 +1,6 @@
 package com.minhagasosa;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -17,6 +18,10 @@ import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
+import com.minhagasosa.preferences.MinhaGasosaPreference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoutesActivity extends AppCompatActivity {
     private CheckBox checkRepeat;
@@ -141,6 +146,7 @@ public class RoutesActivity extends AppCompatActivity {
         novaRota.setRepetoicoes(repetitions);
         rotaDao.update(novaRota);
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
+        calculaDistanciaTotal(session);
         onBackPressed();
     }
 
@@ -166,5 +172,52 @@ public class RoutesActivity extends AppCompatActivity {
 
     public String getRouteTitle() {
         return timesRouteWrapper.getEditText().getText().toString();
+    }
+
+    private void calculaDistanciaTotal(DaoSession session) {
+        String select = "SELECT * FROM ROTA";
+        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
+
+        float soma = 0.0f;
+        for (int i = 0; i < listaRotas.size(); i++) {
+            double atual;
+            if (listaRotas.get(i).getIdaEVolta()) {
+                atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
+                if (listaRotas.get(i).getRepeteSemana()) {
+                    atual = atual * listaRotas.get(i).getRepetoicoes();
+                }
+            }else {
+                atual = listaRotas.get(i).getDistanciaIda();
+                if(listaRotas.get(i).getRepeteSemana()) {
+                    atual = atual * listaRotas.get(i).getRepetoicoes();
+                }
+            }
+            soma += atual;
+        }
+        MinhaGasosaPreference.setDistanciaTotal(soma, getApplicationContext());
+    }
+
+    private static List<Rota> listRotas(DaoSession session, String select) {
+        ArrayList<Rota> result = new ArrayList<Rota>();
+        Cursor c = session.getDatabase().rawQuery(select, null);
+        RotaDao rDao = session.getRotaDao();
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    Rota r = new Rota();
+                    r.setId(c.getLong(0));
+                    r.setNome(c.getString(1));
+                    r.setIdaEVolta(c.getInt(2)!=0);
+                    r.setDistanciaIda(c.getFloat(3));
+                    r.setDistanciaVolta(c.getFloat(4));
+                    r.setRepeteSemana(c.getInt(5)!=0);
+                    r.setRepetoicoes(c.getInt(6));
+                    result.add(r);
+                } while (c.moveToNext());
+            }
+        } finally {
+            c.close();
+        }
+        return result;
     }
 }

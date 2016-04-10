@@ -108,38 +108,15 @@
             android:layout_below="@+id/textViewOpcao"
             android:layout_alignParentLeft="true" />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/textPotencia"
-            android:layout_alignTop="@+id/textView2"
-            android:layout_toLeftOf="@+id/textView2"
-            android:layout_alignLeft="@+id/spinnerVersao"
-            android:layout_alignStart="@+id/spinnerVersao" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="cv"
-            android:id="@+id/textView2"
-            android:layout_alignBottom="@+id/textViewPotencia"
-            android:layout_alignRight="@+id/spinnerVersao"
-            android:layout_alignEnd="@+id/spinnerVersao" />
-
-        <Button
+    <Button
             android:id="@+id/btnPrevisoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/confirm"
-            android:paddingTop="20px"
-            android:layout_below="@+id/textPotencia"
             android:layout_alignLeft="@+id/btnAddRota"
             android:layout_alignStart="@+id/btnAddRota"
-            android:layout_marginTop="58dp" />
+            android:layout_marginTop="58dp"
+            android:layout_below="@+id/spinnerPot" />
 
         <Button
             android:id="@+id/btnAddRota"
@@ -151,6 +128,14 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="300px"
+        android:layout_height="70px"
+        android:id="@+id/spinnerPot"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/textViewOpcao"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
 
