@@ -29,7 +29,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_A_AlterarMarca() throws InterruptedException {
-        onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
+        sleep(30000);//esperando 30 segundos para popular o banco
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
 
         onView(withId(R.id.spinnerMarca)).perform(click());//clica no spinner de marca
@@ -68,7 +68,8 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     public void test_D_AdicionarPotencia() throws InterruptedException {
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
 
-        onView(withId(R.id.textPotencia)).perform(typeText("100"));
+        onView(withId(R.id.spinnerPot)).perform(click());
+        onView(withText("1.4")).perform(click());
 
         sleep(1000);
         onView(withId(R.id.btnPrevisoes)).perform(click());
@@ -117,7 +118,8 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withId(R.id.spinnerVersao)).perform(click());//clica no spinner de versao
         onView(withText("M 3.0 Turbo")).perform(click());
 
-        onView(withId(R.id.textPotencia)).perform(typeText("100"));
+        onView(withId(R.id.spinnerPot)).perform(click());
+        onView(withText("1.6")).perform(click());
 
         sleep(1000);
         onView(withId(R.id.btnPrevisoes)).perform(click());
@@ -133,7 +135,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withId(R.id.editTextPrice)).perform(typeText("4.00"));//digita o preco do combustivo 1
     }
 
-    public void test_G_AdicionarPrecoCombustivelDuplo() throws InterruptedException {
+    public void test_H_AdicionarPrecoCombustivelDuplo() throws InterruptedException {
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
 
         onView(withId(R.id.checkBox)).perform(click());//clica no chechBox flex
@@ -142,12 +144,12 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withId(R.id.editTextPrice)).perform(typeText("4.00"));//digita o preco do combustivo 1
 
         onView(withId(R.id.spinner)).perform(click());//clica no spinner de porcetagem de tanque
-        onView(withText("15%")).perform(click());
+        onView(withText("15")).perform(click());
 
         onView(withId(R.id.textView8)).check(matches(isDisplayed()));//verifica se o texto é mostrado
         onView(withId(R.id.editText)).perform(typeText("2.25"));//digita o preco do combustivo 2
 
         onView(withId(R.id.spinner)).perform(click());//clica no spinner de porcetagem de tanque
-        onView(withText("60%")).perform(click());
+        onView(withText("60")).perform(click());
     }
 }
