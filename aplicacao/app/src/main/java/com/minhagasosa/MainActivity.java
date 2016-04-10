@@ -49,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerMarca;
     Spinner spinnerModelo;
     Spinner spinnerVersao;
-    EditText textPotencia;
+    Spinner spinnerPotencia;
     private ProgressDialog progress;
     private int check = 0;
     public static Activity self;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
         //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
 
-        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
-        if(preferences.getBoolean("done",false) && !getIntent().getBooleanExtra("fromHome",false)){
+        if (MinhaGasosaPreference.getDone(getApplicationContext()) &&
+                !getIntent().getBooleanExtra("fromHome", false)) {
             Intent i = new Intent(this, HomeActivity.class);
             this.startActivity(i);
             return;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
         spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
         spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
-        textPotencia = (EditText) findViewById(R.id.textPotencia);
+        spinnerPotencia = (Spinner) findViewById(R.id.spinnerPot);
 
         String[] marcas = {"Aston Martin", "Audi", "Bentley", "BMW", "Chery", "Chevrolet", "Citroen", "Dodge", "Ferrari", "Fiat", "Ford", "Geely", "Honda", "Hyundai", "JAC", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Lifan", "Maserati", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Peugeot", "Porsche", "Rely", "Renault", "Shineray", "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
         spinnerMarca.setAdapter(new ArrayAdapter<String>(this,
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (mDao.count() == 0) {
             setFinishOnTouchOutside(false);
-            progress=new ProgressDialog(this);
+            progress = new ProgressDialog(this);
             progress.setCancelable(false);
             progress.setCanceledOnTouchOutside(false);
             progress.setMessage("Populando carros, isso so sera feito uma vez");
@@ -144,30 +145,33 @@ public class MainActivity extends AppCompatActivity {
 
         }
         CarroDao dao = session.getCarroDao();
-
-        textPotencia.addTextChangedListener(new TextWatcher() {
+        spinnerPotencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //empty
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //empty
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-                if(s.toString().isEmpty()){
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedPot = (String) spinnerPotencia.getSelectedItem();
+                if (selectedPot.isEmpty()) {
                     MinhaGasosaPreference.putWithPotency(false, getApplicationContext());
-                    MinhaGasosaPreference.putPotency(0, getApplicationContext());
-                } else{
+                    MinhaGasosaPreference.putPotency(0.0f, getApplicationContext());
+                } else {
                     MinhaGasosaPreference.putWithPotency(true, getApplicationContext());
-                    MinhaGasosaPreference.putPotency(Integer.valueOf(s.toString()),
+                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot),
                             getApplicationContext());
+                    MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getApplicationContext());
+                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f,
+                            getApplicationContext());
+                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getApplicationContext());
+                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getApplicationContext());
                 }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
+        String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
+        spinnerPotencia.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, potencias));
 
         final Button btnPrevisoes = (Button) findViewById(R.id.btnPrevisoes);
         btnPrevisoes.setOnClickListener(new View.OnClickListener() {
@@ -184,39 +188,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void salvarInformacoesCarro(CarroDao cDao) {
-        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        String marca = (String) spinnerMarca.getSelectedItem();
-        Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
-        long modelo_id = modelo.getId();
-        String versao = (String) spinnerVersao.getSelectedItem();
-        Query query = cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(modelo_id),
-                CarroDao.Properties.Marca.eq(marca),
-                CarroDao.Properties.Version.eq(versao)).build();
-        Carro carro = (Carro) query.list().get(0);
+        if (!MinhaGasosaPreference.getWithPotency(getApplicationContext())) {
+            String marca = (String) spinnerMarca.getSelectedItem();
+            Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
+            long modelo_id = modelo.getId();
+            String versao = (String) spinnerVersao.getSelectedItem();
+            Query query = cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(modelo_id),
+                    CarroDao.Properties.Marca.eq(marca),
+                    CarroDao.Properties.Version.eq(versao)).build();
+            Carro carro = (Carro) query.list().get(0);
 
-        if (carro.getIsFlex() != null) {
-            editor.putBoolean(
-                    getString(R.string.is_flex), carro.getIsFlex());
+            if (carro.getIsFlex() != null) {
+                MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getApplicationContext());
+            }
+            if (carro.getConsumoUrbanoGasolina() != null) {
+                MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
+                        getApplicationContext());
+            }
+            if (carro.getConsumoRodoviarioGasolina() != null) {
+                MinhaGasosaPreference.setConsumoRodoviarioPrimario(carro.getConsumoRodoviarioGasolina(),
+                        getApplicationContext());
+            }
+            if (carro.getConsumoUrbanoAlcool() != null) {
+                MinhaGasosaPreference.setConsumoUrbanoSecundario(carro.getConsumoUrbanoAlcool(),
+                        getApplicationContext());
+            }
+            if (carro.getConsumoRodoviarioAlcool() != null) {
+                MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
+                        getApplicationContext());
+            }
         }
-        if (carro.getConsumoUrbanoGasolina() != null) {
-            editor.putFloat(getString(R.string.consumoUrbanoPrimario),
-                    carro.getConsumoUrbanoGasolina());
-        }
-        if (carro.getConsumoRodoviarioGasolina() != null) {
-            editor.putFloat(getString(R.string.consumoRodoviarioPrimario),
-                    carro.getConsumoRodoviarioGasolina());
-        }
-        if (carro.getConsumoUrbanoAlcool() != null) {
-            editor.putFloat(getString(R.string.consumoUrbanoSecundario),
-                    carro.getConsumoUrbanoAlcool());
-        }
-        if (carro.getConsumoRodoviarioAlcool() != null) {
-            editor.putFloat(getString(R.string.consumoRodoviarioSecundario),
-                    carro.getConsumoRodoviarioAlcool());
-        }
-        editor.putBoolean("done", true);
-        editor.commit();
+        MinhaGasosaPreference.setDone(true, getApplicationContext());
         Intent i = new Intent(this, HomeActivity.class);
         this.startActivity(i);
     }
@@ -235,57 +237,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Metodo que retorna a soma das rotas cadastradas no sistema
+     *
      * @param session
      * @return
      */
-    private double calculaDistanciaTotal(DaoSession session) {
-        String marca = (String) spinnerMarca.getSelectedItem();
-        //String select = "SELECT IDA_EVOLTA, DISTANCIA_IDA, DISTANCIA_VOLTA, REPETE_SEMANA, REPETOICOES FROM ROTA";
-        String select = "SELECT * FROM ROTA";
-        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
-
-        double soma = 0;
-        for (int i = 0; i < listaRotas.size(); i++) {
-            double atual;
-            if (listaRotas.get(i).getIdaEVolta()) {
-                atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
-                if (listaRotas.get(i).getRepeteSemana()) {
-                    atual = atual * listaRotas.get(i).getRepetoicoes();
-                }
-            }else {
-                atual = listaRotas.get(i).getDistanciaIda();
-                if(listaRotas.get(i).getRepeteSemana()) {
-                    atual = atual * listaRotas.get(i).getRepetoicoes();
-                }
-            }
-            soma += atual;
-        }
-        return soma;
-    }
-
-    private static List<Rota> listRotas(DaoSession session, String select) {
-        ArrayList<Rota> result = new ArrayList<Rota>();
-        Cursor c = session.getDatabase().rawQuery(select, null);
-        RotaDao rDao = session.getRotaDao();
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    Rota r = new Rota();
-                    r.setId(c.getLong(0));
-                    r.setNome(c.getString(1));
-                    r.setIdaEVolta(c.getInt(2)!=0);
-                    r.setDistanciaIda(c.getFloat(3));
-                    r.setDistanciaVolta(c.getFloat(4));
-                    r.setRepeteSemana(c.getInt(5)!=0);
-                    r.setRepetoicoes(c.getInt(6));
-                    result.add(r);
-                } while (c.moveToNext());
-            }
-        } finally {
-            c.close();
-        }
-        return result;
-    }
 
     private void popularModelos(DaoSession session) {
         String marca = (String) spinnerMarca.getSelectedItem();
@@ -324,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                     c.setIsFlex(true);
                     c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
                     c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
-                }else{
+                } else {
                     c.setIsFlex(false);
                 }
                 System.out.println("Inserting car: " + c.getVersion() + " | " + i);

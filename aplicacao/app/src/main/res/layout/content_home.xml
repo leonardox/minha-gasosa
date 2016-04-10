@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Consumo Mensal:"
         android:id="@+id/tv_consumo_mensal"
-        android:layout_below="@+id/textView11"
+        android:layout_below="@+id/tv_consumo_semanal"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="21dp"/>
@@ -26,10 +26,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Consumo Semanal:"
         android:id="@+id/tv_consumo_semanal"
-        android:layout_below="@+id/tv_consumo_mensal"
+        android:layout_below="@+id/textView11"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="21dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,10 +49,10 @@
         android:id="@+id/checkBox"
         android:checked="false"
         android:textSize="14sp"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -178,7 +178,9 @@
         android:layout_alignTop="@+id/textView10"
         android:layout_alignLeft="@+id/textView7"
         android:layout_alignStart="@+id/textView7"
-        android:layout_alignBottom="@+id/textView10" />
+        android:layout_alignBottom="@+id/textView10"
+        android:layout_alignRight="@+id/editTextPrice"
+        android:layout_alignEnd="@+id/editTextPrice" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -201,5 +203,29 @@
         android:layout_alignBottom="@+id/textView11"
         android:layout_alignLeft="@+id/spinner"
         android:layout_alignStart="@+id/spinner"
-        android:layout_marginTop="21dp"/>
+        android:layout_marginTop="21dp"
+        android:layout_alignRight="@+id/editText"
+        android:layout_alignEnd="@+id/editText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="%"
+        android:gravity="center_vertical"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/textView8"
+        android:layout_toRightOf="@+id/editTextPrice"
+        android:layout_toEndOf="@+id/editTextPrice" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="%"
+        android:gravity="center_vertical"
+        android:id="@+id/textView12"
+        android:layout_alignBottom="@+id/spinner2"
+        android:layout_toRightOf="@+id/spinner2"
+        android:layout_toEndOf="@+id/spinner2" />
 </RelativeLayout>
