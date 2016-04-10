@@ -181,8 +181,8 @@ public class HomeActivity extends AppCompatActivity {
         df.setMaximumFractionDigits(2);
         if (checkFlex.isChecked() == false) {
             float precoPrincipal = Float.parseFloat(priceFuelEditText.getText().toString());
-            float distancias = 150.0f;
-            //float distancias = MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
+            //float distancias = 150.0f;
+            float distancias = MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
             float consumoUrbano = MinhaGasosaPreference.
                     getConsumoUrbanoPrimario(getApplicationContext());
             float result = (distancias / consumoUrbano) * precoPrincipal;

@@ -178,7 +178,7 @@ public class RoutesActivity extends AppCompatActivity {
         String select = "SELECT * FROM ROTA";
         ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
 
-        float soma = 0;
+        float soma = 0.0f;
         for (int i = 0; i < listaRotas.size(); i++) {
             double atual;
             if (listaRotas.get(i).getIdaEVolta()) {

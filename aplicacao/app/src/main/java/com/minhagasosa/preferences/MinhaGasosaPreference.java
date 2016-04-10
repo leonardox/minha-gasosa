@@ -139,6 +139,6 @@ public class MinhaGasosaPreference {
     public static float getDistanciaTotal(Context context){
         final SharedPreferences preferences =  context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getFloat(context.getString(R.string.distancia_total), -1);
+        return preferences.getFloat(context.getString(R.string.distancia_total), 0.0f);
     }
 }
