@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Minha Gasosa</string>
-
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0
+    </string>
     <string name="marca">Marca:</string>
     <string name="modelo">Modelo:</string>
     <string name="versao">Versão:</string>
@@ -35,5 +37,8 @@
     <string name="invalid_name">Nome Inválido</string>
     <string name="invalid_distance">Distância Inválida</string>
     <string name="invalid_value">Valor Inválido</string>
+    <string name="select_initial_point">Selecione o ponto inicial...</string>
+    <string name="initial_point">Ponto inicial...</string>
+    <string name="indica_rota">Indique a rota</string>
 
 </resources>
