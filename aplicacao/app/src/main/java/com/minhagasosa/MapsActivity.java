@@ -1,8 +1,6 @@
 package com.minhagasosa;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -28,40 +26,44 @@ import java.util.ArrayList;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private LatLng mCurrentLocation;
-    private Marker mCurrentMark;
+    private LatLng mOriginLocation;
+    private LatLng mDestinyLocation;
+    private Marker mOriginMark;
+    private Marker mDestinyMark;
     private LatLng mCityLatLng;
-    FloatingActionButton mFab;
+    private FloatingActionButton mFab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
         if(this.getIntent().getStringArrayListExtra("LatLng") != null){
             ArrayList<String> loc = this.getIntent().getStringArrayListExtra("LatLng");
             //LatLng h = new LatLng();
         }else{
-            Toast.makeText(this, R.string.select_initial_point, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.select_origin) ,Toast.LENGTH_LONG).show();
         }
         final Activity a = this;
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentMark == null) {
-                    Snackbar snack = Snackbar.make(v, R.string.select_initial_point, Snackbar.LENGTH_LONG)
+                if (mOriginMark == null || mDestinyMark == null) {
+                    Snackbar snack = Snackbar.make(v, R.string.select_origin_and_destiny, Snackbar.LENGTH_LONG)
                             .setAction("Action", null);
                     View view = snack.getView();
                     TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
                     tv.setTextColor(Color.WHITE);
                     snack.show();
                 } else {
-                    Intent i = new Intent();
-                    i.putExtra("location", mCurrentMark.getPosition());
-                    setResult(2, i);
-                    finish();
+                    //Calculate route here
+                    mOriginLocation = mOriginMark.getPosition();
+                    mDestinyLocation = mDestinyMark.getPosition();
+                    Toast.makeText(MapsActivity.this, "Origin: " + mOriginLocation.longitude + ", " + mOriginLocation.longitude , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, "Destiny: " + mDestinyLocation.longitude + ", " + mDestinyLocation.longitude , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -96,12 +98,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
 
                 final LatLng location = latLng;
-                if(mCurrentMark != null){
-                    mCurrentMark.remove();
-                }else{
+                if(mOriginMark != null){
                     mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                    mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
+                    Toast.makeText(MapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
+                }else{
+                    mOriginMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.origin)));
+                    Toast.makeText(MapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
                 }
-                mCurrentMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.initial_point)));
+
             }
         });
         // Add a marker in Sydney and move the camera

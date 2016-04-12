@@ -41,5 +41,11 @@
     <string name="select_initial_point">Selecione o ponto inicial...</string>
     <string name="initial_point">Ponto inicial...</string>
     <string name="indica_rota">Indique a rota</string>
+    <string name="select_origin">Selecione o ponto de origem da rota</string>
+    <string name="select_origin_and_destiny">Selecione a origem e o destino!</string>
+    <string name="destiny_message">Ponto de destino selecionado, confirme para calcular a rota entre os pontos</string>
+    <string name="origin_text">Ponto de origem selecionado, selecione o ponto de destino</string>
+    <string name="Destiny">Destino</string>
+    <string name="origin">Origem</string>
 
 </resources>
