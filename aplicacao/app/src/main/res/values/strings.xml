@@ -23,7 +23,7 @@
     <string name="distancia_total">sharedPotencia</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
-    <string name="title_activity_routes">RoutesActivity</string>
+    <string name="title_activity_routes">Criar rota</string>
     <string name="dist_going">Distância em KM (ida)</string>
     <string name="dist_come_back">Distância em KM (volta)</string>
     <string name="times_routes_week">Percore quantas vezes por semana?</string>
@@ -47,5 +47,6 @@
     <string name="origin_text">Ponto de origem selecionado, selecione o ponto de destino</string>
     <string name="Destiny">Destino</string>
     <string name="origin">Origem</string>
+    <string name="choice_vehicle">Escolha seu veículo</string>
 
 </resources>

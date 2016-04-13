@@ -1,142 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
-<RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Escolha seu veículo"
-            android:id="@+id/textView3"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40px"/>
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/choice_vehicle"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginBottom="8dp"
             android:text="@string/marca"
-            android:id="@+id/textViewMarca"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="40px"/>
+            android:textSize="18sp" />
 
         <Spinner
-            android:layout_width="300px"
-            android:layout_height="70px"
             android:id="@+id/spinnerMarca"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignTop="@+id/textViewMarca"
-            android:layout_marginBottom="10dp"
-            android:layout_alignLeft="@+id/spinnerModelo"
-            android:layout_alignStart="@+id/spinnerModelo"
-            android:layout_alignRight="@+id/textViewOpcao"
-            android:layout_alignEnd="@+id/textViewOpcao" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/modelo"
-            android:id="@+id/textViewModelo"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/spinnerMarca"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="40px"/>
+            android:textSize="18sp" />
 
         <Spinner
-            android:layout_width="300px"
-            android:layout_height="70px"
             android:id="@+id/spinnerModelo"
-            android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/textViewMarca"
-            android:layout_marginBottom="10dp"
-            android:layout_toRightOf="@+id/textViewPotencia"
-            android:layout_alignRight="@+id/textViewOpcao"
-            android:layout_alignEnd="@+id/textViewOpcao" />
-
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/versao"
-            android:id="@+id/textViewVersao"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/spinnerModelo"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="40px"/>
+            android:textSize="18sp" />
 
         <Spinner
-            android:layout_width="300px"
-            android:layout_height="70px"
             android:id="@+id/spinnerVersao"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignTop="@+id/textViewVersao"
-            android:layout_marginBottom="10dp"
-            android:layout_alignLeft="@+id/spinnerModelo"
-            android:layout_alignStart="@+id/spinnerModelo"
-            android:layout_alignRight="@+id/spinnerModelo"
-            android:layout_alignEnd="@+id/spinnerModelo" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/mensagemOpcao"
-            android:id="@+id/textViewOpcao"
-            android:layout_below="@+id/spinnerVersao"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40px"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginBottom="8dp"
             android:text="@string/potencia"
-            android:id="@+id/textViewPotencia"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textViewOpcao"
-            android:layout_alignParentLeft="true" />
+            android:textSize="18sp" />
 
-    <Button
+        <Spinner
+            android:id="@+id/spinnerPot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
             android:id="@+id/btnPrevisoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/confirm"
-            android:layout_alignLeft="@+id/btnAddRota"
-            android:layout_alignStart="@+id/btnAddRota"
-            android:layout_marginTop="58dp"
-            android:layout_below="@+id/spinnerPot" />
-
-        <Button
-            android:id="@+id/btnAddRota"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/adicionarRota"
-            android:paddingTop="20px"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    <Spinner
-        android:layout_width="300px"
-        android:layout_height="70px"
-        android:id="@+id/spinnerPot"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/textViewOpcao"
-        android:layout_centerHorizontal="true" />
-
-</RelativeLayout>
-
+            android:text="@string/confirm" />
+    </LinearLayout>
 </ScrollView>
