@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Escolha seu veículo"
             android:id="@+id/textView3"
             android:layout_alignParentTop="true"
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/marca"
             android:id="@+id/textViewMarca"
             android:layout_below="@+id/textView3"
@@ -35,6 +35,7 @@
             android:layout_height="70px"
             android:id="@+id/spinnerMarca"
             android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:layout_alignTop="@+id/textViewMarca"
             android:layout_marginBottom="10dp"
             android:layout_alignLeft="@+id/spinnerModelo"
@@ -45,7 +46,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/modelo"
             android:id="@+id/textViewModelo"
             android:layout_alignParentStart="true"
@@ -58,6 +59,7 @@
             android:layout_height="70px"
             android:id="@+id/spinnerModelo"
             android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/textViewMarca"
             android:layout_marginBottom="10dp"
             android:layout_toRightOf="@+id/textViewPotencia"
@@ -68,7 +70,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/versao"
             android:id="@+id/textViewVersao"
             android:layout_alignParentStart="true"
@@ -81,6 +83,7 @@
             android:layout_height="70px"
             android:id="@+id/spinnerVersao"
             android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:layout_alignTop="@+id/textViewVersao"
             android:layout_marginBottom="10dp"
             android:layout_alignLeft="@+id/spinnerModelo"
@@ -91,7 +94,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/mensagemOpcao"
             android:id="@+id/textViewOpcao"
             android:layout_below="@+id/spinnerVersao"
@@ -101,7 +104,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/potencia"
             android:id="@+id/textViewPotencia"
             android:layout_alignParentStart="true"

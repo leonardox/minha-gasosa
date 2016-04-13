@@ -4,18 +4,13 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
-import static org.hamcrest.core.AllOf.allOf;
 
-/**
- * Created by elyer on 10/04/2016.
- */
 public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public UITest() {
@@ -151,5 +146,100 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
 
         onView(withId(R.id.spinner)).perform(click());//clica no spinner de porcetagem de tanque
         onView(withText("60")).perform(click());
+    }
+
+    //INICIO DOS TESTES DA ACTIVITY ADIÇÃO DE ROTAS
+
+    public void test_I_AdicaoDeNovaRotaIda() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Primeira Rota"));//digita o nome da rota
+        onView(withId(R.id.check_route)).perform(click());//clica no checkbox so de ida
+
+        sleep(1000);
+        onView(withId(R.id.et_distance_going)).perform(typeText("5"));
+
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+    }
+
+    public void test_J_AdicaoDeNovaRotaIdaVolta() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Segunda Rota"));//digita o nome da rota
+
+        sleep(1000);
+        onView(withId(R.id.et_distance_going)).perform(typeText("5"));
+        onView(withId(R.id.et_distance_comeback)).perform(typeText("5"));
+
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+    }
+
+    public void test_K_AdicaoDeNovaRotaIdaVoltaRepeticoes() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Terceira Rota"));//digita o nome da rota
+
+        sleep(1000);
+        onView(withId(R.id.et_distance_going)).perform(typeText("10"));
+        onView(withId(R.id.et_distance_comeback)).perform(typeText("10"));
+
+        onView(withId(R.id.check_repeats)).perform(click());//clica no checkbox so de repeticoes
+        onView(withId(R.id.ed_times_routes)).perform(typeText("2"));
+
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+    }
+
+    public void test_L_AdicaoDeNovaRotaSemNome() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+        onView(withId(R.id.check_route)).perform(click());
+        onView(withId(R.id.et_distance_going)).perform(typeText("10"));
+
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+        sleep(500);
+    }
+
+    public void test_M_AdicaoDeNovaRotaSemDistancia() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Terceira Rota"));//digita o nome da rota
+        onView(withId(R.id.check_route)).perform(click());
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+        sleep(500);
+    }
+
+    public void test_N_AdicaoDeNovaRotaSemNumeroRepeticoes() throws InterruptedException {
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Terceira Rota"));//digita o nome da rota
+        onView(withId(R.id.check_route)).perform(click());
+        onView(withId(R.id.et_distance_going)).perform(typeText("10"));
+
+        onView(withId(R.id.check_repeats)).perform(click());//clica no checkbox so de repeticoes
+        onView(withId(R.id.done_route)).perform(click());
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
+        sleep(500);
     }
 }
