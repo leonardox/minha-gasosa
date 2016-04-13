@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@string/marca"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:id="@+id/textView3" />
 
         <Spinner
             android:id="@+id/spinnerMarca"
