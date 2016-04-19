@@ -80,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, RoutesActivity.class);
                 startActivity(intent);
+
                 //Toast.makeText(HomeActivity.this, "Ação de adicionar rota aqui...", Toast.LENGTH_SHORT).show();
             }
         });
@@ -236,6 +237,9 @@ public class HomeActivity extends AppCompatActivity {
             Intent i = new Intent(this, MapsActivity.class);
             Toast.makeText(HomeActivity.this, "Isso é só um teste, esse botão de mapinha vai sumir...", Toast.LENGTH_LONG).show();
             startActivity(i);
+        } else if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(HomeActivity.this, PieChartActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
