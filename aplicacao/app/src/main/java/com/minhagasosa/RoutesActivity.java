@@ -1,5 +1,7 @@
 package com.minhagasosa;
 
+import android.app.job.JobParameters;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,11 +16,17 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
+import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,9 +194,9 @@ public class RoutesActivity extends AppCompatActivity {
                 if (listaRotas.get(i).getRepeteSemana()) {
                     atual = atual * listaRotas.get(i).getRepetoicoes();
                 }
-            }else {
+            } else {
                 atual = listaRotas.get(i).getDistanciaIda();
-                if(listaRotas.get(i).getRepeteSemana()) {
+                if (listaRotas.get(i).getRepeteSemana()) {
                     atual = atual * listaRotas.get(i).getRepetoicoes();
                 }
             }
@@ -207,10 +215,10 @@ public class RoutesActivity extends AppCompatActivity {
                     Rota r = new Rota();
                     r.setId(c.getLong(0));
                     r.setNome(c.getString(1));
-                    r.setIdaEVolta(c.getInt(2)!=0);
+                    r.setIdaEVolta(c.getInt(2) != 0);
                     r.setDistanciaIda(c.getFloat(3));
                     r.setDistanciaVolta(c.getFloat(4));
-                    r.setRepeteSemana(c.getInt(5)!=0);
+                    r.setRepeteSemana(c.getInt(5) != 0);
                     r.setRepetoicoes(c.getInt(6));
                     result.add(r);
                 } while (c.moveToNext());
@@ -219,5 +227,28 @@ public class RoutesActivity extends AppCompatActivity {
             c.close();
         }
         return result;
+    }
+
+    private Float somaDistanciasRotaJSON(String json) {
+        Float soma = 0.0f;
+        try {
+            JSONObject result = new JSONObject(json);
+
+            JSONArray rotas = result.getJSONArray("routes");
+            for (int i = 0; i < rotas.length(); i++) {
+                JSONObject rotaJson = rotas.getJSONObject(i);
+                JSONArray legs = rotaJson.getJSONArray("legs");
+                for (int j = 0; j < legs.length(); j++) {
+                    JSONObject leg = legs.getJSONObject(j);
+                    JSONObject distance = leg.getJSONObject("distance");
+                    soma += distance.getInt("value");
+                    break;
+                }
+            }
+        } catch (JSONException e) {
+            System.out.print("TRETAOO");
+            e.printStackTrace();
+        }
+        return soma;
     }
 }
