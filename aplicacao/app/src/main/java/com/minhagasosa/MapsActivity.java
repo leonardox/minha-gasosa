@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -165,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         // Parsing the data in non-ui thread
         @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+        protected List<List<HashMap<String, String>>> doInBackground(final String... jsonData) {
 
             final JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
@@ -179,7 +181,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 routes = parser.parse(jObject);
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(mContext, jObject.toString(), Toast.LENGTH_SHORT).show();
+                        float soma = somaDistanciasRotaJSON(jsonData[0]);
+                        Toast.makeText(mContext, "distancia: " + soma, Toast.LENGTH_SHORT).show();
                         //Chamar método de léo aqui...
                     }
                 });
@@ -248,6 +251,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(mDesenhoRota != null) mDesenhoRota.remove();
             mDesenhoRota = mMap.addPolyline(lineOptions);
         }
+    }
+
+    private Float somaDistanciasRotaJSON(String json) {
+        Float soma = 0.0f;
+        try {
+            JSONObject result = new JSONObject(json);
+
+            JSONArray rotas = result.getJSONArray("routes");
+            for (int i = 0; i < rotas.length(); i++) {
+                JSONObject rotaJson = rotas.getJSONObject(i);
+                JSONArray legs = rotaJson.getJSONArray("legs");
+                for (int j = 0; j < legs.length(); j++) {
+                    JSONObject leg = legs.getJSONObject(j);
+                    JSONObject distance = leg.getJSONObject("distance");
+                    soma += distance.getInt("value");
+                    break;
+                }
+            }
+        } catch (JSONException e) {
+            System.out.print("TRETAOO");
+            e.printStackTrace();
+        }
+        return soma;
     }
 
     /** A method to download json data from url */
