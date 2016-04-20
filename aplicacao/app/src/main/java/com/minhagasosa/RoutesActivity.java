@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoutesActivity extends AppCompatActivity {
     private CheckBox checkRepeat;
@@ -173,22 +176,21 @@ public class RoutesActivity extends AppCompatActivity {
         if (checkRepeat.isChecked()) {
             return Integer.parseInt(timesRouteWrapper.getEditText().getText().toString());
         } else {
-            // // FIXME: 09/04/2016 Qual o valor default válido aqui?
             return 0;
         }
     }
 
     public String getRouteTitle() {
-        return timesRouteWrapper.getEditText().getText().toString();
+        return routeTitleWrapper.getEditText().getText().toString();
     }
-
-    private void calculaDistanciaTotal(DaoSession session) {
+    private List<Pair<String,Float>> calculaDistanciaPorRota(DaoSession session){
         String select = "SELECT * FROM ROTA";
-        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
 
-        float soma = 0.0f;
+        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
+        List<Pair<String,Float>> listaRotaDistancia = new ArrayList<>();
+
         for (int i = 0; i < listaRotas.size(); i++) {
-            double atual;
+            float atual;
             if (listaRotas.get(i).getIdaEVolta()) {
                 atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
                 if (listaRotas.get(i).getRepeteSemana()) {
@@ -200,9 +202,42 @@ public class RoutesActivity extends AppCompatActivity {
                     atual = atual * listaRotas.get(i).getRepetoicoes();
                 }
             }
-            soma += atual;
+            Log.e("RoutesDistancia","Indice: " + i + " " + listaRotas.get(i).getNome() + ": " + atual);
+            listaRotaDistancia.add(new Pair<>(listaRotas.get(i).getNome(), atual));
+        }
+        return listaRotaDistancia;
+    }
+    //CALCULO SEMANAL
+    private void calculaDistanciaTotal(DaoSession session) {
+        List<Pair<String,Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
+        float soma = 0.0f;
+
+        for (int i = 0; i < listaRotaDistancia.size(); i++) {
+            soma += listaRotaDistancia.get(i).second;
         }
         MinhaGasosaPreference.setDistanciaTotal(soma, getApplicationContext());
+    }
+
+    /**
+     * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
+     * @param session
+     * @return
+     */
+    private List<Pair<String,Float>> calculaPrincipaisRotas(DaoSession session) {
+        List<Pair<String,Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
+        List<Pair<String,Float>> listaOrdenada = new ArrayList<>();
+
+        while (listaOrdenada.size() < 3 && listaRotaDistancia.size() != 0) {
+            int index = 0;
+            for (int i = 0; i < listaRotaDistancia.size(); i++) {
+                if (listaRotaDistancia.get(i).second > listaRotaDistancia.get(index).second) {
+                    index = i;
+                }
+            }
+            Log.e("RotasPrincipais", "RotaPrincipal: " + listaRotaDistancia.get(index).first);
+            listaOrdenada.add(listaRotaDistancia.remove(index));
+        }
+        return listaOrdenada;
     }
 
     private static List<Rota> listRotas(DaoSession session, String select) {
@@ -228,5 +263,4 @@ public class RoutesActivity extends AppCompatActivity {
         }
         return result;
     }
-
 }

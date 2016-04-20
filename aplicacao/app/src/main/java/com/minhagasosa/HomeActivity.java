@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -183,8 +184,10 @@ public class HomeActivity extends AppCompatActivity {
             float precoPrincipal = Float.parseFloat(priceFuelEditText.getText().toString());
             //float distancias = 150.0f;
             float distancias = MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
+            Log.d("HomeActivity", "Distancias: " + distancias);
             float consumoUrbano = MinhaGasosaPreference.
                     getConsumoUrbanoPrimario(getApplicationContext());
+            Log.d("HomeActivity", "Consumo: " + consumoUrbano);
             float result = (distancias / consumoUrbano) * precoPrincipal;
             consumoS.setText("R$ " + df.format(result));
             consumoM.setText("R$ " + df.format(result * 4));
