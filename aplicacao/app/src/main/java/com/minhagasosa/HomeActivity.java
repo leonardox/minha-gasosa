@@ -7,7 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -31,11 +34,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.minhagasosa.preferences.MinhaGasosaPreference;
-
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -59,8 +57,8 @@ public class HomeActivity extends AppCompatActivity {
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
 
     private PieChart mChart;
-    private float[] yData = { 5, 10, 15};
-    private String[] xData = { "Academia", "Trabalho", "Faculdade"};
+    private float[] yData = {5, 10, 15};
+    private String[] xData = {"Academia", "Trabalho", "Faculdade"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,26 +262,39 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void addChart() {
-
         mChart = (PieChart) findViewById(R.id.chart1);
-        // add pie chart to main layout
-        // configure pie chart
         mChart.setUsePercentValues(true);
         mChart.setDescription("");
+        mChart.setExtraOffsets(5, 10, 5, 5);
 
-        // enable hole and configure
+        mChart.setDragDecelerationFrictionCoef(0.95f);
+
+        //tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+
+        // mChart.setCenterTextTypeface(Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf"));
+        mChart.setCenterText(generateCenterSpannableText());
+
         mChart.setDrawHoleEnabled(true);
-//        mChart.setHoleColorTransparent(true);
-        mChart.setHoleRadius(70);
-        mChart.setTransparentCircleRadius(10);
+        mChart.setHoleColor(Color.WHITE);
 
-        // enable rotation of the chart by touch
+        mChart.setTransparentCircleColor(Color.WHITE);
+        mChart.setTransparentCircleAlpha(110);
+
+        mChart.setHoleRadius(58f);
+        mChart.setTransparentCircleRadius(61f);
+
+        mChart.setDrawCenterText(true);
+
         mChart.setRotationAngle(0);
+        // enable rotation of the chart by touch
         mChart.setRotationEnabled(true);
+        mChart.setHighlightPerTapEnabled(true);
 
-        // set a chart value selected listener
+        // mChart.setUnit(" €");
+        // mChart.setDrawUnitsInChart(true);
+
+        // add a selection listener
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
             @Override
@@ -302,16 +313,23 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // add data
         addDataToUseInPieChart();
 
-        // customize legends
+        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        // mChart.spin(2000, 0, 360);
+
         Legend l = mChart.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
     }
 
+    private CharSequence generateCenterSpannableText() {
+        SpannableString s = new SpannableString("R$");
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 2, 0);
+        return s;
+    }
 
     private void addDataToUseInPieChart() {
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
@@ -325,26 +343,24 @@ public class HomeActivity extends AppCompatActivity {
             xVals.add(xData[i]);
 
         // create pie data set
-        PieDataSet dataSet = new PieDataSet(yVals1, "Principais Rotas");
+        PieDataSet dataSet = new PieDataSet(yVals1, "");
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(3);
 
-        // add many colors
+        // add colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        int[] COLORS = {
-                Color.rgb(75, 0, 130), Color.rgb(30, 144, 255), Color.rgb(127, 255, 212),
-                Color.rgb(140, 234, 255), Color.rgb(255, 140, 157)
-        };
 
-        for (int c : COLORS)
+        for (int c : ColorTemplate.VORDIPLOM_COLORS) {
             colors.add(c);
+        }
+
         colors.add(ColorTemplate.getHoloBlue());
         dataSet.setColors(colors);
 
         // instantiate pie data object now
         PieData data = new PieData(xVals, dataSet);
         data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(18);
+        data.setValueTextSize(11f);
         data.setValueTextColor(Color.GRAY);
 
         mChart.setData(data);

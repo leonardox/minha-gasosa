@@ -48,5 +48,6 @@
     <string name="Destiny">Destino</string>
     <string name="origin">Origem</string>
     <string name="choice_vehicle">Escolha seu veículo</string>
+    <string name="consumo_principais_rotas">Consumo Nas Principais Rotas</string>
 
 </resources>
