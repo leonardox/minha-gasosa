@@ -1,6 +1,7 @@
 package com.minhagasosa;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +22,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.minhagasosa.preferences.MinhaGasosaPreference;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
     EditText priceFuelEditText;
@@ -41,6 +57,10 @@ public class HomeActivity extends AppCompatActivity {
     Spinner spinner_porcentagem2;
     String[] porcento = {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50",
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
+
+    private PieChart mChart;
+    private float[] yData = { 5, 10, 15};
+    private String[] xData = { "Academia", "Trabalho", "Faculdade"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +195,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+        addChart();
     }
 
     private void gerarPrevisao() {
@@ -241,5 +262,97 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void addChart() {
+
+        mChart = (PieChart) findViewById(R.id.chart1);
+        // add pie chart to main layout
+        // configure pie chart
+        mChart.setUsePercentValues(true);
+        mChart.setDescription("");
+
+        // enable hole and configure
+        mChart.setDrawHoleEnabled(true);
+//        mChart.setHoleColorTransparent(true);
+        mChart.setHoleRadius(70);
+        mChart.setTransparentCircleRadius(10);
+
+        // enable rotation of the chart by touch
+        mChart.setRotationAngle(0);
+        mChart.setRotationEnabled(true);
+
+        // set a chart value selected listener
+        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                // display msg when value selected
+                if (e == null)
+                    return;
+
+                Toast.makeText(HomeActivity.this,
+                        xData[e.getXIndex()] + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        // add data
+        addDataToUseInPieChart();
+
+        // customize legends
+        Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        l.setXEntrySpace(7);
+        l.setYEntrySpace(5);
+    }
+
+
+    private void addDataToUseInPieChart() {
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+
+        for (int i = 0; i < yData.length; i++)
+            yVals1.add(new Entry(yData[i], i));
+
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < xData.length; i++)
+            xVals.add(xData[i]);
+
+        // create pie data set
+        PieDataSet dataSet = new PieDataSet(yVals1, "Principais Rotas");
+        dataSet.setSliceSpace(3);
+        dataSet.setSelectionShift(3);
+
+        // add many colors
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        int[] COLORS = {
+                Color.rgb(75, 0, 130), Color.rgb(30, 144, 255), Color.rgb(127, 255, 212),
+                Color.rgb(140, 234, 255), Color.rgb(255, 140, 157)
+        };
+
+        for (int c : COLORS)
+            colors.add(c);
+        colors.add(ColorTemplate.getHoloBlue());
+        dataSet.setColors(colors);
+
+        // instantiate pie data object now
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(18);
+        data.setValueTextColor(Color.GRAY);
+
+        mChart.setData(data);
+
+        // undo all highlights
+        mChart.highlightValues(null);
+
+        // update pie chart
+        mChart.invalidate();
     }
 }
