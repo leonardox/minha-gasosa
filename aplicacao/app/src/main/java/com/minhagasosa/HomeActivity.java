@@ -258,6 +258,12 @@ public class HomeActivity extends AppCompatActivity {
             Intent i = new Intent(this, MapsActivity.class);
             Toast.makeText(HomeActivity.this, "Isso é só um teste, esse botão de mapinha vai sumir...", Toast.LENGTH_LONG).show();
             startActivity(i);
+
+        }else if(item.getItemId() == R.id.set_planning){
+            Intent i = new Intent(this,PlanningActivity.class);
+            startActivity(i);
+
+
         }
         return super.onOptionsItemSelected(item);
     }
