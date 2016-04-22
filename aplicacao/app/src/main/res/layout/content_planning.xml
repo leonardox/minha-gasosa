@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:ems="10"
-        android:id="@+id/editText2"
+        android:id="@+id/ed_valor_maximo"
         android:layout_marginTop="41dp"
         android:layout_below="@+id/textViewMessageFuel"
         android:layout_alignRight="@+id/textViewPlanejamento"
@@ -51,10 +51,10 @@
         android:text="R$"
         android:gravity="center_vertical"
         android:id="@+id/textViewR$"
-        android:layout_alignBottom="@+id/editText2"
-        android:layout_toLeftOf="@+id/editText2"
-        android:layout_toStartOf="@+id/editText2"
-        android:layout_alignTop="@+id/editText2" />
+        android:layout_alignBottom="@+id/ed_valor_maximo"
+        android:layout_toLeftOf="@+id/ed_valor_maximo"
+        android:layout_toStartOf="@+id/ed_valor_maximo"
+        android:layout_alignTop="@+id/ed_valor_maximo" />
 
     <Button
         android:layout_width="wrap_content"
@@ -62,6 +62,6 @@
         android:text="OK"
         android:id="@+id/buttonOK"
         android:layout_marginTop="89dp"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/ed_valor_maximo"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

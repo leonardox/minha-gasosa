@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     private PieChart mChart;
     private float[] yData = {5, 10, 15};
     private String[] xData = {"Academia", "Trabalho", "Faculdade"};
+    private final int VALOR_MAXIMO_REQUEST = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +197,16 @@ public class HomeActivity extends AppCompatActivity {
         addChart();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VALOR_MAXIMO_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String valorSalvo = "valor máximo: " + MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
+                Toast.makeText(HomeActivity.this, valorSalvo, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void gerarPrevisao() {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
@@ -259,11 +270,10 @@ public class HomeActivity extends AppCompatActivity {
             Toast.makeText(HomeActivity.this, "Isso é só um teste, esse botão de mapinha vai sumir...", Toast.LENGTH_LONG).show();
             startActivity(i);
 
-        }else if(item.getItemId() == R.id.set_planning){
-            Intent i = new Intent(this,PlanningActivity.class);
-            startActivity(i);
-
-
+        } else if (item.getItemId() == R.id.set_planning) {
+            Intent intent = new Intent(this, PlanningActivity.class);
+            startActivityForResult(intent, VALOR_MAXIMO_REQUEST);
+//            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
