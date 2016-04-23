@@ -60,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     private float[] yData = {5, 10, 15};
     private String[] xData = {"Academia", "Trabalho", "Faculdade"};
     private final int VALOR_MAXIMO_REQUEST = 101;
+    private float valorMaximoGastar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,15 +195,21 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        recuperaValorMaximo();
         addChart();
+    }
+
+    private void recuperaValorMaximo() {
+        valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VALOR_MAXIMO_REQUEST) {
             if (resultCode == RESULT_OK) {
-                String valorSalvo = "valor máximo: " + MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
-                Toast.makeText(HomeActivity.this, valorSalvo, Toast.LENGTH_SHORT).show();
+                valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
+                addAvisoConsumo();
             }
         }
     }
@@ -210,45 +217,132 @@ public class HomeActivity extends AppCompatActivity {
     private void gerarPrevisao() {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
+        float previsaoConsumoMensal = 0;
         if (checkFlex.isChecked() == false) {
-            float precoPrincipal = Float.parseFloat(priceFuelEditText.getText().toString());
-            //float distancias = 150.0f;
-            float distancias = MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
+            float precoPrincipal = getPrecoPrincipal();
+            float distancias = getDistanciaTotal();
             Log.d("HomeActivity", "Distancias: " + distancias);
-            float consumoUrbano = MinhaGasosaPreference.
-                    getConsumoUrbanoPrimario(getApplicationContext());
+
+            float consumoUrbano = getConsumoUrbano();
             Log.d("HomeActivity", "Consumo: " + consumoUrbano);
-            float result = (distancias / consumoUrbano) * precoPrincipal;
-            consumoS.setText("R$ " + df.format(result));
-            consumoM.setText("R$ " + df.format(result * 4));
+
+            float valorPrevistoSemana = calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano);
+            previsaoConsumoMensal = calculaPrevisaoMesNorlmal(precoPrincipal, distancias, consumoUrbano);
+            consumoS.setText("R$ " + df.format(valorPrevistoSemana));
+            consumoM.setText("R$ " + df.format(previsaoConsumoMensal));
         } else {
-            float precoPrincipal = 0.0f;
-            if (!priceFuelEditText.getText().toString().isEmpty()) {
-                precoPrincipal = Float.parseFloat(priceFuelEditText.getText().toString());
-            }
-            float precoSecundario = 0.0f;
-            if (!priceFuelEditText2.getText().toString().isEmpty()) {
-                precoSecundario = Float.parseFloat(priceFuelEditText2.getText().toString());
-            }
-            float distancias = 100.0f;
-            float consumoUrbano = MinhaGasosaPreference.
-                    getConsumoUrbanoPrimario(getApplicationContext());
-            float consumoUrbanoSecundario = MinhaGasosaPreference.
-                    getConsumoUrbanoSecundario(getApplicationContext());
-            int porcentagemPrincipal = Integer.parseInt(
-                    spinner_porcentagem1.getSelectedItem().toString());
-            int porcentagemSecundaria = Integer.parseInt(
-                    spinner_porcentagem2.getSelectedItem().toString());
-            float result = 0.0f;
-            if (porcentagemPrincipal != 0 || porcentagemSecundaria != 0) {
-                float autonomia = (distancias / (((consumoUrbano * porcentagemPrincipal) / 100) +
-                        ((consumoUrbanoSecundario * porcentagemSecundaria) / 100)));
-                result = ((((autonomia * porcentagemPrincipal) / 100) * precoPrincipal) +
-                        (((autonomia * porcentagemSecundaria) / 100) * precoSecundario));
-            }
-            consumoS.setText("R$ " + df.format(result));
-            consumoM.setText("R$ " + df.format(result * 4));
+            float precoPrincipal = getPrecoPrincipal();
+            float precoSecundario = getPrecoSecundario();
+            float distancias = getDistanciaTotal();
+            Log.d("HomeActivity", "Distancias: " + distancias);
+            float consumoUrbano = getConsumoUrbano();
+            float consumoUrbanoSecundario = getConsumoUrbanoSecundario();
+            int porcentagemPrincipal = getPorcentagemPrincipal();
+            int porcentagemSecundaria = getPorcentagemSecundaria();
+            float valorPrevistoSemanal = calculaPrevisaoSemanalNormal(porcentagemPrincipal,
+                    porcentagemSecundaria, distancias, consumoUrbano, consumoUrbanoSecundario,
+                    precoPrincipal, precoSecundario);
+            previsaoConsumoMensal = calculaPrevisaoMensalFlex(porcentagemPrincipal,
+                    porcentagemSecundaria, distancias, consumoUrbano, consumoUrbanoSecundario,
+                    precoPrincipal, precoSecundario);
+
+            consumoS.setText("R$ " + df.format(valorPrevistoSemanal));
+            consumoM.setText("R$ " + df.format(previsaoConsumoMensal));
         }
+
+        addAvisoConsumo(previsaoConsumoMensal);
+    }
+
+    private void addAvisoConsumo() {
+        float previsaoConsumoMensal = 0;
+        if (checkFlex.isChecked()) {
+            // se for flex.
+            previsaoConsumoMensal = calculaPrevisaoMensalFlex(getPorcentagemPrincipal(), getPorcentagemSecundaria(),
+                    getDistanciaTotal(), getConsumoUrbano(), getConsumoUrbanoSecundario(),
+                    getPrecoPrincipal(), getPrecoSecundario());
+        } else {
+            // se não for.
+            previsaoConsumoMensal = calculaPrevisaoMesNorlmal(getPrecoPrincipal(), getDistanciaTotal(), getConsumoUrbano());
+        }
+
+        addAvisoConsumo(previsaoConsumoMensal);
+    }
+
+    private void addAvisoConsumo(float previsaoConsumoMensal) {
+        if (previsaoConsumoMensal >= valorMaximoGastar) {
+            Toast.makeText(HomeActivity.this, "Atenção! Você pode estar gastando mais do que " +
+                    valorMaximoGastar, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private float getPrecoPrincipal() {
+        if (!priceFuelEditText.getText().toString().isEmpty()) {
+            return Float.parseFloat(priceFuelEditText.getText().toString());
+        }
+        return 0.0f;
+    }
+
+    private float getPrecoSecundario() {
+        if (!priceFuelEditText2.getText().toString().isEmpty()) {
+            return Float.parseFloat(priceFuelEditText2.getText().toString());
+        }
+        return 0.0f;
+    }
+
+    private float getDistanciaTotal() {
+        return MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
+    }
+
+    private float getConsumoUrbano() {
+        return MinhaGasosaPreference.
+                getConsumoUrbanoPrimario(getApplicationContext());
+    }
+
+    private int getPorcentagemPrincipal() {
+        return Integer.parseInt(
+                spinner_porcentagem1.getSelectedItem().toString());
+    }
+
+    private int getPorcentagemSecundaria() {
+        return Integer.parseInt(
+                spinner_porcentagem2.getSelectedItem().toString());
+    }
+
+    private float calculaPrevisaoSemanalNormal(float precoPrincipal, float distancias, float consumoUrbano) {
+        return (distancias / consumoUrbano) * precoPrincipal;
+    }
+
+    private float calculaPrevisaoMesNorlmal(float precoPrincipal, float distancias, float consumoUrbano) {
+        return calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano) * 4;
+    }
+
+    private float calculaPrevisaoSemanalNormal(float porcentagemPrincipal, float porcentagemSecundaria,
+                                               float distancias, float consumoUrbano,
+                                               float consumoUrbanoSecundario, float precoPrincipal,
+                                               float precoSecundario) {
+        float result = 0.0f;
+        if (porcentagemPrincipal != 0 || porcentagemSecundaria != 0) {
+            float autonomia = (distancias / (((consumoUrbano * porcentagemPrincipal) / 100) +
+                    ((consumoUrbanoSecundario * porcentagemSecundaria) / 100)));
+            result = ((((autonomia * porcentagemPrincipal) / 100) * precoPrincipal) +
+                    (((autonomia * porcentagemSecundaria) / 100) * precoSecundario));
+        }
+        return result;
+    }
+
+    public float getConsumoUrbanoSecundario() {
+        return MinhaGasosaPreference.
+                getConsumoUrbanoSecundario(getApplicationContext());
+    }
+
+    private float calculaPrevisaoMensalFlex(float porcentagemPrincipal, float porcentagemSecundaria,
+                                            float distancias, float consumoUrbano,
+                                            float consumoUrbanoSecundario, float precoPrincipal,
+                                            float precoSecundario) {
+
+        return calculaPrevisaoSemanalNormal(porcentagemPrincipal,
+                porcentagemSecundaria, distancias, consumoUrbano, consumoUrbanoSecundario,
+                precoPrincipal, precoSecundario) * 4;
     }
 
     @Override
@@ -273,7 +367,6 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.set_planning) {
             Intent intent = new Intent(this, PlanningActivity.class);
             startActivityForResult(intent, VALOR_MAXIMO_REQUEST);
-//            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
