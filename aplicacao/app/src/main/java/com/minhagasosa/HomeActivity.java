@@ -80,8 +80,8 @@ public class HomeActivity extends AppCompatActivity {
         porcentagem1.setVisibility(View.GONE);
         porcentagem2 = (TextView) findViewById(R.id.textView11);
         porcentagem2.setVisibility(View.GONE);
-        consumoS = (TextView) findViewById(R.id.textView7);
-        consumoM = (TextView) findViewById(R.id.textView6);
+        consumoS = (TextView) findViewById(R.id.tv_consumo_semanal_valor);
+        consumoM = (TextView) findViewById(R.id.tv_consumo_mensal_valor);
         porcento1 = (TextView) findViewById(R.id.textView2);
         porcento1.setVisibility(View.GONE);
         porcento2 = (TextView) findViewById(R.id.textView12);
