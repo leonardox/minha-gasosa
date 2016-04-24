@@ -49,11 +49,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker mDestinyMark;
     Polyline mDesenhoRota;
     private LatLng mCityLatLng;
+    private boolean mIdaEvolta;
     private FloatingActionButton mFab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mIdaEvolta = true;
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -122,8 +124,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         Context mContext;
-
-        public DownloadTask(Context c){
+        boolean mIsVolta;
+        public DownloadTask(Context c, boolean isVolta){
+            mIsVolta = isVolta;
             mContext = c;
         }
         // Downloading data in non-ui thread
@@ -148,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            ParserTask parserTask = new ParserTask(mContext);
+            ParserTask parserTask = new ParserTask(mContext, mIsVolta);
 
             // Invokes the thread for parsing the JSON data
             parserTask.execute(result);
@@ -161,8 +164,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /** A class to parse the Google Places in JSON format */
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
         Context mContext;
-
-        public ParserTask(Context c){
+        boolean mIsVolta;
+        public ParserTask(Context c, boolean isVolta){
+            mIsVolta = isVolta;
             mContext = c;
         }
         // Parsing the data in non-ui thread
@@ -241,14 +245,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(2);
-                lineOptions.color(Color.RED);
-
+                if(!mIsVolta){
+                    lineOptions.color(Color.RED);
+                }else{
+                    lineOptions.color(Color.CYAN);
+                }
+                if(mIdaEvolta){
+                    DownloadTask dt = new DownloadTask(mContext, true);
+                    String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
+                    mIdaEvolta = false;
+                    dt.execute(url);
+                }
             }
 
             Log.e("Distance: " + distance, "Duration: " + duration);
             //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
             // Drawing polyline in the Google Map for the i-th route
-            if(mDesenhoRota != null) mDesenhoRota.remove();
+            if(mDesenhoRota != null && !mIsVolta) mDesenhoRota.remove();
             mDesenhoRota = mMap.addPolyline(lineOptions);
         }
     }
@@ -342,10 +355,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if(mDestinyMark != null) mDestinyMark.remove();
                     mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
                     //Toast.makeText(MapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
-                    DownloadTask dt = new DownloadTask(ac);
+                    DownloadTask dt = new DownloadTask(ac, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
                 }else{
+                    mIdaEvolta = true;
                     mOriginMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.origin)));
                     Toast.makeText(MapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
                 }
