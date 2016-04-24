@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     TextView porcento2;
     Spinner spinner_porcentagem1;
     Spinner spinner_porcentagem2;
+    ScrollView layoutMain;
     String[] porcento = {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50",
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
 
@@ -95,6 +98,8 @@ public class HomeActivity extends AppCompatActivity {
         spinner_porcentagem2.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, porcento));
         spinner_porcentagem2.setVisibility(View.GONE);
+
+        layoutMain = (ScrollView) findViewById(R.id.layout_main);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,9 +275,27 @@ public class HomeActivity extends AppCompatActivity {
 
     private void addAvisoConsumo(float previsaoConsumoMensal) {
         if (previsaoConsumoMensal >= valorMaximoGastar) {
-            Toast.makeText(HomeActivity.this, "Atenção! Você pode estar gastando mais do que " +
-                    valorMaximoGastar, Toast.LENGTH_LONG).show();
+            mostraAviso(layoutMain, "Atenção! Você pode estar gastando mais do que " + valorMaximoGastar);
         }
+    }
+
+    private void mostraAviso(View view, String mensagem) {
+        Snackbar snackbar = Snackbar
+                .make(view, mensagem, Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                });
+
+        // Changing message text color
+        snackbar.setActionTextColor(Color.YELLOW);
+
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.RED);
+        snackbar.show();
     }
 
     private float getPrecoPrincipal() {
