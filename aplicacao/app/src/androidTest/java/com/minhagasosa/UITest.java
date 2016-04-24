@@ -36,6 +36,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_B_AlterarModelo() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
 
         onView(withId(R.id.spinnerModelo)).perform(click());//clica no spinner de modelo
@@ -47,13 +48,14 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_C_AlterarVersao() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
 
         //Alterando para uma marca que possua um carro com varias versões
         onView(withId(R.id.spinnerMarca)).perform(click());//clica no spinner de marca
-        onView(withText("Kia")).perform(click());
+        onView(withText("Citroen")).perform(click());
         onView(withId(R.id.spinnerVersao)).perform(click());//clica no spinner de versao
-        onView(withText("EST 2.7")).perform(click());
+        onView(withText("Tendance 1.6 16V")).perform(click());
 
         sleep(1000);
         onView(withId(R.id.btnPrevisoes)).perform(click());
@@ -61,6 +63,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_D_AdicionarPotencia() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
 
         onView(withId(R.id.spinnerPot)).perform(click());
@@ -72,6 +75,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_E_AlterarMarcaModeloEVersao() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
@@ -91,6 +95,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_F_AlterarNenhumDado() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
 
@@ -100,6 +105,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void test_F_AlterarTodosOsDados() throws InterruptedException {
+        sleep(500);
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
         onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
@@ -242,4 +248,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se voltou para a tela de previsoes
         sleep(500);
     }
+
+    //INICIO DOS TESTES DE NOTIFICACAO DE LIMITE DE CONSUMO
+
 }
