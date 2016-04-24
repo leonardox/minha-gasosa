@@ -114,9 +114,10 @@
 
     <Button
         android:layout_width="match_parent"
+        android:id="@+id/button_mapa"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/choise_from_map" />
 
 </LinearLayout>

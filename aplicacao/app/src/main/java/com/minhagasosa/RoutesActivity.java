@@ -14,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.DaoMaster;
@@ -65,7 +67,15 @@ public class RoutesActivity extends AppCompatActivity {
         distanceBackWrapper.setHint(getResources().getString(R.string.dist_come_back));
         timesRouteWrapper.setHint(getResources().getString(R.string.times_routes_week));
         routeTitleWrapper.setHint(getResources().getString(R.string.route_title));
-
+        Button botao_mapa = (Button) findViewById(R.id.button_mapa);
+        botao_mapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RoutesActivity.this, MapsActivity.class);
+                Toast.makeText(RoutesActivity.this, "Isso é só um teste, esse botão de mapinha vai sumir...", Toast.LENGTH_LONG).show();
+                startActivity(i);
+            }
+        });
         checkBoxRoute = (CheckBox) findViewById(R.id.check_route);
         checkBoxRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -183,11 +193,12 @@ public class RoutesActivity extends AppCompatActivity {
     public String getRouteTitle() {
         return routeTitleWrapper.getEditText().getText().toString();
     }
-    private List<Pair<String,Float>> calculaDistanciaPorRota(DaoSession session){
+
+    private List<Pair<String, Float>> calculaDistanciaPorRota(DaoSession session) {
         String select = "SELECT * FROM ROTA";
 
         ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
-        List<Pair<String,Float>> listaRotaDistancia = new ArrayList<>();
+        List<Pair<String, Float>> listaRotaDistancia = new ArrayList<>();
 
         for (int i = 0; i < listaRotas.size(); i++) {
             float atual;
@@ -202,14 +213,15 @@ public class RoutesActivity extends AppCompatActivity {
                     atual = atual * listaRotas.get(i).getRepetoicoes();
                 }
             }
-            Log.e("RoutesDistancia","Indice: " + i + " " + listaRotas.get(i).getNome() + ": " + atual);
+            Log.e("RoutesDistancia", "Indice: " + i + " " + listaRotas.get(i).getNome() + ": " + atual);
             listaRotaDistancia.add(new Pair<>(listaRotas.get(i).getNome(), atual));
         }
         return listaRotaDistancia;
     }
+
     //CALCULO SEMANAL
     private void calculaDistanciaTotal(DaoSession session) {
-        List<Pair<String,Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
         float soma = 0.0f;
 
         for (int i = 0; i < listaRotaDistancia.size(); i++) {
@@ -220,12 +232,13 @@ public class RoutesActivity extends AppCompatActivity {
 
     /**
      * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
+     *
      * @param session
      * @return
      */
-    private List<Pair<String,Float>> calculaPrincipaisRotas(DaoSession session) {
-        List<Pair<String,Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
-        List<Pair<String,Float>> listaOrdenada = new ArrayList<>();
+    private List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session) {
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
+        List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
 
         while (listaOrdenada.size() < 3 && listaRotaDistancia.size() != 0) {
             int index = 0;

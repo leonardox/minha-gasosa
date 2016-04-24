@@ -6,10 +6,6 @@
         android:title="Planejamento de gastos"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/set_route"
-        android:icon="@drawable/ic_map_white_24dp"
-        android:title="Rotas"
-        app:showAsAction="always"/>
     <item android:id="@+id/set_car"
         android:icon="@drawable/ic_time_to_leave_white_24dp"
         android:title="Configurar Carro"
