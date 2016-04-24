@@ -1,8 +1,12 @@
 package com.minhagasosa;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
+
+import junit.framework.Assert;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -250,5 +254,71 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     //INICIO DOS TESTES DE NOTIFICACAO DE LIMITE DE CONSUMO
+    public void test_O_SetarUmValorLimiteAlto() throws InterruptedException {
+        sleep(500);
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
 
+        onView(withId(R.id.set_planning)).perform(click());//clica na opção de setar o limite
+        sleep(500);
+        onView(withText("Planejamento")).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        Float valorMaximo = 200.0f;
+        onView(withId(R.id.ed_valor_maximo)).perform(typeText(valorMaximo.toString()));//clica no spinner de porcetagem de tanque
+        onView(withId(R.id.buttonOK)).perform(click());
+
+        onView(withId(R.id.editTextPrice)).perform(typeText("2"));//digita o preco do combustivo
+        Assert.assertEquals(valorMaximo, getActivity().getValorMaximo());
+        sleep(1000);
+    }
+
+    public void test_P_SetarUmValorLimiteBaixo() throws InterruptedException {
+        sleep(500);
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.set_planning)).perform(click());//clica na opção de setar o limite
+        sleep(500);
+        onView(withText("Planejamento")).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        Float valorMaximo = 10.0f;
+        onView(withId(R.id.ed_valor_maximo)).perform(typeText(valorMaximo.toString()));//clica no spinner de porcetagem de tanque
+        onView(withId(R.id.buttonOK)).perform(click());
+
+        onView(withId(R.id.editTextPrice)).perform(typeText("2"));//digita o preco do combustivo
+        Assert.assertEquals(valorMaximo, getActivity().getValorMaximo());
+        sleep(1000);
+    }
+
+    public void test_Q_SetarUmValorLimiteEAdicionarRota() throws InterruptedException {
+        sleep(500);
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.set_planning)).perform(click());//clica na opção de setar o limite
+        sleep(500);
+        onView(withText("Planejamento")).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        Float valorMaximo = 50.0f;
+        onView(withId(R.id.ed_valor_maximo)).perform(typeText(valorMaximo.toString()));//clica no spinner de porcetagem de tanque
+        onView(withId(R.id.buttonOK)).perform(click());
+
+        onView(withId(R.id.editTextPrice)).perform(typeText("2"));//digita o preco do combustivo
+        Assert.assertEquals(valorMaximo, getActivity().getValorMaximo());
+
+
+        //ADD
+        onView(withId(R.id.fab)).perform(click());
+
+        onView(withText(R.string.type_route)).check(matches(isDisplayed()));//verifica se o texto é mostrado
+
+        onView(withId(R.id.et_route_title)).perform(typeText("Rota Extra"));//digita o nome da rota
+        onView(withId(R.id.check_route)).perform(click());
+        onView(withId(R.id.et_distance_going)).perform(typeText("100"));
+
+        onView(withId(R.id.done_route)).perform(click());
+        sleep(5000);
+
+        onView(withId(R.id.editTextPrice)).perform(clearText());//digita o preco do combustivo
+        onView(withId(R.id.editTextPrice)).perform(typeText("2"));//digita o preco do combustivo
+
+        Assert.assertEquals(valorMaximo, getActivity().getValorMaximo());
+    }
 }

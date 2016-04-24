@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return result;
     }
-
-
+    public float getValorMaximo() {
+        return MinhaGasosaPreference.getValorMaximoParaGastar(MainActivity.this);
+    }
 }
