@@ -151,6 +151,6 @@ public class MinhaGasosaPreference {
     public static float getValorMaximoParaGastar(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getFloat(context.getString(R.string.shared_valor_maximo_gastar), 0.0f);
+        return preferences.getFloat(context.getString(R.string.shared_valor_maximo_gastar), Float.MAX_VALUE);
     }
 }
