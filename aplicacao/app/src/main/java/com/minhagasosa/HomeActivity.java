@@ -1,6 +1,7 @@
 package com.minhagasosa;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,10 +38,17 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.minhagasosa.dao.DaoMaster;
+import com.minhagasosa.dao.DaoSession;
+import com.minhagasosa.dao.Rota;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.minhagasosa.Utils.calculaDistanciaTotal;
+import static com.minhagasosa.Utils.listRotas;
 
 public class HomeActivity extends AppCompatActivity {
     EditText priceFuelEditText;
@@ -71,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        iniciaDistancias();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         secundarioText = (TextView) findViewById(R.id.textView8);
         secundarioText.setVisibility(View.GONE);
@@ -98,7 +107,6 @@ public class HomeActivity extends AppCompatActivity {
         spinner_porcentagem2.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, porcento));
         spinner_porcentagem2.setVisibility(View.GONE);
-
         layoutMain = (ScrollView) findViewById(R.id.layout_main);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //empty
+                gerarPrevisao();
             }
 
             @Override
@@ -128,8 +136,9 @@ public class HomeActivity extends AppCompatActivity {
                 } else {
                     MinhaGasosaPreference.putPrice(Float.valueOf(s.toString()),
                             getApplicationContext());
-                    gerarPrevisao();
+
                 }
+                gerarPrevisao();
             }
         });
         priceFuelEditText2.addTextChangedListener(new TextWatcher() {
@@ -140,14 +149,12 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //empty
+                gerarPrevisao();
             }
 
             @Override
             public void afterTextChanged(final Editable s) {
-                if (!s.toString().isEmpty()) {
                     gerarPrevisao();
-                }
             }
         });
         spinner_porcentagem1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -226,6 +233,7 @@ public class HomeActivity extends AppCompatActivity {
         if (checkFlex.isChecked() == false) {
             float precoPrincipal = getPrecoPrincipal();
             float distancias = getDistanciaTotal();
+            Log.d("HomeActivity", "Preço principal: " + precoPrincipal);
             Log.d("HomeActivity", "Distancias: " + distancias);
 
             float consumoUrbano = getConsumoUrbano();
@@ -345,10 +353,12 @@ public class HomeActivity extends AppCompatActivity {
                                                float precoSecundario) {
         float result = 0.0f;
         if (porcentagemPrincipal != 0 || porcentagemSecundaria != 0) {
-            float autonomia = (distancias / (((consumoUrbano * porcentagemPrincipal) / 100) +
-                    ((consumoUrbanoSecundario * porcentagemSecundaria) / 100)));
-            result = ((((autonomia * porcentagemPrincipal) / 100) * precoPrincipal) +
-                    (((autonomia * porcentagemSecundaria) / 100) * precoSecundario));
+            float gastoPrincipal = (distancias / consumoUrbano) * precoPrincipal;
+            float gastoSecundario = (distancias/ consumoUrbanoSecundario) * precoSecundario;
+            result = (((gastoPrincipal * porcentagemPrincipal)/100) + ((gastoSecundario * porcentagemSecundaria)/100));
+            Log.d("HomeActivity", "consumoUrbano"+consumoUrbano);
+            Log.d("HomeActivity", "consumoS"+consumoUrbanoSecundario);
+            Log.d("HomeActivity", "result"+result);
         }
         return result;
     }
@@ -456,6 +466,14 @@ public class HomeActivity extends AppCompatActivity {
         SpannableString s = new SpannableString("R$");
         s.setSpan(new RelativeSizeSpan(1.7f), 0, 2, 0);
         return s;
+    }
+
+    private void iniciaDistancias(){
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+        calculaDistanciaTotal(session, getApplicationContext());
     }
 
     private void addDataToUseInPieChart() {
