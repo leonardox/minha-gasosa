@@ -12,7 +12,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng mDestinyLocation;
     private Marker mOriginMark;
     private Marker mDestinyMark;
-    Polyline mDesenhoRota;
+    Polyline mDesenhoRotaIda;
+    Polyline mDesenhoRotaVolta;
     private LatLng mCityLatLng;
     private boolean mIdaEvolta;
     private FloatingActionButton mFab;
@@ -55,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        mIdaEvolta = true;
+        mIdaEvolta = false;
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -67,6 +73,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             Toast.makeText(this, getString(R.string.select_origin) ,Toast.LENGTH_LONG).show();
         }
+        mapFragment.setHasOptionsMenu(true);
+        ImageButton btUndo = (ImageButton) findViewById(R.id.undoButton);
+        btUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undo();
+            }
+        });
+        Switch sIdaEVolta = (Switch) findViewById(R.id.switchIdaEVolta);
+        final FragmentActivity self = this;
+        sIdaEVolta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println();
+
+                mIdaEvolta = isChecked;
+                if(mOriginMark != null && mDestinyMark != null){
+                    if(mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
+                    mDesenhoRotaIda = null;
+                    if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
+                    mDesenhoRotaVolta = null;
+                    DownloadTask dt = new DownloadTask(self, false);
+                    String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
+                    dt.execute(url);
+                }
+
+            }
+        });
         final Activity a = this;
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,19 +284,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }else{
                     lineOptions.color(Color.CYAN);
                 }
-                if(mIdaEvolta){
-                    DownloadTask dt = new DownloadTask(mContext, true);
-                    String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
-                    mIdaEvolta = false;
-                    dt.execute(url);
-                }
             }
-
             Log.e("Distance: " + distance, "Duration: " + duration);
             //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
             // Drawing polyline in the Google Map for the i-th route
-            if(mDesenhoRota != null && !mIsVolta) mDesenhoRota.remove();
-            mDesenhoRota = mMap.addPolyline(lineOptions);
+            //if(mDesenhoRotaIda != null && !mIsVolta) mDesenhoRotaIda.remove();
+            if(!mIsVolta){
+                mDesenhoRotaIda = mMap.addPolyline(lineOptions);
+                if(mIdaEvolta){
+                    DownloadTask dt = new DownloadTask(mContext, true);
+                    String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
+                    dt.execute(url);
+                }
+            }else{
+                mDesenhoRotaVolta = mMap.addPolyline(lineOptions);
+            }
+
         }
     }
 
@@ -287,6 +324,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
         return soma;
+    }
+
+    private void undo(){
+        if(mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
+        if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
+        if(mOriginMark != null) mOriginMark.remove();
+        if(mDestinyMark != null) mDestinyMark.remove();
+        mDesenhoRotaIda = null;
+        mDesenhoRotaVolta = null;
+        mOriginMark = null;
+        mDestinyMark = null;
+        mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+        mFab.setClickable(false);
     }
 
     /** A method to download json data from url */
@@ -328,6 +378,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return data;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.map_menu, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.undo_route:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
@@ -350,16 +417,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
 
                 final LatLng location = latLng;
-                if(mOriginMark != null){
+                if(mOriginMark != null && mDestinyMark == null){
                     mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
-                    if(mDestinyMark != null) mDestinyMark.remove();
+                    mFab.setClickable(true);
                     mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
                     //Toast.makeText(MapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
                     DownloadTask dt = new DownloadTask(ac, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
-                }else{
-                    mIdaEvolta = true;
+                }else if(mOriginMark == null){
                     mOriginMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.origin)));
                     Toast.makeText(MapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
                 }

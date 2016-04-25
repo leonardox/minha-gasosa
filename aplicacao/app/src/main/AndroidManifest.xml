@@ -53,7 +53,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/indica_rota"></activity>
+            android:label="@string/indica_rota"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".PlanningActivity"
             android:label="@string/title_activity_planning"
