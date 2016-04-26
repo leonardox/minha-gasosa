@@ -77,4 +77,31 @@ public class Utils {
         }
         MinhaGasosaPreference.setDistanciaTotal(soma, context);
     }
+
+    /**
+     * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
+     *
+     * @param session
+     * @return
+     */
+    public static List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session) {
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
+        List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
+
+        while (listaOrdenada.size() < 3 && listaRotaDistancia.size() != 0) {
+            int index = 0;
+            for (int i = 0; i < listaRotaDistancia.size(); i++) {
+                if (listaRotaDistancia.get(i).second > listaRotaDistancia.get(index).second) {
+                    index = i;
+                }
+            }
+            Log.e("RotasPrincipais", "RotaPrincipal: " + listaRotaDistancia.get(index).first);
+            listaOrdenada.add(listaRotaDistancia.remove(index));
+        }
+
+        if (listaOrdenada.size() == 3) {
+            return listaOrdenada;
+        }
+        return new ArrayList<>();
+    }
 }

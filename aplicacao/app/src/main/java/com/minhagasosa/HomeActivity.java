@@ -40,7 +40,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
-import com.minhagasosa.dao.Rota;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -48,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
-import static com.minhagasosa.Utils.listRotas;
+import static com.minhagasosa.Utils.calculaPrincipaisRotas;
 
 public class HomeActivity extends AppCompatActivity {
     EditText priceFuelEditText;
@@ -69,8 +68,8 @@ public class HomeActivity extends AppCompatActivity {
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
 
     private PieChart mChart;
-    private float[] yData = {5, 10, 15};
-    private String[] xData = {"Academia", "Trabalho", "Faculdade"};
+    private float[] yData = new float[4];
+    private String[] xData = new String[4];
     private final int VALOR_MAXIMO_REQUEST = 101;
     private float valorMaximoGastar;
 
@@ -80,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        iniciaDistancias();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         secundarioText = (TextView) findViewById(R.id.textView8);
         secundarioText.setVisibility(View.GONE);
@@ -154,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(final Editable s) {
-                    gerarPrevisao();
+                gerarPrevisao();
             }
         });
         spinner_porcentagem1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -209,7 +207,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         recuperaValorMaximo();
-        addChart();
     }
 
     private void recuperaValorMaximo() {
@@ -354,11 +351,11 @@ public class HomeActivity extends AppCompatActivity {
         float result = 0.0f;
         if (porcentagemPrincipal != 0 || porcentagemSecundaria != 0) {
             float gastoPrincipal = (distancias / consumoUrbano) * precoPrincipal;
-            float gastoSecundario = (distancias/ consumoUrbanoSecundario) * precoSecundario;
-            result = (((gastoPrincipal * porcentagemPrincipal)/100) + ((gastoSecundario * porcentagemSecundaria)/100));
-            Log.d("HomeActivity", "consumoUrbano"+consumoUrbano);
-            Log.d("HomeActivity", "consumoS"+consumoUrbanoSecundario);
-            Log.d("HomeActivity", "result"+result);
+            float gastoSecundario = (distancias / consumoUrbanoSecundario) * precoSecundario;
+            result = (((gastoPrincipal * porcentagemPrincipal) / 100) + ((gastoSecundario * porcentagemSecundaria) / 100));
+            Log.d("HomeActivity", "consumoUrbano" + consumoUrbano);
+            Log.d("HomeActivity", "consumoS" + consumoUrbanoSecundario);
+            Log.d("HomeActivity", "result" + result);
         }
         return result;
     }
@@ -462,18 +459,41 @@ public class HomeActivity extends AppCompatActivity {
         l.setYOffset(0f);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        iniciaDistancias();
+    }
+
     private CharSequence generateCenterSpannableText() {
         SpannableString s = new SpannableString("R$");
         s.setSpan(new RelativeSizeSpan(1.7f), 0, 2, 0);
         return s;
     }
 
-    private void iniciaDistancias(){
+    private void iniciaDistancias() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession session = daoMaster.newSession();
         calculaDistanciaTotal(session, getApplicationContext());
+        iniciaValoresGrafico(calculaPrincipaisRotas(session), getDistanciaTotal());
+    }
+
+    private void iniciaValoresGrafico(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {
+        if (!principaisRotas.isEmpty()) {
+            xData[0] = principaisRotas.get(0).first;
+            xData[1] = principaisRotas.get(1).first;
+            xData[2] = principaisRotas.get(2).first;
+            xData[3] = "outras";
+
+            yData[0] = principaisRotas.get(0).second;
+            yData[1] = principaisRotas.get(1).second;
+            yData[2] = principaisRotas.get(2).second;
+            yData[3] = distanciaTotal - (yData[0] + yData[1] + yData[2]);
+
+            addChart();
+        }
     }
 
     private void addDataToUseInPieChart() {

@@ -1,15 +1,12 @@
 package com.minhagasosa;
 
-import android.app.job.JobParameters;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,26 +16,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
-import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
-import com.minhagasosa.preferences.MinhaGasosaPreference;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.minhagasosa.Utils.calculaDistanciaPorRota;
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
-import static com.minhagasosa.Utils.listRotas;
 
 public class RoutesActivity extends AppCompatActivity {
     private CheckBox checkRepeat;
@@ -196,28 +179,5 @@ public class RoutesActivity extends AppCompatActivity {
 
     public String getRouteTitle() {
         return routeTitleWrapper.getEditText().getText().toString();
-    }
-
-    /**
-     * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
-     *
-     * @param session
-     * @return
-     */
-    private List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session) {
-        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session);
-        List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
-
-        while (listaOrdenada.size() < 3 && listaRotaDistancia.size() != 0) {
-            int index = 0;
-            for (int i = 0; i < listaRotaDistancia.size(); i++) {
-                if (listaRotaDistancia.get(i).second > listaRotaDistancia.get(index).second) {
-                    index = i;
-                }
-            }
-            Log.e("RotasPrincipais", "RotaPrincipal: " + listaRotaDistancia.get(index).first);
-            listaOrdenada.add(listaRotaDistancia.remove(index));
-        }
-        return listaOrdenada;
     }
 }
