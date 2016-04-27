@@ -22,6 +22,17 @@ import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class RoutesActivity extends AppCompatActivity {
     private CheckBox checkRepeat;
@@ -31,6 +42,7 @@ public class RoutesActivity extends AppCompatActivity {
     private TextInputLayout timesRouteWrapper;
     private TextInputLayout routeTitleWrapper;
     private static final String TAG_ROUTES_ACTIVITY = "RoutesActivity";
+    private final int MAPA_ROTA_REQUEST = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +71,7 @@ public class RoutesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(RoutesActivity.this, MapsActivity.class);
-                Toast.makeText(RoutesActivity.this, "Isso é só um teste, esse botão de mapinha vai sumir...", Toast.LENGTH_LONG).show();
-                startActivity(i);
+                startActivityForResult(i, MAPA_ROTA_REQUEST);
             }
         });
         checkBoxRoute = (CheckBox) findViewById(R.id.check_route);
@@ -93,6 +104,24 @@ public class RoutesActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.distance_menu, menu);
         return true;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case MAPA_ROTA_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    distanceGoingWrapper.getEditText().setText("");
+                    distanceBackWrapper.getEditText().setText("");
+                    Bundle res = data.getExtras();
+                    float ida = res.getFloat("ida", -1);
+                    float volta = res.getFloat("volta" , -1);
+                    DecimalFormat df = new DecimalFormat("##.##");
+                    df.setRoundingMode(RoundingMode.DOWN);
+                    if(ida != -1) distanceGoingWrapper.getEditText().setText(df.format(ida/1000.0));
+                    if(volta != -1) distanceBackWrapper.getEditText().setText(df.format(volta/1000.0));
+                }
+                break;
+        }
     }
 
     @Override

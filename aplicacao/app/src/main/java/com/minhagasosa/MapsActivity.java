@@ -56,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Polyline mDesenhoRotaVolta;
     private LatLng mCityLatLng;
     private boolean mIdaEvolta;
+    float mDistanciaIda = -1;
+    float mDistanciaVolta = -1;
     private FloatingActionButton mFab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mDesenhoRotaIda = null;
                     if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
                     mDesenhoRotaVolta = null;
+                    mDistanciaIda = -1;
+                    mDistanciaVolta = -1;
                     DownloadTask dt = new DownloadTask(self, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
@@ -114,10 +118,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     snack.show();
                 } else {
                     //Calculate route here
-                    mOriginLocation = mOriginMark.getPosition();
-                    mDestinyLocation = mDestinyMark.getPosition();
-                    Toast.makeText(MapsActivity.this, "Origin: " + mOriginLocation.longitude + ", " + mOriginLocation.longitude , Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MapsActivity.this, "Destiny: " + mDestinyLocation.longitude + ", " + mDestinyLocation.longitude , Toast.LENGTH_SHORT).show();
+                    Bundle conData = new Bundle();
+                    conData.putFloat("ida", mDistanciaIda);
+                    conData.putFloat("volta", mDistanciaVolta);
+                    Intent intent = new Intent();
+                    intent.putExtras(conData);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });
@@ -220,7 +227,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 runOnUiThread(new Runnable() {
                     public void run() {
                         float soma = somaDistanciasRotaJSON(jsonData[0]);
-                        Toast.makeText(mContext, "distancia: " + soma, Toast.LENGTH_SHORT).show();
+                        if(mIsVolta){
+                            mDistanciaVolta = somaDistanciasRotaJSON(jsonData[0]);
+                        }else{
+                            mDistanciaIda = somaDistanciasRotaJSON(jsonData[0]);
+                        }
                         //Chamar método de léo aqui...
                     }
                 });
@@ -337,6 +348,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDestinyMark = null;
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         mFab.setClickable(false);
+        mDistanciaIda = -1;
+        mDistanciaVolta = -1;
     }
 
     /** A method to download json data from url */
