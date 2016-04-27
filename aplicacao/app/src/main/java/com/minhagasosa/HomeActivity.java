@@ -400,6 +400,7 @@ public class HomeActivity extends AppCompatActivity {
         mChart = (PieChart) findViewById(R.id.chart1);
         mChart.setUsePercentValues(true);
         mChart.setDescription("");
+        mChart.getLegend().setEnabled(false);
         mChart.setExtraOffsets(5, 10, 5, 5);
 
         mChart.setDragDecelerationFrictionCoef(0.95f);
