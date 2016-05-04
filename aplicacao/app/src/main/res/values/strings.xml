@@ -35,6 +35,7 @@
     <string name="shared_price">shared_price</string>
     <string name="route_title">Nome dessa rota</string>
     <string name="going_and_back">De ida e volta</string>
+    <string name="type_routine_adicional">De rotina</string>
     <string name="repeat_wekly">É repetida semanalmente</string>
     <string name="invalid_name">Nome Inválido</string>
     <string name="invalid_distance">Distância Inválida</string>

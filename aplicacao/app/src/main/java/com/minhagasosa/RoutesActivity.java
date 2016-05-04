@@ -37,6 +37,7 @@ import java.util.Map;
 public class RoutesActivity extends AppCompatActivity {
     private CheckBox checkRepeat;
     private CheckBox checkBoxRoute;
+    private CheckBox checkBoxTypeRoute;
     private TextInputLayout distanceGoingWrapper;
     private TextInputLayout distanceBackWrapper;
     private TextInputLayout timesRouteWrapper;
@@ -82,6 +83,19 @@ public class RoutesActivity extends AppCompatActivity {
                     distanceBackWrapper.setVisibility(View.VISIBLE);
                 } else {
                     distanceBackWrapper.setVisibility(View.GONE);
+                }
+            }
+        });
+        checkBoxRoute = (CheckBox) findViewById(R.id.check_type_route);
+        checkBoxRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    checkRepeat.setVisibility(View.VISIBLE);
+                    timesRouteWrapper.setVisibility(View.VISIBLE);
+                } else {
+                    checkRepeat.setVisibility(View.GONE);
+                    timesRouteWrapper.setVisibility(View.GONE);
                 }
             }
         });
