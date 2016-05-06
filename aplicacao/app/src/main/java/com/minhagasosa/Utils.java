@@ -33,6 +33,7 @@ public class Utils {
                     r.setDistanciaVolta(c.getFloat(4));
                     r.setRepeteSemana(c.getInt(5) != 0);
                     r.setRepetoicoes(c.getInt(6));
+                    r.setDeRotina(c.getInt(7) != 0);
                     result.add(r);
                 } while (c.moveToNext());
             }

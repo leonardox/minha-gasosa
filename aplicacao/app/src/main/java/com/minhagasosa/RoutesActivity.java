@@ -86,8 +86,8 @@ public class RoutesActivity extends AppCompatActivity {
                 }
             }
         });
-        checkBoxRoute = (CheckBox) findViewById(R.id.check_type_route);
-        checkBoxRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBoxTypeRoute = (CheckBox) findViewById(R.id.check_type_route);
+        checkBoxTypeRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -143,7 +143,8 @@ public class RoutesActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.done_route) {
             if (validateFields()) {
                 saveRoute(getRouteTitle(), getDistanceGoing(), getDistanceBack(),
-                        checkBoxRoute.isChecked(), checkRepeat.isChecked(), getRepetitions());
+                        checkBoxRoute.isChecked(), checkRepeat.isChecked(), getRepetitions(),
+                        checkBoxTypeRoute.isChecked());
             } else {
                 Log.d(TAG_ROUTES_ACTIVITY, "no menu, algo foi inválido");
             }
@@ -176,7 +177,7 @@ public class RoutesActivity extends AppCompatActivity {
     }
 
     private void saveRoute(String title, float distanceGoing, float distanceBack, boolean goingBack,
-                           boolean repeats, int repetitions) {
+                           boolean repeats, int repetitions, boolean deRotina) {
 
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -189,13 +190,16 @@ public class RoutesActivity extends AppCompatActivity {
         novaRota.setId(rotaDao.getKey(novaRota));
         Log.d("RoutesActivity", "id da rota inserida: " + novaRota.getId());
         Log.d("RoutesActivity", "id da rota inserida no bd: " + rotaDao.getKey(novaRota));
+
         novaRota.setNome(title);
         novaRota.setDistanciaIda(distanceGoing);
         novaRota.setIdaEVolta(goingBack);
         novaRota.setDistanciaVolta(distanceBack);
         novaRota.setRepeteSemana(repeats);
         novaRota.setRepetoicoes(repetitions);
+        novaRota.setDeRotina(deRotina);
         rotaDao.update(novaRota);
+
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
         calculaDistanciaTotal(session, getApplicationContext());
         onBackPressed();

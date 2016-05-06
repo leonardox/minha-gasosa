@@ -3,6 +3,7 @@ package com.minhagasosa.dao;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
@@ -30,6 +31,7 @@ public class RotaDao extends AbstractDao<Rota, Long> {
         public final static Property DistanciaVolta = new Property(4, Float.class, "distanciaVolta", false, "DISTANCIA_VOLTA");
         public final static Property RepeteSemana = new Property(5, Boolean.class, "repeteSemana", false, "REPETE_SEMANA");
         public final static Property Repetoicoes = new Property(6, Integer.class, "repetoicoes", false, "REPETOICOES");
+        public final static Property DeRotina = new Property(7, Boolean.class, "deRotina", false, "DE_ROTINA");
     };
 
 
@@ -51,7 +53,8 @@ public class RotaDao extends AbstractDao<Rota, Long> {
                 "\"DISTANCIA_IDA\" REAL," + // 3: distanciaIda
                 "\"DISTANCIA_VOLTA\" REAL," + // 4: distanciaVolta
                 "\"REPETE_SEMANA\" INTEGER," + // 5: repeteSemana
-                "\"REPETOICOES\" INTEGER);"); // 6: repetoicoes
+                "\"REPETOICOES\" INTEGER," + // 6: repetoicoes
+                "\"DE_ROTINA\" INTEGER);"); // 7: deRotina
     }
 
     /** Drops the underlying database table. */
@@ -77,7 +80,7 @@ public class RotaDao extends AbstractDao<Rota, Long> {
  
         Boolean idaEVolta = entity.getIdaEVolta();
         if (idaEVolta != null) {
-            stmt.bindLong(3, idaEVolta ? 1L: 0L);
+            stmt.bindLong(3, idaEVolta ? 1L : 0L);
         }
  
         Float distanciaIda = entity.getDistanciaIda();
@@ -92,12 +95,17 @@ public class RotaDao extends AbstractDao<Rota, Long> {
  
         Boolean repeteSemana = entity.getRepeteSemana();
         if (repeteSemana != null) {
-            stmt.bindLong(6, repeteSemana ? 1L: 0L);
+            stmt.bindLong(6, repeteSemana ? 1L : 0L);
         }
  
         Integer repetoicoes = entity.getRepetoicoes();
         if (repetoicoes != null) {
             stmt.bindLong(7, repetoicoes);
+        }
+
+        Boolean deRotina = entity.getDeRotina();
+        if (deRotina != null) {
+            stmt.bindLong(8, deRotina ? 1L: 0L);
         }
     }
 
@@ -117,7 +125,8 @@ public class RotaDao extends AbstractDao<Rota, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getFloat(offset + 3), // distanciaIda
             cursor.isNull(offset + 4) ? null : cursor.getFloat(offset + 4), // distanciaVolta
             cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0, // repeteSemana
-            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6) // repetoicoes
+            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // repetoicoes
+            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0 // deRotina
         );
         return entity;
     }
@@ -132,7 +141,8 @@ public class RotaDao extends AbstractDao<Rota, Long> {
         entity.setDistanciaVolta(cursor.isNull(offset + 4) ? null : cursor.getFloat(offset + 4));
         entity.setRepeteSemana(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
         entity.setRepetoicoes(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
-     }
+        entity.setDeRotina(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
+    }
     
     /** @inheritdoc */
     @Override

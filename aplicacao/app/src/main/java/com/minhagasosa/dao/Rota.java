@@ -13,6 +13,7 @@ public class Rota {
     private Float distanciaVolta;
     private Boolean repeteSemana;
     private Integer repetoicoes;
+    private Boolean deRotina;
 
     public Rota() {
     }
@@ -21,7 +22,7 @@ public class Rota {
         this.id = id;
     }
 
-    public Rota(Long id, String Nome, Boolean idaEVolta, Float distanciaIda, Float distanciaVolta, Boolean repeteSemana, Integer repetoicoes) {
+    public Rota(Long id, String Nome, Boolean idaEVolta, Float distanciaIda, Float distanciaVolta, Boolean repeteSemana, Integer repetoicoes, Boolean deRotina) {
         this.id = id;
         this.Nome = Nome;
         this.idaEVolta = idaEVolta;
@@ -29,6 +30,7 @@ public class Rota {
         this.distanciaVolta = distanciaVolta;
         this.repeteSemana = repeteSemana;
         this.repetoicoes = repetoicoes;
+        this.deRotina = deRotina;
     }
 
     public Long getId() {
@@ -87,4 +89,11 @@ public class Rota {
         this.repetoicoes = repetoicoes;
     }
 
+    public Boolean getDeRotina() {
+        return deRotina;
+    }
+
+    public void setDeRotina(Boolean deRotina) {
+        this.deRotina = deRotina;
+    }
 }
