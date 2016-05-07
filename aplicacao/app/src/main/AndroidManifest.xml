@@ -59,7 +59,13 @@
             android:name=".PlanningActivity"
             android:label="@string/title_activity_planning"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ComparaGastosActivity"></activity>
+        <activity
+            android:name=".ComparaGastosActivity"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.minhagasosa.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

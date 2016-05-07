@@ -392,7 +392,11 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.set_planning) {
             Intent intent = new Intent(this, PlanningActivity.class);
             startActivityForResult(intent, VALOR_MAXIMO_REQUEST);
+        } else if (item.getItemId() == R.id.menu_item_comparar) {
+            Intent intent = new Intent(this, ComparaGastosActivity.class);
+            startActivity(intent);
         }
+
         return super.onOptionsItemSelected(item);
     }
 

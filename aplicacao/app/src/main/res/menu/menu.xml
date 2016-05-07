@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/set_planning"
+    <item
+        android:id="@+id/set_planning"
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="Planejamento de gastos"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
-    <item android:id="@+id/set_car"
+    <item
+        android:id="@+id/set_car"
         android:icon="@drawable/ic_time_to_leave_white_24dp"
         android:title="Configurar Carro"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
-
-    <item android:id="@+id/action_settings" android:title="Set"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <!-- todo alterar a imagem desse item do menu -->
+    <item
+        android:id="@+id/menu_item_comparar"
+        android:icon="@drawable/ic_time_to_leave_white_24dp"
+        android:title="Configurar Carro"
+        app:showAsAction="always" />
 </menu>
