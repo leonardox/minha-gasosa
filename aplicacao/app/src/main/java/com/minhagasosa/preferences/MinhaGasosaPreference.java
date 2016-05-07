@@ -153,4 +153,16 @@ public class MinhaGasosaPreference {
                 Context.MODE_PRIVATE);
         return preferences.getFloat(context.getString(R.string.shared_valor_maximo_gastar), Float.MAX_VALUE);
     }
+
+    public static void putCapacidadeDoTanque(int valor, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putInt(context.getString(R.string.shared_capacidade_tanque), valor);
+        editor.commit();
+    }
+
+    public static float getCapacidadeDoTanque(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getInt(context.getString(R.string.shared_capacidade_tanque), Integer.MAX_VALUE);
+    }
 }

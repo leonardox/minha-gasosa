@@ -22,6 +22,7 @@
     <string name="sharedPotencia">sharedPotencia</string>
     <string name="distancia_total">sharedPotencia</string>
     <string name="shared_valor_maximo_gastar">valorMaximoQueQuerGastar</string>
+    <string name="shared_capacidade_tanque">capacidadeDoTanque</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
     <string name="title_activity_routes">Criar rota</string>
