@@ -100,9 +100,6 @@ public class Utils {
             listaOrdenada.add(listaRotaDistancia.remove(index));
         }
 
-        if (listaOrdenada.size() == 3) {
-            return listaOrdenada;
-        }
-        return new ArrayList<>();
+        return listaOrdenada;
     }
 }

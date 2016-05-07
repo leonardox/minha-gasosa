@@ -68,10 +68,13 @@ public class HomeActivity extends AppCompatActivity {
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
 
     private PieChart mChart;
-    private float[] yData = new float[4];
-    private String[] xData = new String[4];
+    private String[] xData;
+    //private String[] xData = new String[4];
+    private float[] yData;
+    //private float[] yData = new float[4];
     private final int VALOR_MAXIMO_REQUEST = 101;
     private float valorMaximoGastar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -487,15 +490,44 @@ public class HomeActivity extends AppCompatActivity {
 
     private void iniciaValoresGrafico(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {
         if (!principaisRotas.isEmpty()) {
-            xData[0] = principaisRotas.get(0).first;
-            xData[1] = principaisRotas.get(1).first;
-            xData[2] = principaisRotas.get(2).first;
-            xData[3] = "outras";
+            xData = new String[principaisRotas.size()];
+            yData = new float[principaisRotas.size()];
+            switch (principaisRotas.size()) {
+                case 1:
+                    xData[0] = principaisRotas.get(0).first;
 
-            yData[0] = principaisRotas.get(0).second;
-            yData[1] = principaisRotas.get(1).second;
-            yData[2] = principaisRotas.get(2).second;
-            yData[3] = distanciaTotal - (yData[0] + yData[1] + yData[2]);
+                    yData[0] = principaisRotas.get(0).second;
+                    break;
+                case 2:
+                    xData[0] = principaisRotas.get(0).first;
+                    xData[1] = principaisRotas.get(1).first;
+
+                    yData[0] = principaisRotas.get(0).second;
+                    yData[1] = principaisRotas.get(1).second;
+                    break;
+                case 3:
+                    xData[0] = principaisRotas.get(0).first;
+                    xData[1] = principaisRotas.get(1).first;
+                    xData[2] = principaisRotas.get(2).first;
+
+                    yData[0] = principaisRotas.get(0).second;
+                    yData[1] = principaisRotas.get(1).second;
+                    yData[2] = principaisRotas.get(2).second;
+                    break;
+                default:
+                    xData = new String[principaisRotas.size() + 1];
+                    yData = new float[principaisRotas.size() + 1];
+                    xData[0] = principaisRotas.get(0).first;
+                    xData[1] = principaisRotas.get(1).first;
+                    xData[2] = principaisRotas.get(2).first;
+                    xData[3] = "outras";
+
+                    yData[0] = principaisRotas.get(0).second;
+                    yData[1] = principaisRotas.get(1).second;
+                    yData[2] = principaisRotas.get(2).second;
+                    yData[3] = distanciaTotal - (yData[0] + yData[1] + yData[2]);
+                    break;
+            }
 
             addChart();
         }
