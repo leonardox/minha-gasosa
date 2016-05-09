@@ -44,6 +44,7 @@ import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
@@ -484,8 +485,13 @@ public class HomeActivity extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession session = daoMaster.newSession();
-        calculaDistanciaTotal(session, getApplicationContext());
-        iniciaValoresGrafico(calculaPrincipaisRotas(session), getDistanciaTotal());
+
+        String dataAtual = new Date(System.currentTimeMillis()).toString();
+        String ano = dataAtual.substring(24);// Pega o ano atual
+        String mes = dataAtual.substring(4, 7);// Pega o mes atual
+
+        calculaDistanciaTotal(session, null, null, getApplicationContext());
+        iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
     }
 
     private void iniciaValoresGrafico(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {

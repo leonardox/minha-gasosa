@@ -200,7 +200,7 @@ public class RoutesActivity extends AppCompatActivity {
         novaRota.setDeRotina(deRotina);
         rotaDao.update(novaRota);
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
-        calculaDistanciaTotal(session, getApplicationContext());
+        calculaDistanciaTotal(session, null, null, getApplicationContext());
         onBackPressed();
     }
 
