@@ -49,8 +49,8 @@ public class ChartView {
         String ano = dataAtual.substring(24);// Pega o ano atual
         String mes = dataAtual.substring(4, 7);// Pega o mes atual
 
-        calculaDistanciaTotal(session, mes, ano, mContext);
-        iniciaValoresGrafico(calculaPrincipaisRotas(session, mes, ano), getDistanciaTotal());
+        calculaDistanciaTotal(session, null, null, mContext);
+        iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
     }
 
     private void iniciaValoresGrafico(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {
