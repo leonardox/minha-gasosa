@@ -57,5 +57,6 @@
     <string name="compare_gastos">Compare os seus gastos no mês anterior com os do mês atual</string>
     <string name="consumo_mes_anterior">No mês passado, você gasto no total: xxx reais com combustível</string>
     <string name="distancia_mes_anterior">No mês passado, você percorreu no total: xxx kilômetros</string>
+    <string name="capacidade_tanque">Capacidade do tanque (Litros)</string>
 
 </resources>
