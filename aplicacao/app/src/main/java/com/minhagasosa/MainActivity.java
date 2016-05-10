@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progress;
     private int check = 0;
     public static Activity self;
-
+    CarroDao cDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         final DaoSession session = daoMaster.newSession();
         final ModeloDao mDao = session.getModeloDao();
-        final CarroDao cDao = session.getCarroDao();
+        cDao = session.getCarroDao();
 
         //ADIÇÃO DE ALGUMAS ROTAS FICTICIAS
         //rDao.insert(new Rota((long)1, "Olar", true, (float)10.5, (float)5.5, false, 0));
@@ -165,18 +167,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerPotencia.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, potencias));
 
-        final Button btnPrevisoes = (Button) findViewById(R.id.btnPrevisoes);
-        btnPrevisoes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public final void onClick(final View v) {
-                // Potency value at sharedPreferences
-                Log.e("MinhaGasosa", "ValorArmazenadoPotencia = " + String.valueOf(MinhaGasosaPreference.getPotency(
-                        getApplicationContext())));
-                Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
-                        getApplicationContext())));
-                salvarInformacoesCarro(cDao);
-            }
-        });
     }
 
     private void salvarInformacoesCarro(CarroDao cDao) {
@@ -333,4 +323,26 @@ public class MainActivity extends AppCompatActivity {
     public float getValorMaximo() {
         return MinhaGasosaPreference.getValorMaximoParaGastar(MainActivity.this);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.distance_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.done_route:
+                // Potency value at sharedPreferences
+                Log.e("MinhaGasosa", "ValorArmazenadoPotencia = " + String.valueOf(MinhaGasosaPreference.getPotency(
+                        getApplicationContext())));
+                Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
+                        getApplicationContext())));
+                salvarInformacoesCarro(cDao);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

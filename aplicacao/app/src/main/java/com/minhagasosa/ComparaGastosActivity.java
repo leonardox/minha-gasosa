@@ -22,6 +22,7 @@ import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
@@ -45,8 +46,13 @@ public class ComparaGastosActivity extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession session = daoMaster.newSession();
-        calculaDistanciaTotal(session, getApplicationContext());
-        iniciaGraficoMesAtual(calculaPrincipaisRotas(session), MinhaGasosaPreference.getDistanciaTotal(getApplicationContext()));
+
+        String dataAtual = new Date(System.currentTimeMillis()).toString();
+        String ano = dataAtual.substring(24);// Pega o ano atual
+        String mes = dataAtual.substring(4, 7);// Pega o mes atual
+
+        calculaDistanciaTotal(session, null, null, getApplicationContext());
+        iniciaGraficoMesAtual(calculaPrincipaisRotas(session, null, null), MinhaGasosaPreference.getDistanciaTotal(getApplicationContext()));
     }
 
     private void iniciaGraficoMesAtual(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {
