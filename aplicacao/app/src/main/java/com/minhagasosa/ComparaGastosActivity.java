@@ -13,10 +13,8 @@ public class ComparaGastosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compara_gastos);
 
-        PieChart pieChart = (PieChart) findViewById(R.id.chart1);
+        PieChart pieChart = (PieChart) findViewById(R.id.chart_current_month);
         chartView = new ChartView(this, pieChart);
         chartView.iniciaDistancias();
     }
-
-
 }

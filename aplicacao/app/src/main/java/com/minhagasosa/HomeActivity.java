@@ -184,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         recuperaValorMaximo();
-        PieChart pieChart = (PieChart) findViewById(R.id.chart1);
+        PieChart pieChart = (PieChart) findViewById(R.id.chart);
         chartView = new ChartView(this, pieChart);
     }
 

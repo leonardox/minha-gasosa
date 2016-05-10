@@ -35,8 +35,28 @@
             android:text="@string/distancia_mes_anterior"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle" />
 
-        <include layout="@layout/graph_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/principais_rotas_mes_passado"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle" />
 
-        <include layout="@layout/graph_content" />
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/chart_last_month"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/principais_rotas_mes_atual"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/chart_current_month"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 </ScrollView>
