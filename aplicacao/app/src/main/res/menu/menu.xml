@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/set_planning"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@drawable/ic_local_gas_station_white_24dp"
         android:title="Planejamento de gastos"
         app:showAsAction="always" />
 
@@ -16,7 +16,7 @@
     <!-- todo alterar a imagem desse item do menu -->
     <item
         android:id="@+id/menu_item_comparar"
-        android:icon="@drawable/ic_time_to_leave_white_24dp"
-        android:title="Configurar Carro"
+        android:icon="@drawable/ic_rv_hookup_white_24dp"
+        android:title="Comparação"
         app:showAsAction="always" />
 </menu>

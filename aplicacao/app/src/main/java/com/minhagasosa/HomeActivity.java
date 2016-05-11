@@ -28,30 +28,87 @@ import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
 
+/**
+ * Classe Inicial do app.
+ */
 public class HomeActivity extends AppCompatActivity {
-    EditText priceFuelEditText;
-    EditText priceFuelEditText2;
-    TextView secundarioText;
-    TextView secundarioPriceText;
-    CheckBox checkFlex;
-    TextView porcentagem1;
-    TextView porcentagem2;
-    TextView consumoS;
-    TextView consumoM;
-    TextView porcento1;
-    TextView porcento2;
-    Spinner spinner_porcentagem1;
-    Spinner spinner_porcentagem2;
-    ScrollView layoutMain;
-    String[] porcento = {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50",
+    /**
+     * preco do combustivel primario
+     */
+    private EditText priceFuelEditText;
+    /**
+     * preco do combustivel secundario
+     */
+    private EditText priceFuelEditText2;
+    /**
+     * texto
+     */
+    private TextView secundarioText;
+    /**
+     *texto
+     */
+    private TextView secundarioPriceText;
+    /**
+     *marcador de flex no carro
+     */
+    private CheckBox checkFlex;
+    /**
+     * atribute
+     */
+    private TextView porcentagem1;
+    /**
+     * atribute
+     */
+    private TextView porcentagem2;
+    /**
+     * atribute
+     */
+    private TextView consumoS;
+    /**
+     * atribute
+     */
+    private TextView consumoM;
+    /**
+     * atribute
+     */
+    private TextView porcento1;
+    /**
+     * atribute
+     */
+    private TextView porcento2;
+    /**
+     * atribute
+     */
+    private Spinner spinnerPorcentagem1;
+    /**
+     * atribute
+     */
+    private Spinner spinnerPorcentagem2;
+    /**
+     * atribute
+     */
+    private ScrollView layoutMain;
+    /**
+     * string de porcentagens da capacidade do tanque do carro
+     */
+    private String[] porcento = {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50",
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
 
+    /**
+     *
+     */
     private final int VALOR_MAXIMO_REQUEST = 101;
+    /**
+     * valor maximo que pode gastar
+     */
     private float valorMaximoGastar;
+    /**
+     * atribute
+     */
     private ChartView chartView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -74,14 +131,14 @@ public class HomeActivity extends AppCompatActivity {
         porcento2 = (TextView) findViewById(R.id.textView12);
         porcento2.setVisibility(View.GONE);
         porcentagem2 = (TextView) findViewById(R.id.textView11);
-        spinner_porcentagem1 = (Spinner) findViewById(R.id.spinner);
-        spinner_porcentagem1.setAdapter(new ArrayAdapter<String>(this,
+        spinnerPorcentagem1 = (Spinner) findViewById(R.id.spinner);
+        spinnerPorcentagem1.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, porcento));
-        spinner_porcentagem1.setVisibility(View.GONE);
-        spinner_porcentagem2 = (Spinner) findViewById(R.id.spinner2);
-        spinner_porcentagem2.setAdapter(new ArrayAdapter<String>(this,
+        spinnerPorcentagem1.setVisibility(View.GONE);
+        spinnerPorcentagem2 = (Spinner) findViewById(R.id.spinner2);
+        spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, porcento));
-        spinner_porcentagem2.setVisibility(View.GONE);
+        spinnerPorcentagem2.setVisibility(View.GONE);
         layoutMain = (ScrollView) findViewById(R.id.layout_main);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -95,12 +152,12 @@ public class HomeActivity extends AppCompatActivity {
         priceFuelEditText = (EditText) findViewById(R.id.editTextPrice);
         priceFuelEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before,final int count) {
                 gerarPrevisao();
             }
 
@@ -118,12 +175,12 @@ public class HomeActivity extends AppCompatActivity {
         });
         priceFuelEditText2.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
 
@@ -132,25 +189,25 @@ public class HomeActivity extends AppCompatActivity {
                 gerarPrevisao();
             }
         });
-        spinner_porcentagem1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerPorcentagem1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
-        spinner_porcentagem2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerPorcentagem2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
@@ -164,8 +221,8 @@ public class HomeActivity extends AppCompatActivity {
                     priceFuelEditText2.setVisibility(View.VISIBLE);
                     porcentagem1.setVisibility(View.VISIBLE);
                     porcentagem2.setVisibility(View.VISIBLE);
-                    spinner_porcentagem1.setVisibility(View.VISIBLE);
-                    spinner_porcentagem2.setVisibility(View.VISIBLE);
+                    spinnerPorcentagem1.setVisibility(View.VISIBLE);
+                    spinnerPorcentagem2.setVisibility(View.VISIBLE);
                     porcento1.setVisibility(View.VISIBLE);
                     porcento2.setVisibility(View.VISIBLE);
                 } else {
@@ -175,8 +232,8 @@ public class HomeActivity extends AppCompatActivity {
                     priceFuelEditText2.setVisibility(View.GONE);
                     porcentagem1.setVisibility(View.GONE);
                     porcentagem2.setVisibility(View.GONE);
-                    spinner_porcentagem1.setVisibility(View.GONE);
-                    spinner_porcentagem2.setVisibility(View.GONE);
+                    spinnerPorcentagem1.setVisibility(View.GONE);
+                    spinnerPorcentagem2.setVisibility(View.GONE);
                     porcento1.setVisibility(View.GONE);
                     porcento2.setVisibility(View.GONE);
                 }
@@ -188,12 +245,15 @@ public class HomeActivity extends AppCompatActivity {
         chartView = new ChartView(this, pieChart);
     }
 
+    /**
+     * Metodo que recupera o maximo maximo gasto
+     */
     private void recuperaValorMaximo() {
         valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected final void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == VALOR_MAXIMO_REQUEST) {
             if (resultCode == RESULT_OK) {
                 valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
@@ -202,6 +262,9 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * metodo que gera a previsao de gasto semanal e mensal gasto
+     */
     private void gerarPrevisao() {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
@@ -242,6 +305,9 @@ public class HomeActivity extends AppCompatActivity {
         addAvisoConsumo(previsaoConsumoMensal);
     }
 
+    /**
+     * metodo que adiciona o  alerta caso o valor gasto seja maior do que o previsto mensal
+     */
     private void addAvisoConsumo() {
         float previsaoConsumoMensal = 0;
         if (checkFlex.isChecked()) {
@@ -257,18 +323,28 @@ public class HomeActivity extends AppCompatActivity {
         addAvisoConsumo(previsaoConsumoMensal);
     }
 
-    private void addAvisoConsumo(float previsaoConsumoMensal) {
+    /**
+     * metodo que adiciona o aviso de consumo baseado na previsao mensal
+     * @param previsaoConsumoMensal
+     */
+    private void addAvisoConsumo(final float previsaoConsumoMensal) {
         if (previsaoConsumoMensal >= valorMaximoGastar) {
             mostraAviso(layoutMain, "Atenção! Você pode estar gastando mais do que " + valorMaximoGastar);
         }
     }
 
-    private void mostraAviso(View view, String mensagem) {
+    /**
+     *
+     * @param view
+     * @param mensagem
+     */
+
+    private void mostraAviso(final View view, final String mensagem) {
         Snackbar snackbar = Snackbar
                 .make(view, mensagem, Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(final View view) {
                     }
                 });
 
@@ -282,6 +358,10 @@ public class HomeActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    /**
+     *  metodo que pega o preco principla
+     * @return
+     */
     private float getPrecoPrincipal() {
         if (!priceFuelEditText.getText().toString().isEmpty()) {
             return Float.parseFloat(priceFuelEditText.getText().toString());
@@ -289,44 +369,77 @@ public class HomeActivity extends AppCompatActivity {
         return 0.0f;
     }
 
+    /**
+     *
+     * @return
+     */
     private float getPrecoSecundario() {
         if (!priceFuelEditText2.getText().toString().isEmpty()) {
             return Float.parseFloat(priceFuelEditText2.getText().toString());
         }
         return 0.0f;
     }
+    /**
+     *
+     * @return
+     */
 
     private float getDistanciaTotal() {
         return MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
     }
 
+    /**
+     *
+     * @return
+     */
     private float getConsumoUrbano() {
         return MinhaGasosaPreference.
                 getConsumoUrbanoPrimario(getApplicationContext());
     }
 
+    /**
+     *
+     * @return
+     */
     private int getPorcentagemPrincipal() {
         return Integer.parseInt(
-                spinner_porcentagem1.getSelectedItem().toString());
+                spinnerPorcentagem1.getSelectedItem().toString());
     }
 
+    /**
+     *
+     * @return
+     */
     private int getPorcentagemSecundaria() {
         return Integer.parseInt(
-                spinner_porcentagem2.getSelectedItem().toString());
+                spinnerPorcentagem2.getSelectedItem().toString());
     }
 
-    private float calculaPrevisaoSemanalNormal(float precoPrincipal, float distancias, float consumoUrbano) {
+    /**
+     *
+     * @return
+     */
+
+    private float calculaPrevisaoSemanalNormal(final float precoPrincipal, final float distancias, final float consumoUrbano) {
         return (distancias / consumoUrbano) * precoPrincipal;
     }
 
-    private float calculaPrevisaoMesNorlmal(float precoPrincipal, float distancias, float consumoUrbano) {
+    /**
+     *
+     * @return
+     */
+    private float calculaPrevisaoMesNorlmal(final float precoPrincipal, final float distancias, final float consumoUrbano) {
         return calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano) * 4;
     }
 
-    private float calculaPrevisaoSemanalNormal(float porcentagemPrincipal, float porcentagemSecundaria,
-                                               float distancias, float consumoUrbano,
-                                               float consumoUrbanoSecundario, float precoPrincipal,
-                                               float precoSecundario) {
+    /**
+     *
+     * @return
+     */
+    private float calculaPrevisaoSemanalNormal(final float porcentagemPrincipal, final float porcentagemSecundaria,
+                                               final float distancias, final float consumoUrbano,
+                                               final float consumoUrbanoSecundario, final float precoPrincipal,
+                                               final float precoSecundario) {
         float result = 0.0f;
         if (porcentagemPrincipal != 0 || porcentagemSecundaria != 0) {
             float gastoPrincipal = (distancias / consumoUrbano) * precoPrincipal;
@@ -339,15 +452,30 @@ public class HomeActivity extends AppCompatActivity {
         return result;
     }
 
-    public float getConsumoUrbanoSecundario() {
+    /**
+     *
+     * @return
+     */
+    public final float getConsumoUrbanoSecundario() {
         return MinhaGasosaPreference.
                 getConsumoUrbanoSecundario(getApplicationContext());
     }
 
-    private float calculaPrevisaoMensalFlex(float porcentagemPrincipal, float porcentagemSecundaria,
-                                            float distancias, float consumoUrbano,
-                                            float consumoUrbanoSecundario, float precoPrincipal,
-                                            float precoSecundario) {
+    /**
+     *
+     * @param porcentagemPrincipal
+     * @param porcentagemSecundaria
+     * @param distancias
+     * @param consumoUrbano
+     * @param consumoUrbanoSecundario
+     * @param precoPrincipal
+     * @param precoSecundario
+     * @return
+     */
+    private float calculaPrevisaoMensalFlex(final float porcentagemPrincipal, final float porcentagemSecundaria,
+                                            final float distancias, final float consumoUrbano,
+                                            final float consumoUrbanoSecundario, final float precoPrincipal,
+                                            final float precoSecundario) {
 
         return calculaPrevisaoSemanalNormal(porcentagemPrincipal,
                 porcentagemSecundaria, distancias, consumoUrbano, consumoUrbanoSecundario,
@@ -355,7 +483,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public final boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
@@ -363,7 +491,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.set_car) {
             Intent i = new Intent(this, MainActivity.class);
             i.putExtra("fromHome", true);
@@ -380,7 +508,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected final void onResume() {
         super.onResume();
         chartView.iniciaDistancias();
     }

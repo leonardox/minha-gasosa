@@ -13,9 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.CarroDao;
 import com.minhagasosa.dao.DaoMaster;
@@ -38,18 +36,45 @@ import java.util.List;
 
 import de.greenrobot.dao.query.Query;
 
+/**
+ * Classe Main.
+ */
 public class MainActivity extends AppCompatActivity {
-
-    Spinner spinnerMarca;
-    Spinner spinnerModelo;
-    Spinner spinnerVersao;
-    Spinner spinnerPotencia;
+    /**
+     * atributo de Marca do carro
+     */
+    private Spinner spinnerMarca;
+    /**
+     * Atributo de modelo do carro
+     */
+    private Spinner spinnerModelo;
+    /**
+     * atributo da versao do carro
+     */
+    private Spinner spinnerVersao;
+    /**
+     * atributo da potencia do carro
+     */
+    private Spinner spinnerPotencia;
+    /**
+     * atributo progresso
+     */
     private ProgressDialog progress;
+    /**
+     * verifica
+     */
     private int check = 0;
+    /**
+     *
+     */
     public static Activity self;
-    CarroDao cDao;
+    /**
+     * instancia da classe CarroDao
+     */
+    private CarroDao cDao;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "casosa-db", null);
@@ -67,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
         //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
         //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
 
-        if (MinhaGasosaPreference.getDone(getApplicationContext()) &&
-                !getIntent().getBooleanExtra("fromHome", false)) {
+        if (MinhaGasosaPreference.getDone(getApplicationContext())
+                && !getIntent().getBooleanExtra("fromHome", false)) {
             Intent i = new Intent(this, HomeActivity.class);
             this.startActivity(i);
             return;
@@ -84,23 +109,23 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 popularModelos(session);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
         spinnerModelo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 popularVersoes(cDao);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
@@ -141,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         CarroDao dao = session.getCarroDao();
         spinnerPotencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String selectedPot = (String) spinnerPotencia.getSelectedItem();
                 if (selectedPot.isEmpty()) {
                     MinhaGasosaPreference.putWithPotency(false, getApplicationContext());
@@ -159,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
@@ -169,13 +194,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void salvarInformacoesCarro(CarroDao cDao) {
+    /**
+     * metodo que salva todas as informacoes do carro no banco
+     * @param cDao
+     */
+    private void salvarInformacoesCarro(final CarroDao cDao) {
         if (!MinhaGasosaPreference.getWithPotency(getApplicationContext())) {
             String marca = (String) spinnerMarca.getSelectedItem();
             Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
-            long modelo_id = modelo.getId();
+            long modeloId = modelo.getId();
             String versao = (String) spinnerVersao.getSelectedItem();
-            Query query = cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(modelo_id),
+            Query query = cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(modeloId),
                     CarroDao.Properties.Marca.eq(marca),
                     CarroDao.Properties.Version.eq(versao)).build();
             Carro carro = (Carro) query.list().get(0);
@@ -205,7 +234,11 @@ public class MainActivity extends AppCompatActivity {
         this.startActivity(i);
     }
 
-    private void popularVersoes(CarroDao cDao) {
+    /**
+     *  metodo que popula as versoes do carro para o banco de dados
+     * @param cDao
+     */
+    private void popularVersoes(final CarroDao cDao) {
         Modelo selectedModel = (Modelo) spinnerModelo.getSelectedItem();
         long idx = selectedModel.getId();
         ArrayList<Carro> listaCarros = (ArrayList<Carro>) cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(idx)).list();
@@ -224,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
 
-    private void popularModelos(DaoSession session) {
+    private void popularModelos(final DaoSession session) {
         String marca = (String) spinnerMarca.getSelectedItem();
         String select = "SELECT MODELO._id, MODELO.MODELO FROM CARRO, MODELO " +
                 "WHERE CARRO.MARCA ='" + marca + "' AND MODELO._id = CARRO.MODELO_ID " +
@@ -234,7 +267,12 @@ public class MainActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, listaModelos));
     }
 
-    private void populateCars(ModeloDao mDao, CarroDao cDao) {
+    /**
+     *  metodo que popula o modelo e o carro no banco
+     * @param mDao
+     * @param cDao
+     */
+    private void populateCars(final ModeloDao mDao, final CarroDao cDao) {
         String jsonModelos = loadJSONFromAsset("Modelos.json");
         String jsonCarros = loadJSONFromAsset("carrosminhagasosa.json");
         try {
@@ -277,7 +315,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String loadJSONFromAsset(String fileName) {
+    /**
+     *
+     * @param fileName
+     * @return
+     */
+    public final String loadJSONFromAsset(final String fileName) {
         String json = null;
         try {
 
@@ -302,7 +345,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static List<Modelo> listModelos(DaoSession session, String select) {
+    /**
+     *
+     * @param session
+     * @param select
+     * @return
+     */
+    private static List<Modelo> listModelos(final DaoSession session, final String select) {
         ArrayList<Modelo> result = new ArrayList<Modelo>();
         Cursor c = session.getDatabase().rawQuery(select, null);
         ModeloDao mDao = session.getModeloDao();
@@ -320,18 +369,23 @@ public class MainActivity extends AppCompatActivity {
         }
         return result;
     }
-    public float getValorMaximo() {
+
+    /**
+     * metodo que retorna o valor maximo que deve ser gasto
+     * @return
+     */
+    public final float getValorMaximo() {
         return MinhaGasosaPreference.getValorMaximoParaGastar(MainActivity.this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public final boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.distance_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_route:
                 // Potency value at sharedPreferences

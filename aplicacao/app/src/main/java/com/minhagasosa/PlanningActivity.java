@@ -9,10 +9,13 @@ import android.widget.EditText;
 
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
+/**
+ * Classe de planejamento.
+ */
 public class PlanningActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planning);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

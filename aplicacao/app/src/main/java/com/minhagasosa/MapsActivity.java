@@ -45,22 +45,62 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
+/**
+ * Classe de Mapa.
+ */
+public class MapsActivity extends FragmentActivity
+        implements OnMapReadyCallback {
+    /**
+     *API Google Mapa
+     */
     private GoogleMap mMap;
+    /**
+     * atributo local de origem
+     */
     private LatLng mOriginLocation;
+    /**
+     * Atributo Local de destino
+     */
     private LatLng mDestinyLocation;
+    /**
+     * Atributo marca de origin
+     */
     private Marker mOriginMark;
+    /**
+     * Atributo marca de destino
+     */
     private Marker mDestinyMark;
-    Polyline mDesenhoRotaIda;
-    Polyline mDesenhoRotaVolta;
+    /**
+     * Atributo desenho da rota de ida no mapa
+     */
+    private Polyline mDesenhoRotaIda;
+    /**
+     * desenho da rota de volta no mapa
+     */
+    private Polyline mDesenhoRotaVolta;
+    /**
+     * latitude e longitude da cidade no mapa
+     */
     private LatLng mCityLatLng;
+    /**
+     * ida e volta
+     */
     private boolean mIdaEvolta;
-    float mDistanciaIda = -1;
-    float mDistanciaVolta = -1;
+    /**
+     *  distancia de ida
+     */
+    private float mDistanciaIda = -1;
+    /**
+     * distancia de volta
+     */
+    private float mDistanciaVolta = -1;
+    /**
+     * atribute
+     */
     private FloatingActionButton mFab;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mIdaEvolta = false;
@@ -79,7 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageButton btUndo = (ImageButton) findViewById(R.id.undoButton);
         btUndo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 undo();
             }
         });
@@ -87,7 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final FragmentActivity self = this;
         sIdaEVolta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 System.out.println();
 
                 mIdaEvolta = isChecked;
@@ -108,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Activity a = this;
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (mOriginMark == null || mDestinyMark == null) {
                     Snackbar snack = Snackbar.make(v, R.string.select_origin_and_destiny, Snackbar.LENGTH_LONG)
                             .setAction("Action", null);
@@ -137,42 +177,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
+    /**
+     *
+     * @param origin
+     * @param dest
+     * @return
+     */
+    private String getDirectionsUrl(final LatLng origin, final LatLng dest){
 
         // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+        String strOrigin = "origin=" + origin.latitude + "," + origin.longitude;
 
         // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+        String strDest = "destination=" + dest.latitude + "," + dest.longitude;
 
 
         // Sensor enabled
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = strOrigin + "&" + strDest + "&" + sensor;
 
         // Output format
         String output = "json";
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin.latitude+","+origin.longitude+"&destination="+dest.latitude+","+dest.longitude+"&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
-
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+
+                origin.latitude + "," + origin.longitude + "&destination=" + dest.latitude + "," + dest.longitude +
+                "&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
 
         return url;
     }
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
-        Context mContext;
-        boolean mIsVolta;
-        public DownloadTask(Context c, boolean isVolta){
+        /**
+         * Contexto
+         */
+        private Context mContext;
+        /**
+         *boolean volta
+         */
+        private boolean mIsVolta;
+
+        /**
+         *
+         * @param c
+         * @param isVolta
+         */
+        DownloadTask(final Context c, final boolean isVolta){
             mIsVolta = isVolta;
             mContext = c;
         }
         // Downloading data in non-ui thread
         @Override
-        protected String doInBackground(String... url) {
+        protected String doInBackground(final String... url) {
 
             // For storing data from web service
             String data = "";
@@ -189,7 +248,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Executes in UI thread, after the execution of
         // doInBackground()
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 
             ParserTask parserTask = new ParserTask(mContext, mIsVolta);
@@ -203,10 +262,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
-        Context mContext;
-        boolean mIsVolta;
-        public ParserTask(Context c, boolean isVolta){
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>{
+        /**
+         *
+         */
+        private Context mContext;
+        /**
+         *
+         */
+        private boolean mIsVolta;
+
+        /**
+         *
+         * @param c
+         * @param isVolta
+         */
+        ParserTask(final Context c, final boolean isVolta){
             mIsVolta = isVolta;
             mContext = c;
         }
@@ -245,7 +316,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Executes in UI thread, after the parsing process
         @SuppressWarnings("unused")
         @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+        protected void onPostExecute(final List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
@@ -261,7 +332,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
+            for(int i = 0; i < result.size(); i++){
                 points = new ArrayList<LatLng>();
                 lineOptions = new PolylineOptions();
 
@@ -269,14 +340,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
+                for(int j = 0 ; j < path.size(); j++){
+                    HashMap<String, String> point = path.get(j);
 
-                    if(j==0){   // Get distance from the list
-                        distance = (String)point.get("distance");
+                    if(j == 0){   // Get distance from the list
+                        distance = (String) point.get("distance");
                         continue;
-                    }else if(j==1){ // Get duration from the list
-                        duration = (String)point.get("duration");
+                    }else if(j == 1){ // Get duration from the list
+                        duration = (String) point.get("duration");
                         continue;
                     }
 
