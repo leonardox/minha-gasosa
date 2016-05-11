@@ -53,6 +53,17 @@ public class ChartView {
         iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
     }
 
+    public void iniciaDistancias(String month, String year) {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+
+        calculaDistanciaTotal(session, month, year, mContext);
+        iniciaValoresGrafico(calculaPrincipaisRotas(session, month, year), getDistanciaTotal());
+    }
+
+
     private void iniciaValoresGrafico(List<Pair<String, Float>> principaisRotas, float distanciaTotal) {
         if (!principaisRotas.isEmpty()) {
             xData = new String[principaisRotas.size()];
