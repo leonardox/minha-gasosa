@@ -1,9 +1,14 @@
 package com.minhagasosa;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.minhagasosa.dao.DaoMaster;
+import com.minhagasosa.dao.DaoSession;
 
 import java.util.GregorianCalendar;
 
@@ -32,6 +37,24 @@ public class ComparaGastosActivity extends AppCompatActivity {
         }
 
         chartViewLastMonth.iniciaDistancias(month, year);
+
+        showTotalPercorrido(String.valueOf(getTotalPercorrido(month, year)));
+    }
+
+    private float getTotalPercorrido(String month, String year) {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+
+        Log.d("COMPARA_GASTOS_ACTIVITY", "total percorrido = " + Utils.calculaDistanciaTotal(session, month, year));
+
+        return Utils.calculaDistanciaTotal(session, month, year);
+    }
+
+    private void showTotalPercorrido(String total) {
+        TextView tvTotalDistance = (TextView) findViewById(R.id.tv_total_distance);
+        tvTotalDistance.setText(tvTotalDistance.getText() + " " + total + " " + getResources().getText(R.string.kilometers));
     }
 
     private String getLastMonth(GregorianCalendar calendar) {

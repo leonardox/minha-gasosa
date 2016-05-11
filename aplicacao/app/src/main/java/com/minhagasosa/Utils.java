@@ -93,13 +93,24 @@ public class Utils {
         MinhaGasosaPreference.setDistanciaTotal(soma, context);
     }
 
+    public static float calculaDistanciaTotal(DaoSession session, String mes, String ano) {
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
+        float total = 0.0f;
+        Log.d("Utils", "num de rotas = " + listaRotaDistancia.size());
+
+        for (int i = 0; i < listaRotaDistancia.size(); i++) {
+            total += listaRotaDistancia.get(i).second;
+        }
+        return total;
+    }
+
     /**
      * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
      *
      * @param session
      * @return
      */
-    public static List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session, String mes,String ano) {
+    public static List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session, String mes, String ano) {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
         List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
 
