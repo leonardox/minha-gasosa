@@ -41,7 +41,8 @@ public class Utils {
                     r.setRepeteSemana(c.getInt(5) != 0);
                     r.setRepetoicoes(c.getInt(6));
                     r.setDeRotina(c.getInt(7) != 0);
-                    r.setData(new Date(c.getLong(8)));
+                    System.out.println("-----------" + (c.getLong(8)) + "---" + (new Date(c.getLong(8))));
+                    r.setData(c.getLong(8));
                     result.add(r);
                 } while (c.moveToNext());
             }

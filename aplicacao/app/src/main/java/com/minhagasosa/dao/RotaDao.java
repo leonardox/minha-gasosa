@@ -34,7 +34,7 @@ public class RotaDao extends AbstractDao<Rota, Long> {
         public final static Property RepeteSemana = new Property(5, Boolean.class, "repeteSemana", false, "REPETE_SEMANA");
         public final static Property Repetoicoes = new Property(6, Integer.class, "repetoicoes", false, "REPETOICOES");
         public final static Property DeRotina = new Property(7, Boolean.class, "deRotina", false, "DE_ROTINA");
-        public final static Property Data = new Property(8, Date.class, "data", false, "DATA");
+        public final static Property Data = new Property(8, Long.class, "data", false, "DATA");
     };
 
 
@@ -58,7 +58,7 @@ public class RotaDao extends AbstractDao<Rota, Long> {
                 "\"REPETE_SEMANA\" INTEGER," + // 5: repeteSemana
                 "\"REPETOICOES\" INTEGER," + // 6: repetoicoes
                 "\"DE_ROTINA\" INTEGER," + // 7: deRotina
-                "\"DATA\" DATE);"); //8: data
+                "\"DATA\" INTEGER);"); //8: data
     }
 
     /** Drops the underlying database table. */
@@ -111,9 +111,9 @@ public class RotaDao extends AbstractDao<Rota, Long> {
         if (deRotina != null) {
             stmt.bindLong(8, deRotina ? 1L: 0L);
         }
-        Date data = entity.getData();
-        if (data != null) {
-            stmt.bindString(9, data.toString());
+        long data = entity.getDataInLong();
+        if (data != -1) {
+            stmt.bindLong(9, data);
         }
     }
 
@@ -134,7 +134,8 @@ public class RotaDao extends AbstractDao<Rota, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getFloat(offset + 4), // distanciaVolta
             cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0, // repeteSemana
             cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // repetoicoes
-            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0 // deRotina
+            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0, // deRotina
+            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8)// deRotina
         );
         return entity;
     }
@@ -150,7 +151,7 @@ public class RotaDao extends AbstractDao<Rota, Long> {
         entity.setRepeteSemana(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
         entity.setRepetoicoes(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
         entity.setDeRotina(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
-        entity.setData(new Date());
+        entity.setData(cursor.getLong(offset + 8));
     }
     
     /** @inheritdoc */

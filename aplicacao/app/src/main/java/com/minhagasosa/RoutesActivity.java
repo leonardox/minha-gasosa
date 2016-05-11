@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,6 +199,8 @@ public class RoutesActivity extends AppCompatActivity {
         novaRota.setRepeteSemana(repeats);
         novaRota.setRepetoicoes(repetitions);
         novaRota.setDeRotina(deRotina);
+        novaRota.setData(new Date().getTime());
+
         rotaDao.update(novaRota);
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
         calculaDistanciaTotal(session, null, null, getApplicationContext());
