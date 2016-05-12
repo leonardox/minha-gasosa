@@ -90,7 +90,7 @@
                 android:id="@+id/ed_capacidade_tanque"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="@string/capacidade_tanque"
                 android:inputType="numberDecimal" />
         </android.support.design.widget.TextInputLayout>

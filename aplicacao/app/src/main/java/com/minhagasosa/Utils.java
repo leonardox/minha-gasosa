@@ -7,25 +7,22 @@ import android.util.Pair;
 
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
-import com.minhagasosa.dao.RotaDao;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Leonardo on 25/04/2016.
  */
 public class Utils {
-
-    public static List<Rota> listRotas(DaoSession session, String select) {
+    /**
+     * @param session
+     * @param select
+     * @return
+     */
+    public static List<Rota> listRotas(final DaoSession session, final String select) {
         ArrayList<Rota> result = new ArrayList<Rota>();
         Cursor c = session.getDatabase().rawQuery(select, null);
 
@@ -52,7 +49,13 @@ public class Utils {
         return result;
     }
 
-    public static List<Pair<String, Float>> calculaDistanciaPorRota(DaoSession session, String mes, String ano) {
+    /**
+     * @param session
+     * @param mes
+     * @param ano
+     * @return
+     */
+    public static List<Pair<String, Float>> calculaDistanciaPorRota(final DaoSession session, final String mes, final String ano) {
         String select = "SELECT * FROM ROTA";
 
         ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
@@ -82,8 +85,15 @@ public class Utils {
         return listaRotaDistancia;
     }
 
-    //CALCULO SEMANAL
-    public static void calculaDistanciaTotal(DaoSession session, String mes, String ano, Context context) {
+    /**
+     * Metodo que calcula a distancia total
+     *
+     * @param session
+     * @param mes
+     * @param ano
+     * @param context
+     */
+    public static void calculaDistanciaTotal(final DaoSession session, final String mes, final String ano, final Context context) {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
         float soma = 0.0f;
 
@@ -110,7 +120,7 @@ public class Utils {
      * @param session
      * @return
      */
-    public static List<Pair<String, Float>> calculaPrincipaisRotas(DaoSession session, String mes, String ano) {
+    public static List<Pair<String, Float>> calculaPrincipaisRotas(final DaoSession session, final String mes, String ano) {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
         List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
 

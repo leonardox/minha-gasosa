@@ -61,7 +61,19 @@
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/buttonOK"
-        android:layout_marginTop="89dp"
-        android:layout_below="@+id/ed_valor_maximo"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="72dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/ed_tanque_vezes"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_above="@+id/buttonOK"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp" />
+
 </RelativeLayout>

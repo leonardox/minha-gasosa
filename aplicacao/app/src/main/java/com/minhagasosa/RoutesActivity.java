@@ -14,40 +14,60 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Toast;
-
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
-
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
+/**
+ *  classe de rotas.
+ */
 public class RoutesActivity extends AppCompatActivity {
+
+    /**
+     * Verificar repetir
+     */
     private CheckBox checkRepeat;
+    /**
+     * Verificar rota
+     */
     private CheckBox checkBoxRoute;
+    /**
+     * Verificar tipo de rota
+     */
     private CheckBox checkBoxTypeRoute;
+    /**
+     * distancia ida
+     */
     private TextInputLayout distanceGoingWrapper;
+    /**
+     * distancia volta
+     */
     private TextInputLayout distanceBackWrapper;
+    /**
+     * tempo de rota
+     */
     private TextInputLayout timesRouteWrapper;
+    /**
+     * titulo da rota
+     */
     private TextInputLayout routeTitleWrapper;
+    /**
+     * Actividade das rotas
+     */
     private static final String TAG_ROUTES_ACTIVITY = "RoutesActivity";
+    /**
+     * requisicao da rota do mapa.
+     */
     private final int MAPA_ROTA_REQUEST = 102;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,6 +78,9 @@ public class RoutesActivity extends AppCompatActivity {
         initializeLayout();
     }
 
+    /**
+     * Metodo que inicializa os campos do layout com seus respectivos atributos
+     */
     private void initializeLayout() {
         distanceGoingWrapper = (TextInputLayout) findViewById(R.id.distance_going_wrapper);
         distanceBackWrapper = (TextInputLayout) findViewById(R.id.distance_comeback_wrapper);
@@ -68,10 +91,10 @@ public class RoutesActivity extends AppCompatActivity {
         distanceBackWrapper.setHint(getResources().getString(R.string.dist_come_back));
         timesRouteWrapper.setHint(getResources().getString(R.string.times_routes_week));
         routeTitleWrapper.setHint(getResources().getString(R.string.route_title));
-        Button botao_mapa = (Button) findViewById(R.id.button_mapa);
-        botao_mapa.setOnClickListener(new View.OnClickListener() {
+        Button botaoMapa = (Button) findViewById(R.id.button_mapa);
+        botaoMapa.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Intent i = new Intent(RoutesActivity.this, MapsActivity.class);
                 startActivityForResult(i, MAPA_ROTA_REQUEST);
             }
@@ -79,7 +102,7 @@ public class RoutesActivity extends AppCompatActivity {
         checkBoxRoute = (CheckBox) findViewById(R.id.check_route);
         checkBoxRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     distanceBackWrapper.setVisibility(View.VISIBLE);
                 } else {
@@ -90,7 +113,7 @@ public class RoutesActivity extends AppCompatActivity {
         checkBoxTypeRoute = (CheckBox) findViewById(R.id.check_type_route);
         checkBoxTypeRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     checkRepeat.setVisibility(View.VISIBLE);
                     timesRouteWrapper.setVisibility(View.VISIBLE);
@@ -104,7 +127,7 @@ public class RoutesActivity extends AppCompatActivity {
         checkRepeat = (CheckBox) findViewById(R.id.check_repeats);
         checkRepeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     timesRouteWrapper.getEditText().setEnabled(true);
                 } else {
@@ -115,14 +138,20 @@ public class RoutesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public final boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.distance_menu, menu);
         return true;
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    protected final void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch(requestCode){
             case MAPA_ROTA_REQUEST:
                 if (resultCode == RESULT_OK) {
                     distanceGoingWrapper.getEditText().setText("");
@@ -140,7 +169,7 @@ public class RoutesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.done_route) {
             if (validateFields()) {
                 saveRoute(getRouteTitle(), getDistanceGoing(), getDistanceBack(),
@@ -153,6 +182,10 @@ public class RoutesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * metodo que valida os campos de entrada
+     * @return true caso for validade ou false caso seja invalido
+     */
     private boolean validateFields() {
         String distanceGoing = distanceGoingWrapper.getEditText().getText().toString();
         String distanceBack = distanceBackWrapper.getEditText().getText().toString();
@@ -177,8 +210,18 @@ public class RoutesActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveRoute(String title, float distanceGoing, float distanceBack, boolean goingBack,
-                           boolean repeats, int repetitions, boolean deRotina) {
+    /**
+     *
+     * @param title
+     * @param distanceGoing
+     * @param distanceBack
+     * @param goingBack
+     * @param repeats
+     * @param repetitions
+     * @param deRotina
+     */
+    private void saveRoute(final String title, final float distanceGoing, final float distanceBack, final boolean goingBack,
+                           final boolean repeats, final int repetitions, final boolean deRotina) {
 
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -207,18 +250,31 @@ public class RoutesActivity extends AppCompatActivity {
         onBackPressed();
     }
 
-    public float getDistanceGoing() {
+    /**
+     * metodo que retorna a distancia de ida
+     * @return
+     */
+    public final float getDistanceGoing() {
         return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
     }
 
-    public float getDistanceBack() {
+    /**
+     * metodo que verifica se a rota foi checada, se sim retorna a distancia de volta
+     * caso contrário retorna a distancia de ida
+     * @return
+     */
+    public final float getDistanceBack() {
         if (checkBoxRoute.isChecked()) {
             return Integer.parseInt(distanceBackWrapper.getEditText().getText().toString());
         }
         return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
     }
 
-    public int getRepetitions() {
+    /**
+     * metodo que retorna o tempo da rota
+     * @return
+     */
+    public final int getRepetitions() {
         if (checkRepeat.isChecked()) {
             return Integer.parseInt(timesRouteWrapper.getEditText().getText().toString());
         } else {
@@ -226,7 +282,11 @@ public class RoutesActivity extends AppCompatActivity {
         }
     }
 
-    public String getRouteTitle() {
+    /**
+     * metodo que retorna o titulo da rota
+     * @return
+     */
+    public final String getRouteTitle() {
         return routeTitleWrapper.getEditText().getText().toString();
     }
 }

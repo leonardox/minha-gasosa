@@ -112,6 +112,8 @@ public class MinhaGasosaPreference {
         editor.commit();
     }
 
+
+
     public static float getConsumoRodoviarioSecundario(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
@@ -154,15 +156,15 @@ public class MinhaGasosaPreference {
         return preferences.getFloat(context.getString(R.string.shared_valor_maximo_gastar), Float.MAX_VALUE);
     }
 
-    public static void putCapacidadeDoTanque(int valor, Context context) {
+    public static void putCapacidadeDoTanque(float valor, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
-        editor.putInt(context.getString(R.string.shared_capacidade_tanque), valor);
+        editor.putFloat(context.getString(R.string.shared_capacidade_tanque), valor);
         editor.commit();
     }
 
     public static float getCapacidadeDoTanque(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getInt(context.getString(R.string.shared_capacidade_tanque), Integer.MAX_VALUE);
+        return preferences.getFloat(context.getString(R.string.shared_capacidade_tanque), (float)-1.0);
     }
 }
