@@ -35,7 +35,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText("Chery")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
@@ -47,7 +47,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText("Vanquish")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
@@ -62,19 +62,19 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText("Tendance 1.6 16V")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
     public void test_D_AdicionarPotencia() throws InterruptedException {
         sleep(500);
-        onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
+        //onView(withId(R.id.set_car)).perform(click());//Vai para a tela de seleção de carro
 
         onView(withId(R.id.spinnerPot)).perform(click());
         onView(withText("1.4")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
@@ -94,7 +94,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText("ELX 1.4")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
@@ -104,7 +104,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
@@ -127,7 +127,7 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(withText("1.6")).perform(click());
 
         sleep(1000);
-        onView(withId(R.id.btnPrevisoes)).perform(click());
+        //onView(withId(R.id.btnPrevisoes)).perform(click());
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 

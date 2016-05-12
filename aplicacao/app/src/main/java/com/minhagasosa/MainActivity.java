@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.CarroDao;
@@ -227,6 +228,18 @@ public class MainActivity extends AppCompatActivity {
             if (carro.getConsumoRodoviarioAlcool() != null) {
                 MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
                         getApplicationContext());
+            }
+        }
+        EditText edCapacidadeTanuqe = (EditText) findViewById(R.id.ed_capacidade_tanque);
+        String capacidade = edCapacidadeTanuqe.getText().toString();
+        if(!capacidade.trim().isEmpty()){
+            try {
+                float cap  = Float.valueOf(capacidade);
+                Log.e("OrigCap:", cap+"");
+                MinhaGasosaPreference.putCapacidadeDoTanque(cap, getApplicationContext());
+            }catch (Exception e){
+                Log.e("Treta", "Treta!");
+                e.printStackTrace();
             }
         }
         MinhaGasosaPreference.setDone(true, getApplicationContext());

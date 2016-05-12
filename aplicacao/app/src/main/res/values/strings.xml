@@ -18,6 +18,7 @@
     <string name="consumoRodoviarioPrimario">consumoRodoviarioPrimario</string>
     <string name="consumoUrbanoSecundario">consumoUrbanoSecundario</string>
     <string name="consumoRodoviarioSecundario">consumoRodoviarioSecundario</string>
+    <string name="capacidade_tanque_shp">capacidadeTanque</string>
     <string name="com_potencia">com_potencia</string>
     <string name="sharedPotencia">sharedPotencia</string>
     <string name="distancia_total">sharedPotencia</string>
@@ -60,5 +61,7 @@
     <string name="capacidade_tanque">Capacidade do tanque (Litros)</string>
     <string name="principais_rotas_mes_passado">As suas principais rotas no mês passado, foram:</string>
     <string name="principais_rotas_mes_atual">As suas principais rotas no mês atual:</string>
+    <string name="neeeded_times">"Você precisará encher o tanque "</string>
+    <string name="times">vezes</string>
 
 </resources>

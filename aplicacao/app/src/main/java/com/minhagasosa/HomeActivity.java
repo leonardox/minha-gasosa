@@ -497,7 +497,11 @@ public class HomeActivity extends AppCompatActivity {
             i.putExtra("fromHome", true);
             startActivity(i);
         } else if (item.getItemId() == R.id.set_planning) {
+            float dist = getDistanciaTotal();
+            float consumo = getConsumoUrbano();
             Intent intent = new Intent(this, PlanningActivity.class);
+            intent.putExtra("distance", dist);
+            intent.putExtra("consumo", consumo);
             startActivityForResult(intent, VALOR_MAXIMO_REQUEST);
         } else if (item.getItemId() == R.id.menu_item_comparar) {
             Intent intent = new Intent(this, ComparaGastosActivity.class);
