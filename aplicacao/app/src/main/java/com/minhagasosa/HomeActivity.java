@@ -1,5 +1,7 @@
 package com.minhagasosa;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 
 /**
  * Classe Inicial do app.
@@ -45,11 +48,11 @@ public class HomeActivity extends AppCompatActivity {
      */
     private TextView secundarioText;
     /**
-     *texto
+     * texto
      */
     private TextView secundarioPriceText;
     /**
-     *marcador de flex no carro
+     * marcador de flex no carro
      */
     private CheckBox checkFlex;
     /**
@@ -107,6 +110,8 @@ public class HomeActivity extends AppCompatActivity {
      */
     private ChartView chartView;
 
+    private PendingIntent pendingIntent;
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,7 +162,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(final CharSequence s, final int start, final int before,final int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
 
@@ -243,6 +248,23 @@ public class HomeActivity extends AppCompatActivity {
         recuperaValorMaximo();
         PieChart pieChart = (PieChart) findViewById(R.id.chart);
         chartView = new ChartView(this, pieChart);
+
+        startTheNotificationLauncher();
+    }
+
+    /**
+     * Método para criaçao de mecanismo para lançamento da notificação diária.
+     */
+    private void startTheNotificationLauncher() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 41);
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent intent = new Intent(HomeActivity.this, MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) HomeActivity.this.getSystemService(HomeActivity.this.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     /**
@@ -325,6 +347,7 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * metodo que adiciona o aviso de consumo baseado na previsao mensal
+     *
      * @param previsaoConsumoMensal
      */
     private void addAvisoConsumo(final float previsaoConsumoMensal) {
@@ -334,7 +357,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param view
      * @param mensagem
      */
@@ -359,7 +381,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *  metodo que pega o preco principla
+     * metodo que pega o preco principla
+     *
      * @return
      */
     private float getPrecoPrincipal() {
@@ -370,7 +393,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private float getPrecoSecundario() {
@@ -379,8 +401,8 @@ public class HomeActivity extends AppCompatActivity {
         }
         return 0.0f;
     }
+
     /**
-     *
      * @return
      */
 
@@ -389,7 +411,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private float getConsumoUrbano() {
@@ -398,7 +419,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private int getPorcentagemPrincipal() {
@@ -407,7 +427,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private int getPorcentagemSecundaria() {
@@ -416,7 +435,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
 
@@ -425,7 +443,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private float calculaPrevisaoMesNorlmal(final float precoPrincipal, final float distancias, final float consumoUrbano) {
@@ -433,7 +450,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     private float calculaPrevisaoSemanalNormal(final float porcentagemPrincipal, final float porcentagemSecundaria,
@@ -453,7 +469,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return
      */
     public final float getConsumoUrbanoSecundario() {
@@ -462,7 +477,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param porcentagemPrincipal
      * @param porcentagemSecundaria
      * @param distancias

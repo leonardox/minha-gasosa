@@ -66,6 +66,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.minhagasosa.HomeActivity" />
         </activity>
+
+        <receiver android:name=".MyReceiver" />
     </application>
 
 </manifest>
