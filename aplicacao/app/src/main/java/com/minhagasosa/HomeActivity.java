@@ -257,8 +257,8 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void startTheNotificationLauncher() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 41);
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
         Intent intent = new Intent(HomeActivity.this, MyReceiver.class);
