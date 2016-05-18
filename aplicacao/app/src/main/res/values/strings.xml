@@ -65,4 +65,36 @@
     <string name="neeeded_times">"Você precisará encher o tanque "</string>
     <string name="times">vezes</string>
 
+
+    <!-- DICAS fonte: http://www.meusgastos.com.br/blog/dica/30-dicas-para-economizar-combustivel/ -->
+    <string name="dica01">Pense duas vezes antes de sair procurando o posto mais barato. Se você tiver que andar 15 km para economizar R$ 0,10 por litro, provavelmente terá gasto todo seu “lucro” no caminho. Faça as contas!</string>
+    <string name="dica02">Pise no acelerador de forma suave. Quanto mais você pisa no acelerador maior é a quantidade de gasolina que você envia para o motor.</string>
+    <string name="dica03">Prefira andar com o caro de janelas fechadas. Nestas condições você melhora a aerodinâmica do carro que se refletirá em economia para você.</string>
+    <string name="dica04">Preste atenção no trânsito. Não adianta acelerar se você vai ser o primeiro a chegar no sinal fechado!</string>
+    <string name="dica05">Uma boa dica para saber se você anda pisando demais no acelerador é analisar se você pisa demais no freio. Além de gastar sua pastilha de forma desnecessária, todo seu esforço para atingir a velocidade é perdida. Pé leve no freio e no acelerador!</string>
+    <string name="dica06">Respeite seu conta-giros. Trocar marchas antes ou depois da hora gasta mais combustível. O ideal é que você fique na rotação de torque máximo do seu carro (no manual do fabricante você descobre isso).</string>
+    <string name="dica07">Verifique quando deve trocar oléo e filtros de ar, e troque sempre de acordo com o manual do fabricante.</string>
+    <string name="dica08">Retire o bagageiro do carro quando não for utilizado. Ele piora a aerodinâmica aumentando o consumo.</string>
+    <string name="dica09">Esqueça aquele velho hábito de acelerar o carro antes de desligá-lo. Você pode danificar o catalisador, o que aumenta a emissão de poluentes e prejudica o desempenho.</string>
+    <string name="dica10">Quando atingir a velocidade desejada, alivie o pé. O ideal é que seu pe pressione o acelerador apenas o necessário para manter a velocidade.</string>
+    <string name="dica11">Otimize sua rota! Antes de sair de casa pense qual o melhor trajeto a percorrer, evitando andar mais que o necessário.</string>
+    <string name="dica12">Faça sempre a revisão do seu carro. Um motor desregulado pode aumentar em 60% seus gastos com combustível (além de poluir o meio ambiente).</string>
+    <string name="dica13">Sempre que possível vá a pé. É limpo, melhora sua saúde e te economiza no carro, academia e no médico!</string>
+    <string name="dica14">Carregar peso aumenta o consumo. Então nada de levar compras para passear! Cada 50kg a mais equivalem a 1% de aumento no consumo, sem considerar o desgastes dos freios, suspensão, pneus…</string>
+    <string name="dica15">Procure caminhos alternativos. Às vezes é mais vantajoso andar um pouco mais do que ficar no anda-e-pára dos engarrafamentos.</string>
+    <string name="dica16">Desligue o carro se for ficar parado por mais do que dois minutos</string>
+    <string name="dica17">Porque não utilizar transportes coletivos? Economiza dinheiro, evita estresse de dirigir no trânsito congestionado das grandes cidades e muitas vezes é mais rápido! Procure conhecer as opções para seu dia-a-dia.</string>
+    <string name="dica18">Se o carro para você é indispensável, procure outras pessoas que fazem o mesmo trajeto que você. Vocês podem revezar!</string>
+    <string name="dica19">O excesso de velocidade, além dos problemas de segurança, aumenta o consumo. O Centro de Pesquisa da Petrobrás realizou testes que indicaram um aumento no consumo de até 20% para carros que andavam a 100km/h confrontados com outros que não passavam dos 80km/h.</string>
+    <string name="dica20">Assim como é importante você anotar seus gastos para ter controle da sua vida financeiro, é importar anotar o consumo do seu carro para saber como ele anda! Tenha uma planilha onde você anota o valor percorrido e quantos litros você consumiu. Mas lembre-se, para funcionar, você deve sempre completar o tanque.</string>
+    <string name="dica21">Evite andar com o carro na reserva! Além de correr o risco de parar no meio do caminho, você força a bomba de combustível (que irá queimar com o tempo) e irá consumir mais combustível. Sim, seu carro é mais econômico com o tanque cheio.</string>
+    <string name="dica22">Matenha seus pneus sempre calibrados. Alguns psi a mais ou menos podem fazer uma boa diferença no final do mês.</string>
+    <string name="dica23">Esta não é segredo. Em dias frios, desligue o ar condicionado.</string>
+    <string name="dica24">Hoje em dia carro não precisa mais ser esquentado! Evite perder um tempo precioso dentro de casa (mas sim, conforme o motor aquece o carro fica mais econômico).</string>
+    <string name="dica25">Esta é para você que mora nos grandes centros urbanos. Não perca tempo procurando a vaga perfeita nas ruas. A experiência mostra que você irá dar voltas e mais voltas em busca de vagas.</string>
+    <string name="dica26">Para shopping lotados, entre em um corredor e desligue o carro até encontrar alguém saindo.</string>
+    <string name="dica27">Você já possuí habilitação! Então pare de treinar rampa em subida e utilize os freios!</string>
+    <string name="dica28">Não descanse seu pé nos pedais. Ainda que leve, o pé sobre o pedal do freio irá diminuir a velocidade do carro.</string>
+    <string name="dica29">Mesmo em descidas, desça engrenado. Os carros atuais consomem mais gasolina em descida no ponto morto.</string>
+    <string name="dica30">Antes de abastecer, veja qual posto tem a gasolina mais barata do seu bairro. Na sessão combustíveis do site você encontra o preço de todos os postos de todas as capitais brasileiras e ainda pode ler e deixar comentários sobre seus postos favoritos ou mais suspeitos.</string>
 </resources>
