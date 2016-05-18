@@ -357,10 +357,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * @param view
-     * @param mensagem
+     * Exibe um aviso em uma snackbar.
+     * @param view uma instancia da view principal.
+     * @param mensagem a mensagem que se quer exibir.
      */
-
     private void mostraAviso(final View view, final String mensagem) {
         Snackbar snackbar = Snackbar
                 .make(view, mensagem, Snackbar.LENGTH_INDEFINITE)

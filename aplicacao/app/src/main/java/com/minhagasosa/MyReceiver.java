@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 /**
- * Created by silva on 16/05/2016.
+ * Broadcast responsavél por lançar a notificação toda vez que chega a hora definida.
  */
 public class MyReceiver extends BroadcastReceiver {
     int MID = 0;
