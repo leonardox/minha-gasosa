@@ -1,12 +1,15 @@
 package com.minhagasosa;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -151,7 +154,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, RoutesActivity.class);
                 startActivity(intent);
-                //Toast.makeText(HomeActivity.this, "Ação de adicionar rota aqui...", Toast.LENGTH_SHORT).show();
             }
         });
         priceFuelEditText = (EditText) findViewById(R.id.editTextPrice);
@@ -256,9 +258,10 @@ public class HomeActivity extends AppCompatActivity {
      * Método para criaçao de mecanismo para lançamento da notificação diária.
      */
     private void startTheNotificationLauncher() {
+        Log.d("HomeActivity", "entrou no startTheNotificationLauncher");
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.MINUTE, 40);
         calendar.set(Calendar.SECOND, 0);
 
         Intent intent = new Intent(HomeActivity.this, MyReceiver.class);
@@ -358,7 +361,8 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * Exibe um aviso em uma snackbar.
-     * @param view uma instancia da view principal.
+     *
+     * @param view     uma instancia da view principal.
      * @param mensagem a mensagem que se quer exibir.
      */
     private void mostraAviso(final View view, final String mensagem) {
