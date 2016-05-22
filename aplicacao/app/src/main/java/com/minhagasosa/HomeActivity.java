@@ -524,6 +524,9 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menu_item_comparar) {
             Intent intent = new Intent(this, ComparaGastosActivity.class);
             startActivity(intent);
+        }else if(item.getItemId() == R.id.list_routes){
+            Intent intent = new Intent(this, ListRoutesActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
