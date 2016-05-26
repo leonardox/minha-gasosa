@@ -1,6 +1,7 @@
 package com.minhagasosa;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,10 @@ public class ComparaGastosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compara_gastos);
+        ActionBar action = getSupportActionBar();
+        if(action != null){
+            action.setTitle("Comparação dos Gastos");
+        }
 
         PieChart pieChartCurrentMonth = (PieChart) findViewById(R.id.chart_current_month);
         chartViewCurrentMonth = new ChartView(this, pieChartCurrentMonth);

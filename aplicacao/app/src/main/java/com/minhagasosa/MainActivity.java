@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -78,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle("Configurar Carro");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "casosa-db", null);
         self = this;
         JobManager jobManager = new JobManager(this);
@@ -211,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             Carro carro = (Carro) query.list().get(0);
 
             if (carro.getIsFlex() != null) {
+                System.out.println("----setCarroIsFlex--"+carro.getIsFlex());
                 MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getApplicationContext());
             }
             if (carro.getConsumoUrbanoGasolina() != null) {
@@ -407,6 +415,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
                         getApplicationContext())));
                 salvarInformacoesCarro(cDao);
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);

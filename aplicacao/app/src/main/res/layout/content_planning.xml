@@ -15,21 +15,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Planejamento"
-        android:id="@+id/textViewPlanejamento"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Quanto você pretende gastar esse mês com combustível?"
         android:id="@+id/textViewMessageFuel"
-        android:layout_below="@+id/textViewPlanejamento"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginTop="79dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -39,10 +32,7 @@
         android:id="@+id/ed_valor_maximo"
         android:layout_marginTop="41dp"
         android:layout_below="@+id/textViewMessageFuel"
-        android:layout_alignRight="@+id/textViewPlanejamento"
-        android:layout_alignEnd="@+id/textViewPlanejamento"
-        android:layout_alignLeft="@+id/textViewPlanejamento"
-        android:layout_alignStart="@+id/textViewPlanejamento" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,9 +51,8 @@
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/buttonOK"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="72dp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"

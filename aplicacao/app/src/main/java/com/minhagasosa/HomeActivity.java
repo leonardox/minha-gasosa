@@ -4,29 +4,36 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
@@ -157,6 +164,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         priceFuelEditText = (EditText) findViewById(R.id.editTextPrice);
+        priceFuelEditText.setText(String.valueOf(MinhaGasosaPreference.getPrice(getApplicationContext())));
         priceFuelEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
@@ -219,31 +227,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         checkFlex = (CheckBox) findViewById(R.id.checkBox);
+        boolean isChecked = MinhaGasosaPreference.getCarroIsFlex(getApplicationContext());
+        checkFlex.setChecked(isChecked);
+        updateIsCheck(isChecked);
         checkFlex.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    secundarioText.setVisibility(View.VISIBLE);
-                    secundarioPriceText.setVisibility(View.VISIBLE);
-                    priceFuelEditText2.setVisibility(View.VISIBLE);
-                    porcentagem1.setVisibility(View.VISIBLE);
-                    porcentagem2.setVisibility(View.VISIBLE);
-                    spinnerPorcentagem1.setVisibility(View.VISIBLE);
-                    spinnerPorcentagem2.setVisibility(View.VISIBLE);
-                    porcento1.setVisibility(View.VISIBLE);
-                    porcento2.setVisibility(View.VISIBLE);
-                } else {
-                    secundarioText.setVisibility(View.GONE);
-                    priceFuelEditText2.setText("");
-                    secundarioPriceText.setVisibility(View.GONE);
-                    priceFuelEditText2.setVisibility(View.GONE);
-                    porcentagem1.setVisibility(View.GONE);
-                    porcentagem2.setVisibility(View.GONE);
-                    spinnerPorcentagem1.setVisibility(View.GONE);
-                    spinnerPorcentagem2.setVisibility(View.GONE);
-                    porcento1.setVisibility(View.GONE);
-                    porcento2.setVisibility(View.GONE);
-                }
+                MinhaGasosaPreference.setCarroIsFlex(isChecked, getApplicationContext());
+                updateIsCheck(isChecked);
             }
         });
 
@@ -252,6 +243,31 @@ public class HomeActivity extends AppCompatActivity {
         chartView = new ChartView(this, pieChart);
 
         startTheNotificationLauncher();
+    }
+
+    private void updateIsCheck(boolean isChecked) {
+        if (isChecked) {
+            secundarioText.setVisibility(View.VISIBLE);
+            secundarioPriceText.setVisibility(View.VISIBLE);
+            priceFuelEditText2.setVisibility(View.VISIBLE);
+            porcentagem1.setVisibility(View.VISIBLE);
+            porcentagem2.setVisibility(View.VISIBLE);
+            spinnerPorcentagem1.setVisibility(View.VISIBLE);
+            spinnerPorcentagem2.setVisibility(View.VISIBLE);
+            porcento1.setVisibility(View.VISIBLE);
+            porcento2.setVisibility(View.VISIBLE);
+        } else {
+            secundarioText.setVisibility(View.GONE);
+            priceFuelEditText2.setText("");
+            secundarioPriceText.setVisibility(View.GONE);
+            priceFuelEditText2.setVisibility(View.GONE);
+            porcentagem1.setVisibility(View.GONE);
+            porcentagem2.setVisibility(View.GONE);
+            spinnerPorcentagem1.setVisibility(View.GONE);
+            spinnerPorcentagem2.setVisibility(View.GONE);
+            porcento1.setVisibility(View.GONE);
+            porcento2.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -524,12 +540,115 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menu_item_comparar) {
             Intent intent = new Intent(this, ComparaGastosActivity.class);
             startActivity(intent);
-        }else if(item.getItemId() == R.id.list_routes){
+        } else if(item.getItemId() == R.id.list_routes){
             Intent intent = new Intent(this, ListRoutesActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.menu_item_vantagem) {
+            showDialogVantagemCombustivel();
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialogVantagemCombustivel() {
+        AlertDialog.Builder builder = new  AlertDialog.Builder(this);
+        builder.setTitle("Vantagem combustível");
+        String combustivel = "";
+        final float preco = MinhaGasosaPreference.getPrice(this);
+        int resultado = 0;
+        boolean isFlex = MinhaGasosaPreference.getCarroIsFlex(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.vantagem_dialog_layout, null);
+        final EditText precoAlcoolEditText = (EditText) dialoglayout.findViewById(R.id.editTextAlcool);
+        final TextView message = (TextView) dialoglayout.findViewById(R.id.mensagem);
+        TextView messageAlcool = (TextView) dialoglayout.findViewById(R.id.mensagemAlcool);
+        final Button buttonCalcular = (Button) dialoglayout.findViewById(R.id.buttonCalcular);
+        if(isFlex){
+            precoAlcoolEditText.setVisibility(View.GONE);
+            messageAlcool.setVisibility(View.GONE);
+            buttonCalcular.setVisibility(View.GONE);
+            double precoGasolina = preco;
+            double precoAlcool = getPrecoSecundario();
+            if (precoAlcool == 0) {
+                calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool, buttonCalcular);
+            } else {
+                double calculoCombustivel = (precoAlcool/precoGasolina)*100;
+                resultado = (int) calculoCombustivel;
+                if(resultado <= 70){
+                    combustivel += "Álcool";
+                } else {
+                    combustivel += "Gasolina";
+                }
+                message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
+            }
+
+        } else {
+            calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool,
+                    buttonCalcular);
+        }
+        builder.setView(dialoglayout);
+        builder.setPositiveButton(getString(android.R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        View view = HomeActivity.this.getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager)getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void calculaSemCombustivelSecundario(final float preco, final EditText precoAlcoolEditText, final TextView message, TextView messageAlcool, Button buttonCalcular) {
+        precoAlcoolEditText.setVisibility(View.VISIBLE);
+        messageAlcool.setVisibility(View.VISIBLE);
+        buttonCalcular.setVisibility(View.VISIBLE);
+        message.setText("Informe o valor do combustível secundário para calcular");
+        buttonCalcular.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String combustivel = "";
+                if (!precoAlcoolEditText.getText().toString().isEmpty()) {
+                    double precoGasolina = preco;
+                    if (preco == 0) {
+                        Toast.makeText(getApplicationContext(), "Você precisa informar o valor da gasolina", Toast.LENGTH_SHORT).show();
+                    } else {
+                        double precoAlcool = Float.valueOf(precoAlcoolEditText.getText().toString());
+                        double calculoCombustivel = (precoAlcool / precoGasolina) * 100;
+                        int resultado = (int) calculoCombustivel;
+                        if (resultado <= 70) {
+                            combustivel += "Álcool";
+                        } else {
+                            combustivel += "Gasolina";
+                        }
+                        message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
+                    }
+
+                }
+            }
+        });
+        precoAlcoolEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    message.setText("Informe o valor do combustível secundário para calcular");
+                }
+            }
+        });
     }
 
     @Override

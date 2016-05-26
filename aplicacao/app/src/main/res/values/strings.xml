@@ -53,7 +53,7 @@
     <string name="origin">Origem</string>
     <string name="choice_vehicle">Escolha seu veículo</string>
     <string name="consumo_principais_rotas">Consumo Nas Principais Rotas</string>
-    <string name="title_activity_planning">Planning</string>
+    <string name="title_activity_planning">Planejamento</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="compare_gastos">Compare os seus gastos no mês anterior com os do mês atual</string>
     <string name="consumo_mes_anterior">No mês passado, você gastou no total: xxx reais com combustível</string>

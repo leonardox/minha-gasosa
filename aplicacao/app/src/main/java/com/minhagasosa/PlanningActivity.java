@@ -1,9 +1,11 @@
 package com.minhagasosa;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,10 @@ public class PlanningActivity extends AppCompatActivity {
         setContentView(R.layout.activity_planning);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         final EditText editValor = (EditText) findViewById(R.id.ed_valor_maximo);
 
         Button button = (Button) findViewById(R.id.buttonOK);
@@ -40,7 +45,7 @@ public class PlanningActivity extends AppCompatActivity {
             float vezes = (distancia/consumo)/capacidade;
             DecimalFormat df = new DecimalFormat("##.##");
             df.setRoundingMode(RoundingMode.DOWN);
-            edVezes.setText(getString(R.string.neeeded_times) + df.format(vezes) + " " +getString(R.string.times) + ".");
+            edVezes.setText(getString(R.string.neeeded_times) + df.format(vezes) + " " + getString(R.string.times) + ".");
         }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,4 +58,11 @@ public class PlanningActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public final boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

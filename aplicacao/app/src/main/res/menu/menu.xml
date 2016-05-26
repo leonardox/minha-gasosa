@@ -26,4 +26,12 @@
         android:icon="@drawable/ic_rv_hookup_white_24dp"
         android:title="Comparação"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item_vantagem"
+        android:icon="@drawable/ic_import_export_white_18dp"
+        android:title="Vantagem Combustível"
+        app:showAsAction="always" />
+
+
 </menu>
