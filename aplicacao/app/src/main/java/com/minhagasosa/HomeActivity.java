@@ -1,17 +1,14 @@
 package com.minhagasosa;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +42,9 @@ import java.util.Calendar;
  * Classe Inicial do app.
  */
 public class HomeActivity extends AppCompatActivity {
+
+    private String Home = "HomeActivity";
+    private String R$ = "R$ ";
     /**
      * preco do combustivel primario
      */
@@ -110,7 +110,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      *
      */
-    private final int VALOR_MAXIMO_REQUEST = 101;
+    private static final int VALOR_MAXIMO_REQUEST = 101;
     /**
      * valor maximo que pode gastar
      */
@@ -147,19 +147,16 @@ public class HomeActivity extends AppCompatActivity {
         porcento2.setVisibility(View.GONE);
         porcentagem2 = (TextView) findViewById(R.id.textView11);
         spinnerPorcentagem1 = (Spinner) findViewById(R.id.spinner);
-        spinnerPorcentagem1.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, porcento));
+        spinnerPorcentagem1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem1.setVisibility(View.GONE);
         spinnerPorcentagem2 = (Spinner) findViewById(R.id.spinner2);
-        spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, porcento));
+        spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem2.setVisibility(View.GONE);
         layoutMain = (ScrollView) findViewById(R.id.layout_main);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, RoutesActivity.class);
+            public void onClick(View view) {Intent intent = new Intent(HomeActivity.this, RoutesActivity.class);
                 startActivity(intent);
             }
         });
@@ -170,12 +167,10 @@ public class HomeActivity extends AppCompatActivity {
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
-
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
-
             @Override
             public void afterTextChanged(final Editable s) {
                 if (s.toString().isEmpty()) {
@@ -183,7 +178,6 @@ public class HomeActivity extends AppCompatActivity {
                 } else {
                     MinhaGasosaPreference.putPrice(Float.valueOf(s.toString()),
                             getApplicationContext());
-
                 }
                 gerarPrevisao();
             }
@@ -193,12 +187,10 @@ public class HomeActivity extends AppCompatActivity {
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
-
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
-
             @Override
             public void afterTextChanged(final Editable s) {
                 gerarPrevisao();
@@ -209,10 +201,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
-
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
-
             }
         });
         spinnerPorcentagem2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -220,10 +210,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
-
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
-
             }
         });
         checkFlex = (CheckBox) findViewById(R.id.checkBox);
@@ -237,11 +225,9 @@ public class HomeActivity extends AppCompatActivity {
                 updateIsCheck(isChecked);
             }
         });
-
         recuperaValorMaximo();
         PieChart pieChart = (PieChart) findViewById(R.id.chart);
         chartView = new ChartView(this, pieChart);
-
         startTheNotificationLauncher();
     }
 
@@ -274,7 +260,7 @@ public class HomeActivity extends AppCompatActivity {
      * Método para criaçao de mecanismo para lançamento da notificação diária.
      */
     private void startTheNotificationLauncher() {
-        Log.d("HomeActivity", "entrou no startTheNotificationLauncher");
+        Log.d(Home, "entrou no startTheNotificationLauncher");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 9);
         calendar.set(Calendar.MINUTE, 0);
@@ -295,11 +281,10 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected final void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == VALOR_MAXIMO_REQUEST) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == VALOR_MAXIMO_REQUEST && resultCode == RESULT_OK) {
                 valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
                 addAvisoConsumo();
-            }
+
         }
     }
 
@@ -310,24 +295,24 @@ public class HomeActivity extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         float previsaoConsumoMensal = 0;
-        if (checkFlex.isChecked() == false) {
+        if (!checkFlex.isChecked()) {
             float precoPrincipal = getPrecoPrincipal();
             float distancias = getDistanciaTotal();
-            Log.d("HomeActivity", "Preço principal: " + precoPrincipal);
-            Log.d("HomeActivity", "Distancias: " + distancias);
+            Log.d(Home, "Preço principal: " + precoPrincipal);
+            Log.d(Home, "Distancias: " + distancias);
 
             float consumoUrbano = getConsumoUrbano();
-            Log.d("HomeActivity", "Consumo: " + consumoUrbano);
+            Log.d(Home, "Consumo: " + consumoUrbano);
 
             float valorPrevistoSemana = calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano);
             previsaoConsumoMensal = calculaPrevisaoMesNorlmal(precoPrincipal, distancias, consumoUrbano);
-            consumoS.setText("R$ " + df.format(valorPrevistoSemana));
-            consumoM.setText("R$ " + df.format(previsaoConsumoMensal));
+            consumoS.setText(R$ + df.format(valorPrevistoSemana));
+            consumoM.setText(R$ + df.format(previsaoConsumoMensal));
         } else {
             float precoPrincipal = getPrecoPrincipal();
             float precoSecundario = getPrecoSecundario();
             float distancias = getDistanciaTotal();
-            Log.d("HomeActivity", "Distancias: " + distancias);
+            Log.d(Home, "Distancias: " + distancias);
             float consumoUrbano = getConsumoUrbano();
             float consumoUrbanoSecundario = getConsumoUrbanoSecundario();
             int porcentagemPrincipal = getPorcentagemPrincipal();
@@ -339,8 +324,8 @@ public class HomeActivity extends AppCompatActivity {
                     porcentagemSecundaria, distancias, consumoUrbano, consumoUrbanoSecundario,
                     precoPrincipal, precoSecundario);
 
-            consumoS.setText("R$ " + df.format(valorPrevistoSemanal));
-            consumoM.setText("R$ " + df.format(previsaoConsumoMensal));
+            consumoS.setText(R$ + df.format(valorPrevistoSemanal));
+            consumoM.setText(R$ + df.format(previsaoConsumoMensal));
         }
 
         addAvisoConsumo(previsaoConsumoMensal);
@@ -481,9 +466,9 @@ public class HomeActivity extends AppCompatActivity {
             float gastoPrincipal = (distancias / consumoUrbano) * precoPrincipal;
             float gastoSecundario = (distancias / consumoUrbanoSecundario) * precoSecundario;
             result = (((gastoPrincipal * porcentagemPrincipal) / 100) + ((gastoSecundario * porcentagemSecundaria) / 100));
-            Log.d("HomeActivity", "consumoUrbano" + consumoUrbano);
-            Log.d("HomeActivity", "consumoS" + consumoUrbanoSecundario);
-            Log.d("HomeActivity", "result" + result);
+            Log.d(Home, "consumoUrbano" + consumoUrbano);
+            Log.d(Home, "consumoS" + consumoUrbanoSecundario);
+            Log.d(Home, "result" + result);
         }
         return result;
     }

@@ -64,7 +64,7 @@ public class RoutesActivity extends AppCompatActivity {
     /**
      * requisicao da rota do mapa.
      */
-    private final int MAPA_ROTA_REQUEST = 102;
+    private static final int MAPA_ROTA_REQUEST = 102;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {

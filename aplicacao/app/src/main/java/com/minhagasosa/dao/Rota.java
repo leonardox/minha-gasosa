@@ -38,72 +38,72 @@ public class Rota {
         this.data = date;//new Date();
     }
 
-    public Long getId() {
+    public final Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public final void setId(Long id) {
         this.id = id;
     }
 
-    public String getNome() {
+    public final String getNome() {
         return Nome;
     }
 
-    public void setNome(String Nome) {
+    public final void setNome(String Nome) {
         this.Nome = Nome;
     }
 
-    public Boolean getIdaEVolta() {
+    public final Boolean getIdaEVolta() {
         return idaEVolta;
     }
 
-    public void setIdaEVolta(Boolean idaEVolta) {
+    public final void setIdaEVolta(Boolean idaEVolta) {
         this.idaEVolta = idaEVolta;
     }
 
-    public Float getDistanciaIda() {
+    public final Float getDistanciaIda() {
         return distanciaIda;
     }
 
-    public void setDistanciaIda(Float distanciaIda) {
+    public final void setDistanciaIda(Float distanciaIda) {
         this.distanciaIda = distanciaIda;
     }
 
-    public Float getDistanciaVolta() {
+    public final Float getDistanciaVolta() {
         return distanciaVolta;
     }
 
-    public void setDistanciaVolta(Float distanciaVolta) {
+    public final void setDistanciaVolta(Float distanciaVolta) {
         this.distanciaVolta = distanciaVolta;
     }
 
-    public Boolean getRepeteSemana() {
+    public final Boolean getRepeteSemana() {
         return repeteSemana;
     }
 
-    public void setRepeteSemana(Boolean repeteSemana) {
+    public final void setRepeteSemana(Boolean repeteSemana) {
         this.repeteSemana = repeteSemana;
     }
 
-    public Integer getRepetoicoes() {
+    public final Integer getRepetoicoes() {
         return repetoicoes;
     }
 
-    public void setRepetoicoes(Integer repetoicoes) {
+    public final void setRepetoicoes(Integer repetoicoes) {
         this.repetoicoes = repetoicoes;
     }
 
-    public Boolean getDeRotina() {
+    public final Boolean getDeRotina() {
         return deRotina;
     }
 
-    public void setDeRotina(Boolean deRotina) {
+    public final void setDeRotina(Boolean deRotina) {
         this.deRotina = deRotina;
     }
 
-    public void setData(long data){ this.data = data; }
+    public final void setData(long data){ this.data = data; }
 
-    public long getDataInLong() { return  data; }
-    public Date getData() { return  new Date(data); }
+    public final long getDataInLong() { return  data; }
+    public final Date getData() { return  new Date(data); }
 }

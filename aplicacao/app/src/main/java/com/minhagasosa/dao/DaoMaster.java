@@ -40,7 +40,7 @@ public class DaoMaster extends AbstractDaoMaster {
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db) {
+        public final void onCreate(SQLiteDatabase db) {
             Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
             createAllTables(db, false);
         }
@@ -53,7 +53,7 @@ public class DaoMaster extends AbstractDaoMaster {
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        public final void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " + newVersion + " by dropping all tables");
             dropAllTables(db, true);
             onCreate(db);
@@ -67,11 +67,11 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(RotaDao.class);
     }
     
-    public DaoSession newSession() {
+    public final DaoSession newSession() {
         return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
     }
     
-    public DaoSession newSession(IdentityScopeType type) {
+    public final DaoSession newSession(IdentityScopeType type) {
         return new DaoSession(db, type, daoConfigMap);
     }
     

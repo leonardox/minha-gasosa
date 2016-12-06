@@ -23,7 +23,7 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
         public final static Property MODELO = new Property(1, String.class, "MODELO", false, "MODELO");
     };
 
@@ -52,7 +52,7 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
 
     /** @inheritdoc */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Modelo entity) {
+    protected final void bindValues(SQLiteStatement stmt, Modelo entity) {
         stmt.clearBindings();
  
         Long id = entity.getId();
@@ -68,13 +68,13 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
 
     /** @inheritdoc */
     @Override
-    public Long readKey(Cursor cursor, int offset) {
+    public final Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
-    public Modelo readEntity(Cursor cursor, int offset) {
+    public final Modelo readEntity(Cursor cursor, int offset) {
         Modelo entity = new Modelo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // MODELO
@@ -84,21 +84,21 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
      
     /** @inheritdoc */
     @Override
-    public void readEntity(Cursor cursor, Modelo entity, int offset) {
+    public final void readEntity(Cursor cursor, Modelo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMODELO(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
      }
     
     /** @inheritdoc */
     @Override
-    protected Long updateKeyAfterInsert(Modelo entity, long rowId) {
+    protected final Long updateKeyAfterInsert(Modelo entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Long getKey(Modelo entity) {
+    public final Long getKey(Modelo entity) {
         if(entity != null) {
             return entity.getId();
         } else {
@@ -108,7 +108,7 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
 
     /** @inheritdoc */
     @Override    
-    protected boolean isEntityUpdateable() {
+    protected final boolean isEntityUpdateable() {
         return true;
     }
     

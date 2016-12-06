@@ -26,16 +26,16 @@ public class CarroDao extends AbstractDao<Carro, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Marca = new Property(1, String.class, "marca", false, "MARCA");
-        public final static Property Ano = new Property(2, String.class, "ano", false, "ANO");
-        public final static Property ConsumoUrbanoGasolina = new Property(3, Float.class, "consumoUrbanoGasolina", false, "CONSUMO_URBANO_GASOLINA");
-        public final static Property ConsumoRodoviarioGasolina = new Property(4, Float.class, "consumoRodoviarioGasolina", false, "CONSUMO_RODOVIARIO_GASOLINA");
-        public final static Property ConsumoUrbanoAlcool = new Property(5, Float.class, "consumoUrbanoAlcool", false, "CONSUMO_URBANO_ALCOOL");
-        public final static Property ConsumoRodoviarioAlcool = new Property(6, Float.class, "consumoRodoviarioAlcool", false, "CONSUMO_RODOVIARIO_ALCOOL");
-        public final static Property IsFlex = new Property(7, Boolean.class, "isFlex", false, "IS_FLEX");
-        public final static Property Version = new Property(8, String.class, "version", false, "VERSION");
-        public final static Property ModeloId = new Property(9, Long.class, "modeloId", false, "MODELO_ID");
+        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
+        public final static Property MARCA = new Property(1, String.class, "marca", false, "MARCA");
+        public final static Property ANO = new Property(2, String.class, "ano", false, "ANO");
+        public final static Property CONSUMO_URBANO_GASOLINA = new Property(3, Float.class, "consumoUrbanoGasolina", false, "CONSUMO_URBANO_GASOLINA");
+        public final static Property CONSUMO_RODOVIARIO_GASOLINA = new Property(4, Float.class, "consumoRodoviarioGasolina", false, "CONSUMO_RODOVIARIO_GASOLINA");
+        public final static Property CONSUMO_URBANO_ALCOOL = new Property(5, Float.class, "consumoUrbanoAlcool", false, "CONSUMO_URBANO_ALCOOL");
+        public final static Property CONSUMO_RODOVIARIO_ALCOOL = new Property(6, Float.class, "consumoRodoviarioAlcool", false, "CONSUMO_RODOVIARIO_ALCOOL");
+        public final static Property IS_FLEX = new Property(7, Boolean.class, "isFlex", false, "IS_FLEX");
+        public final static Property VERSION = new Property(8, String.class, "version", false, "VERSION");
+        public final static Property MODELO_ID = new Property(9, Long.class, "modeloId", false, "MODELO_ID");
     };
 
     private DaoSession daoSession;
@@ -74,7 +74,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
 
     /** @inheritdoc */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Carro entity) {
+    public void bindValues(SQLiteStatement stmt, Carro entity) {
         stmt.clearBindings();
  
         Long id = entity.getId();
@@ -129,7 +129,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
     }
 
     @Override
-    protected void attachEntity(Carro entity) {
+    public void attachEntity(Carro entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -198,7 +198,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
     
     private String selectDeep;
 
-    protected String getSelectDeep() {
+    String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -222,7 +222,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
         return entity;    
     }
 
-    public Carro loadDeep(Long key) {
+    Carro loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -250,7 +250,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
     }
     
     /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<Carro> loadAllDeepFromCursor(Cursor cursor) {
+    List<Carro> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Carro> list = new ArrayList<Carro>(count);
         
@@ -272,7 +272,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
         return list;
     }
     
-    protected List<Carro> loadDeepAllAndCloseCursor(Cursor cursor) {
+    List<Carro> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -282,7 +282,7 @@ public class CarroDao extends AbstractDao<Carro, Long> {
     
 
     /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<Carro> queryDeep(String where, String... selectionArg) {
+    List<Carro> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }

@@ -19,7 +19,7 @@ public class ComparaGastosActivity extends AppCompatActivity {
     private boolean isFromLastYear = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compara_gastos);
         ActionBar action = getSupportActionBar();

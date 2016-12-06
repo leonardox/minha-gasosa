@@ -21,7 +21,7 @@ public class Modelo {
         this.MODELO = MODELO;
     }
 
-    public Long getId() {
+    public final Long getId() {
         return id;
     }
 
@@ -29,16 +29,16 @@ public class Modelo {
         this.id = id;
     }
 
-    public String getMODELO() {
+    public final String getMODELO() {
         return MODELO;
     }
 
-    public void setMODELO(String MODELO) {
+    public final void setMODELO(String MODELO) {
         this.MODELO = MODELO;
     }
 
     @Override
-    public String toString(){
+    public final String toString(){
         return  getMODELO();
     }
 

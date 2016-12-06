@@ -25,7 +25,7 @@ public class MyReceiver extends BroadcastReceiver {
     private List<String> dicas = new ArrayList<>();
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public final void onReceive(Context context, Intent intent) {
         preencheDicas(context);
         Log.d("MyReceiver", "entrou no onReceive");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

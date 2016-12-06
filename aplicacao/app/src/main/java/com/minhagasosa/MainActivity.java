@@ -43,7 +43,7 @@ import de.greenrobot.dao.query.Query;
  */
 public class MainActivity extends AppCompatActivity {
     /**
-     * atributo de Marca do carro
+     * atributo de MARCA do carro
      */
     private Spinner spinnerMarca;
     /**
@@ -111,7 +111,10 @@ public class MainActivity extends AppCompatActivity {
         spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
         spinnerPotencia = (Spinner) findViewById(R.id.spinnerPot);
 
-        String[] marcas = {"Aston Martin", "Audi", "Bentley", "BMW", "Chery", "Chevrolet", "Citroen", "Dodge", "Ferrari", "Fiat", "Ford", "Geely", "Honda", "Hyundai", "JAC", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Lifan", "Maserati", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Peugeot", "Porsche", "Rely", "Renault", "Shineray", "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
+        String[] marcas = {"Aston Martin", "Audi", "Bentley", "BMW", "Chery", "Chevrolet", "Citroen", "Dodge", "Ferrari", "Fiat",
+                "Ford", "Geely", "Honda", "Hyundai", "JAC", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Lifan",
+                "Maserati", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Peugeot", "Porsche", "Rely", "Renault", "Shineray",
+                "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
         spinnerMarca.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, marcas));
 
@@ -167,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            System.out.println("Populating...");
 
 
         }
@@ -181,19 +183,15 @@ public class MainActivity extends AppCompatActivity {
                     MinhaGasosaPreference.putPotency(0.0f, getApplicationContext());
                 } else {
                     MinhaGasosaPreference.putWithPotency(true, getApplicationContext());
-                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot),
-                            getApplicationContext());
+                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getApplicationContext());
                     MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getApplicationContext());
-                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f,
-                            getApplicationContext());
+                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getApplicationContext());
                     MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getApplicationContext());
                     MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getApplicationContext());
                 }
             }
-
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
-
             }
         });
         String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
@@ -212,13 +210,12 @@ public class MainActivity extends AppCompatActivity {
             Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
             long modeloId = modelo.getId();
             String versao = (String) spinnerVersao.getSelectedItem();
-            Query query = cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(modeloId),
-                    CarroDao.Properties.Marca.eq(marca),
-                    CarroDao.Properties.Version.eq(versao)).build();
+            Query query = cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(modeloId),
+                    CarroDao.Properties.MARCA.eq(marca),
+                    CarroDao.Properties.VERSION.eq(versao)).build();
             Carro carro = (Carro) query.list().get(0);
 
             if (carro.getIsFlex() != null) {
-                System.out.println("----setCarroIsFlex--"+carro.getIsFlex());
                 MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getApplicationContext());
             }
             if (carro.getConsumoUrbanoGasolina() != null) {
@@ -262,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     private void popularVersoes(final CarroDao cDao) {
         Modelo selectedModel = (Modelo) spinnerModelo.getSelectedItem();
         long idx = selectedModel.getId();
-        ArrayList<Carro> listaCarros = (ArrayList<Carro>) cDao.queryBuilder().where(CarroDao.Properties.ModeloId.eq(idx)).list();
+        ArrayList<Carro> listaCarros = (ArrayList<Carro>) cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(idx)).list();
         String[] listaVersoes = new String[listaCarros.size()];
         for (int i = 0; i < listaCarros.size(); i++) {
             listaVersoes[i] = listaCarros.get(i).toString();
@@ -301,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < modelos.length(); i++) {
                 JSONObject modeloJson = modelos.getJSONObject(i);
                 Modelo modelo = new Modelo(modeloJson.getLong("ID"), modeloJson.getString("MODELO"));
-                System.out.println("Adding model: " + modeloJson.getString("MODELO"));
                 mDao.insert(modelo);
             }
             JSONArray carros = new JSONArray(jsonCarros);
@@ -323,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     c.setIsFlex(false);
                 }
-                System.out.println("Inserting car: " + c.getVersion() + " | " + i);
                 cDao.insert(c);
 
             }
@@ -331,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(self, MainActivity.class);
             self.startActivity(i);
         } catch (JSONException e) {
-            System.out.print("TRETAOO");
             e.printStackTrace();
         }
     }

@@ -39,7 +39,7 @@ public class ChartView {
         this.mChart = chart;
     }
 
-    public void iniciaDistancias() {
+    void iniciaDistancias() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -53,7 +53,7 @@ public class ChartView {
         iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
     }
 
-    public void iniciaDistancias(String month, String year) {
+    void iniciaDistancias(String month, String year) {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -176,13 +176,15 @@ public class ChartView {
     private void addDataToUseInPieChart() {
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
 
-        for (int i = 0; i < yData.length; i++)
+        for (int i = 0; i < yData.length; i++) {
             yVals1.add(new Entry(yData[i], i));
+        }
 
         ArrayList<String> xVals = new ArrayList<String>();
 
-        for (int i = 0; i < xData.length; i++)
+        for (int i = 0; i < xData.length; i++) {
             xVals.add(xData[i]);
+        }
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yVals1, "");

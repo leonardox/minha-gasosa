@@ -128,7 +128,6 @@ public class MapsActivity extends FragmentActivity
         sIdaEVolta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                System.out.println();
 
                 mIdaEvolta = isChecked;
                 if(mOriginMark != null && mDestinyMark != null){
@@ -145,19 +144,16 @@ public class MapsActivity extends FragmentActivity
 
             }
         });
-        final Activity a = this;
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 if (mOriginMark == null || mDestinyMark == null) {
-                    Snackbar snack = Snackbar.make(v, R.string.select_origin_and_destiny, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null);
+                    Snackbar snack = Snackbar.make(v, R.string.select_origin_and_destiny, Snackbar.LENGTH_LONG).setAction("Action", null);
                     View view = snack.getView();
                     TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
                     tv.setTextColor(Color.WHITE);
                     snack.show();
                 } else {
-                    //Calculate route here
                     Bundle conData = new Bundle();
                     conData.putFloat("ida", mDistanciaIda);
                     conData.putFloat("volta", mDistanciaVolta);
@@ -293,7 +289,6 @@ public class MapsActivity extends FragmentActivity
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
                 // Starts parsing data
-                System.out.println("TESTE: " + jObject.toString());
                 routes = parser.parse(jObject);
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -402,7 +397,6 @@ public class MapsActivity extends FragmentActivity
                 }
             }
         } catch (JSONException e) {
-            System.out.print("TRETAOO");
             e.printStackTrace();
         }
         return soma;
@@ -463,7 +457,7 @@ public class MapsActivity extends FragmentActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public final boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.map_menu, menu);
         super.onCreateOptionsMenu(menu);
@@ -471,7 +465,7 @@ public class MapsActivity extends FragmentActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.undo_route:
 
@@ -492,7 +486,7 @@ public class MapsActivity extends FragmentActivity
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public final void onMapReady(GoogleMap googleMap) {
         final MapsActivity ac = this;
         mMap = googleMap;
 

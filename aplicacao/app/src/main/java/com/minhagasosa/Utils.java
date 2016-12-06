@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Leonardo on 25/04/2016.
  */
-public class Utils {
+class Utils {
     /**
      * @param session
      * @param select
@@ -38,7 +38,6 @@ public class Utils {
                     r.setRepeteSemana(c.getInt(5) != 0);
                     r.setRepetoicoes(c.getInt(6));
                     r.setDeRotina(c.getInt(7) != 0);
-                    System.out.println("-----------" + (c.getLong(8)) + "---" + (new Date(c.getLong(8))));
                     r.setData(c.getLong(8));
                     result.add(r);
                 } while (c.moveToNext());

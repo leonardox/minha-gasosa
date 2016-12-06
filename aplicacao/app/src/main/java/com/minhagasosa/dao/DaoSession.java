@@ -56,21 +56,21 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Rota.class, rotaDao);
     }
     
-    public void clear() {
+    public final void clear() {
         modeloDaoConfig.getIdentityScope().clear();
         carroDaoConfig.getIdentityScope().clear();
         rotaDaoConfig.getIdentityScope().clear();
     }
 
-    public ModeloDao getModeloDao() {
+    public final ModeloDao getModeloDao() {
         return modeloDao;
     }
 
-    public CarroDao getCarroDao() {
+    public final CarroDao getCarroDao() {
         return carroDao;
     }
 
-    public RotaDao getRotaDao() {
+    public final RotaDao getRotaDao() {
         return rotaDao;
     }
 
