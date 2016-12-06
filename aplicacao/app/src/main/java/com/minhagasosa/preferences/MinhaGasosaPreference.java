@@ -8,10 +8,12 @@ import com.minhagasosa.R;
 /**
  * Created by Vinicius Silva on 06/04/2016.
  */
-public class MinhaGasosaPreference {
+public final class MinhaGasosaPreference {
 
     final private static String PREFERENCE = "com.minhagasosa.preference";
+    private MinhaGasosaPreference() {
 
+    }
 
     private static SharedPreferences.Editor getSharedPreference(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
@@ -54,7 +56,7 @@ public class MinhaGasosaPreference {
     public static float getPrice(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getFloat(context.getString(R.string.shared_price), 0);
+        return preferences.getFloat(context.getString(R.string.shared_price), -1);
 
     }
 

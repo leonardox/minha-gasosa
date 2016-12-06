@@ -33,18 +33,7 @@ public class DaoMaster extends AbstractDaoMaster {
         RotaDao.dropTable(db, ifExists);
     }
     
-    public static abstract class OpenHelper extends SQLiteOpenHelper {
 
-        public OpenHelper(Context context, String name, CursorFactory factory) {
-            super(context, name, factory, SCHEMA_VERSION);
-        }
-
-        @Override
-        public final void onCreate(SQLiteDatabase db) {
-            Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
-            createAllTables(db, false);
-        }
-    }
     
     /** WARNING: Drops all table on Upgrade! Use only during development. */
     public static class DevOpenHelper extends OpenHelper {
@@ -71,8 +60,20 @@ public class DaoMaster extends AbstractDaoMaster {
         return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
     }
     
-    public final DaoSession newSession(IdentityScopeType type) {
+    public DaoSession newSession(IdentityScopeType type) {
         return new DaoSession(db, type, daoConfigMap);
     }
-    
+
+    public static abstract class OpenHelper extends SQLiteOpenHelper {
+
+        public OpenHelper(Context context, String name, CursorFactory factory) {
+            super(context, name, factory, SCHEMA_VERSION);
+        }
+
+        @Override
+        public final void onCreate(SQLiteDatabase db) {
+            Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
+            createAllTables(db, false);
+        }
+    }
 }

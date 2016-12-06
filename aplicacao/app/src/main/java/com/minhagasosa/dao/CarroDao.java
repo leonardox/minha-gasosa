@@ -20,26 +20,15 @@ import com.minhagasosa.dao.Carro;
 public class CarroDao extends AbstractDao<Carro, Long> {
 
     public static final String TABLENAME = "CARRO";
-
-    /**
-     * Properties of entity Carro.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-    */
-    public static class Properties {
-        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
-        public final static Property MARCA = new Property(1, String.class, "marca", false, "MARCA");
-        public final static Property ANO = new Property(2, String.class, "ano", false, "ANO");
-        public final static Property CONSUMO_URBANO_GASOLINA = new Property(3, Float.class, "consumoUrbanoGasolina", false, "CONSUMO_URBANO_GASOLINA");
-        public final static Property CONSUMO_RODOVIARIO_GASOLINA = new Property(4, Float.class, "consumoRodoviarioGasolina", false, "CONSUMO_RODOVIARIO_GASOLINA");
-        public final static Property CONSUMO_URBANO_ALCOOL = new Property(5, Float.class, "consumoUrbanoAlcool", false, "CONSUMO_URBANO_ALCOOL");
-        public final static Property CONSUMO_RODOVIARIO_ALCOOL = new Property(6, Float.class, "consumoRodoviarioAlcool", false, "CONSUMO_RODOVIARIO_ALCOOL");
-        public final static Property IS_FLEX = new Property(7, Boolean.class, "isFlex", false, "IS_FLEX");
-        public final static Property VERSION = new Property(8, String.class, "version", false, "VERSION");
-        public final static Property MODELO_ID = new Property(9, Long.class, "modeloId", false, "MODELO_ID");
-    };
-
+    private final int THREE = 3;
+    private final int FOUR = 4;
+    private final int FIVE = 5;
+    private final int SIX = 6;
+    private final int SEVEN = 7;
+    private final int EIGHT = 8;
+    private final int NINE = 9;
+    private final int TEN = 10;
     private DaoSession daoSession;
-
 
     public CarroDao(DaoConfig config) {
         super(config);
@@ -57,13 +46,13 @@ public class CarroDao extends AbstractDao<Carro, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"MARCA\" TEXT," + // 1: marca
                 "\"ANO\" TEXT," + // 2: ano
-                "\"CONSUMO_URBANO_GASOLINA\" REAL," + // 3: consumoUrbanoGasolina
-                "\"CONSUMO_RODOVIARIO_GASOLINA\" REAL," + // 4: consumoRodoviarioGasolina
-                "\"CONSUMO_URBANO_ALCOOL\" REAL," + // 5: consumoUrbanoAlcool
-                "\"CONSUMO_RODOVIARIO_ALCOOL\" REAL," + // 6: consumoRodoviarioAlcool
-                "\"IS_FLEX\" INTEGER," + // 7: isFlex
-                "\"VERSION\" TEXT," + // 8: version
-                "\"MODELO_ID\" INTEGER);"); // 9: modeloId
+                "\"CONSUMO_URBANO_GASOLINA\" REAL," + // THREE: consumoUrbanoGasolina
+                "\"CONSUMO_RODOVIARIO_GASOLINA\" REAL," + // FOUR: consumoRodoviarioGasolina
+                "\"CONSUMO_URBANO_ALCOOL\" REAL," + // FIVE: consumoUrbanoAlcool
+                "\"CONSUMO_RODOVIARIO_ALCOOL\" REAL," + // SIX: consumoRodoviarioAlcool
+                "\"IS_FLEX\" INTEGER," + // SEVEN: isFlex
+                "\"VERSION\" TEXT," + // EIGHT: version
+                "\"MODELO_ID\" INTEGER);"); // NINE: modeloId
     }
 
     /** Drops the underlying database table. */
@@ -89,42 +78,42 @@ public class CarroDao extends AbstractDao<Carro, Long> {
  
         String ano = entity.getAno();
         if (ano != null) {
-            stmt.bindString(3, ano);
+            stmt.bindString(THREE, ano);
         }
  
         Float consumoUrbanoGasolina = entity.getConsumoUrbanoGasolina();
         if (consumoUrbanoGasolina != null) {
-            stmt.bindDouble(4, consumoUrbanoGasolina);
+            stmt.bindDouble(FOUR, consumoUrbanoGasolina);
         }
  
         Float consumoRodoviarioGasolina = entity.getConsumoRodoviarioGasolina();
         if (consumoRodoviarioGasolina != null) {
-            stmt.bindDouble(5, consumoRodoviarioGasolina);
+            stmt.bindDouble(FIVE, consumoRodoviarioGasolina);
         }
  
         Float consumoUrbanoAlcool = entity.getConsumoUrbanoAlcool();
         if (consumoUrbanoAlcool != null) {
-            stmt.bindDouble(6, consumoUrbanoAlcool);
+            stmt.bindDouble(SIX, consumoUrbanoAlcool);
         }
  
         Float consumoRodoviarioAlcool = entity.getConsumoRodoviarioAlcool();
         if (consumoRodoviarioAlcool != null) {
-            stmt.bindDouble(7, consumoRodoviarioAlcool);
+            stmt.bindDouble(SEVEN, consumoRodoviarioAlcool);
         }
  
         Boolean isFlex = entity.getIsFlex();
         if (isFlex != null) {
-            stmt.bindLong(8, isFlex ? 1L: 0L);
+            stmt.bindLong(EIGHT, isFlex ? 1L: 0L);
         }
  
         String version = entity.getVersion();
         if (version != null) {
-            stmt.bindString(9, version);
+            stmt.bindString(NINE, version);
         }
  
         Long modeloId = entity.getModeloId();
         if (modeloId != null) {
-            stmt.bindLong(10, modeloId);
+            stmt.bindLong(TEN, modeloId);
         }
     }
 
@@ -147,13 +136,13 @@ public class CarroDao extends AbstractDao<Carro, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // marca
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // ano
-            cursor.isNull(offset + 3) ? null : cursor.getFloat(offset + 3), // consumoUrbanoGasolina
-            cursor.isNull(offset + 4) ? null : cursor.getFloat(offset + 4), // consumoRodoviarioGasolina
-            cursor.isNull(offset + 5) ? null : cursor.getFloat(offset + 5), // consumoUrbanoAlcool
-            cursor.isNull(offset + 6) ? null : cursor.getFloat(offset + 6), // consumoRodoviarioAlcool
-            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0, // isFlex
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // version
-            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9) // modeloId
+            cursor.isNull(offset + THREE) ? null : cursor.getFloat(offset + THREE), // consumoUrbanoGasolina
+            cursor.isNull(offset + FOUR) ? null : cursor.getFloat(offset + FOUR), // consumoRodoviarioGasolina
+            cursor.isNull(offset + FIVE) ? null : cursor.getFloat(offset + FIVE), // consumoUrbanoAlcool
+            cursor.isNull(offset + SIX) ? null : cursor.getFloat(offset + SIX), // consumoRodoviarioAlcool
+            cursor.isNull(offset + SEVEN) ? null : cursor.getShort(offset + SEVEN) != 0, // isFlex
+            cursor.isNull(offset + EIGHT) ? null : cursor.getString(offset + EIGHT), // version
+            cursor.isNull(offset + NINE) ? null : cursor.getLong(offset + NINE) // modeloId
         );
         return entity;
     }
@@ -164,13 +153,13 @@ public class CarroDao extends AbstractDao<Carro, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMarca(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setAno(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setConsumoUrbanoGasolina(cursor.isNull(offset + 3) ? null : cursor.getFloat(offset + 3));
-        entity.setConsumoRodoviarioGasolina(cursor.isNull(offset + 4) ? null : cursor.getFloat(offset + 4));
-        entity.setConsumoUrbanoAlcool(cursor.isNull(offset + 5) ? null : cursor.getFloat(offset + 5));
-        entity.setConsumoRodoviarioAlcool(cursor.isNull(offset + 6) ? null : cursor.getFloat(offset + 6));
-        entity.setIsFlex(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
-        entity.setVersion(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setModeloId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
+        entity.setConsumoUrbanoGasolina(cursor.isNull(offset + THREE) ? null : cursor.getFloat(offset + THREE));
+        entity.setConsumoRodoviarioGasolina(cursor.isNull(offset + FOUR) ? null : cursor.getFloat(offset + FOUR));
+        entity.setConsumoUrbanoAlcool(cursor.isNull(offset + FIVE) ? null : cursor.getFloat(offset + FIVE));
+        entity.setConsumoRodoviarioAlcool(cursor.isNull(offset + SIX) ? null : cursor.getFloat(offset + SIX));
+        entity.setIsFlex(cursor.isNull(offset + SEVEN) ? null : cursor.getShort(offset + SEVEN) != 0);
+        entity.setVersion(cursor.isNull(offset + EIGHT) ? null : cursor.getString(offset + EIGHT));
+        entity.setModeloId(cursor.isNull(offset + NINE) ? null : cursor.getLong(offset + NINE));
      }
     
     /** @inheritdoc */
@@ -286,5 +275,22 @@ public class CarroDao extends AbstractDao<Carro, Long> {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
- 
+
+    /**
+     * Properties of entity Carro.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
+        public final static Property MARCA = new Property(1, String.class, "marca", false, "MARCA");
+        public final static Property ANO = new Property(2, String.class, "ano", false, "ANO");
+        public final static Property CONSUMO_URBANO_GASOLINA = new Property(3, Float.class, "consumoUrbanoGasolina", false, "CONSUMO_URBANO_GASOLINA");
+        public final static Property CONSUMO_RODOVIARIO_GASOLINA = new Property(4, Float.class, "consumoRodoviarioGasolina", false, "CONSUMO_RODOVIARIO_GASOLINA");
+        public final static Property CONSUMO_URBANO_ALCOOL = new Property(5, Float.class, "consumoUrbanoAlcool", false, "CONSUMO_URBANO_ALCOOL");
+        public final static Property CONSUMO_RODOVIARIO_ALCOOL = new Property(6, Float.class, "consumoRodoviarioAlcool", false, "CONSUMO_RODOVIARIO_ALCOOL");
+        public final static Property IS_FLEX = new Property(7, Boolean.class, "isFlex", false, "IS_FLEX");
+        public final static Property VERSION = new Property(8, String.class, "version", false, "VERSION");
+        public final static Property MODELO_ID = new Property(9, Long.class, "modeloId", false, "MODELO_ID");
+    };
+
 }

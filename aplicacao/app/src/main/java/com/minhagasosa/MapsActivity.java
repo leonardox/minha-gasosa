@@ -112,7 +112,6 @@ public class MapsActivity extends FragmentActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if(this.getIntent().getStringArrayListExtra("LatLng") != null){
-            ArrayList<String> loc = this.getIntent().getStringArrayListExtra("LatLng");
             //LatLng h = new LatLng();
         }else{
             Toast.makeText(this, getString(R.string.select_origin) ,Toast.LENGTH_LONG).show();
@@ -194,10 +193,8 @@ public class MapsActivity extends FragmentActivity
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = strOrigin + "&" + strDest + "&" + sensor;
 
         // Output format
-        String output = "json";
 
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+
@@ -207,180 +204,6 @@ public class MapsActivity extends FragmentActivity
         return url;
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        /**
-         * Contexto
-         */
-        private Context mContext;
-        /**
-         *boolean volta
-         */
-        private boolean mIsVolta;
-
-        /**
-         *
-         * @param c
-         * @param isVolta
-         */
-        DownloadTask(final Context c, final boolean isVolta){
-            mIsVolta = isVolta;
-            mContext = c;
-        }
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(final String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try{
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(final String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask(mContext, mIsVolta);
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-
-        }
-    }
-
-
-
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>{
-        /**
-         *
-         */
-        private Context mContext;
-        /**
-         *
-         */
-        private boolean mIsVolta;
-
-        /**
-         *
-         * @param c
-         * @param isVolta
-         */
-        ParserTask(final Context c, final boolean isVolta){
-            mIsVolta = isVolta;
-            mContext = c;
-        }
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(final String... jsonData) {
-
-            final JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        float soma = somaDistanciasRotaJSON(jsonData[0]);
-                        if(mIsVolta){
-                            mDistanciaVolta = somaDistanciasRotaJSON(jsonData[0]);
-                        }else{
-                            mDistanciaIda = somaDistanciasRotaJSON(jsonData[0]);
-                        }
-                        //Chamar método de léo aqui...
-                    }
-                });
-
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @SuppressWarnings("unused")
-        @Override
-        protected void onPostExecute(final List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
-            String distance = "";
-            String duration = "";
-
-
-
-            if(result.size()<1){
-                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-
-            // Traversing through all the routes
-            for(int i = 0; i < result.size(); i++){
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
-
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for(int j = 0 ; j < path.size(); j++){
-                    HashMap<String, String> point = path.get(j);
-
-                    if(j == 0){   // Get distance from the list
-                        distance = (String) point.get("distance");
-                        continue;
-                    }else if(j == 1){ // Get duration from the list
-                        duration = (String) point.get("duration");
-                        continue;
-                    }
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
-                }
-
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(2);
-                if(!mIsVolta){
-                    lineOptions.color(Color.RED);
-                }else{
-                    lineOptions.color(Color.CYAN);
-                }
-            }
-            Log.e("Distance: " + distance, "Duration: " + duration);
-            //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
-            // Drawing polyline in the Google Map for the i-th route
-            //if(mDesenhoRotaIda != null && !mIsVolta) mDesenhoRotaIda.remove();
-            if(!mIsVolta){
-                mDesenhoRotaIda = mMap.addPolyline(lineOptions);
-                if(mIdaEvolta){
-                    DownloadTask dt = new DownloadTask(mContext, true);
-                    String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
-                    dt.execute(url);
-                }
-            }else{
-                mDesenhoRotaVolta = mMap.addPolyline(lineOptions);
-            }
-
-        }
-    }
 
     private Float somaDistanciasRotaJSON(String json) {
         Float soma = 0.0f;
@@ -496,7 +319,6 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                final LatLng location = latLng;
                 if(mOriginMark != null && mDestinyMark == null){
                     mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                     mFab.setClickable(true);
@@ -541,4 +363,178 @@ public class MapsActivity extends FragmentActivity
             mMap.setOnMyLocationChangeListener(myLocationChangeListener);
         }
     }
+    private class DownloadTask extends AsyncTask<String, Void, String> {
+
+        /**
+         * Contexto
+         */
+        private Context mContext;
+        /**
+         *boolean volta
+         */
+        private boolean mIsVolta;
+
+        /**
+         *
+         * @param c
+         * @param isVolta
+         */
+        DownloadTask(final Context c, final boolean isVolta){
+            mIsVolta = isVolta;
+            mContext = c;
+        }
+        // Downloading data in non-ui thread
+        @Override
+        protected String doInBackground(final String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try{
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+            }catch(Exception e){
+                Log.d("Background Task",e.toString());
+            }
+            return data;
+        }
+
+        // Executes in UI thread, after the execution of
+        // doInBackground()
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask(mContext, mIsVolta);
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+
+        }
+    }
+
+
+
+    /** A class to parse the Google Places in JSON format */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>{
+        /**
+         *
+         */
+        private Context mContext;
+        /**
+         *
+         */
+        private boolean mIsVolta;
+
+        /**
+         *
+         * @param c
+         * @param isVolta
+         */
+        ParserTask(final Context c, final boolean isVolta){
+            mIsVolta = isVolta;
+            mContext = c;
+        }
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(final String... jsonData) {
+
+            final JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try{
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                // Starts parsing data
+                routes = parser.parse(jObject);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        if(mIsVolta){
+                            mDistanciaVolta = somaDistanciasRotaJSON(jsonData[0]);
+                        }else{
+                            mDistanciaIda = somaDistanciasRotaJSON(jsonData[0]);
+                        }
+                        //Chamar método de léo aqui...
+                    }
+                });
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @SuppressWarnings("unused")
+        @Override
+        protected void onPostExecute(final List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
+            MarkerOptions markerOptions = new MarkerOptions();
+            String distance = "";
+            String duration = "";
+
+
+
+            if(result.size()<1){
+                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            // Traversing through all the routes
+            for(int i = 0; i < result.size(); i++){
+                points = new ArrayList<LatLng>();
+                lineOptions = new PolylineOptions();
+
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+
+                // Fetching all the points in i-th route
+                for(int j = 0 ; j < path.size(); j++){
+                    HashMap<String, String> point = path.get(j);
+
+                    if(j == 0){   // Get distance from the list
+                        distance = (String) point.get("distance");
+                        continue;
+                    }else if(j == 1){ // Get duration from the list
+                        duration = (String) point.get("duration");
+                        continue;
+                    }
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(2);
+                if(!mIsVolta){
+                    lineOptions.color(Color.RED);
+                }else{
+                    lineOptions.color(Color.CYAN);
+                }
+            }
+            Log.e("Distance: " + distance, "Duration: " + duration);
+            //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
+            // Drawing polyline in the Google Map for the i-th route
+            //if(mDesenhoRotaIda != null && !mIsVolta) mDesenhoRotaIda.remove();
+            if(!mIsVolta){
+                mDesenhoRotaIda = mMap.addPolyline(lineOptions);
+                if(mIdaEvolta){
+                    DownloadTask dt = new DownloadTask(mContext, true);
+                    String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
+                    dt.execute(url);
+                }
+            }else{
+                mDesenhoRotaVolta = mMap.addPolyline(lineOptions);
+            }
+
+        }
+    }
+
 }

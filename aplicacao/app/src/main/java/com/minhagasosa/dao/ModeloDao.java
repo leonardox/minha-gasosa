@@ -18,14 +18,6 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
 
     public static final String TABLENAME = "MODELO";
 
-    /**
-     * Properties of entity Modelo.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-    */
-    public static class Properties {
-        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
-        public final static Property MODELO = new Property(1, String.class, "MODELO", false, "MODELO");
-    };
 
 
     public ModeloDao(DaoConfig config) {
@@ -110,6 +102,16 @@ public class ModeloDao extends AbstractDao<Modelo, Long> {
     @Override    
     protected final boolean isEntityUpdateable() {
         return true;
+    }
+
+
+    /**
+     * Properties of entity Modelo.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property ID = new Property(0, Long.class, "id", true, "_id");
+        public final static Property MODELO = new Property(1, String.class, "MODELO", false, "MODELO");
     }
     
 }

@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
             progress.setIndeterminate(true);
             progress.setProgress(0);
             progress.show();
-            final int totalProgressTime = 100;
 
             jobManager.addJobInBackground(new Job(new Params(1)) {
                 @Override
@@ -160,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onRun() throws Throwable {
+                public void onRun() throws Exception {
                     CarroDao cDao = session.getCarroDao();
                     populateCars(mDao, cDao);
                 }
@@ -173,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-        CarroDao dao = session.getCarroDao();
         spinnerPotencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -301,7 +299,6 @@ public class MainActivity extends AppCompatActivity {
                 mDao.insert(modelo);
             }
             JSONArray carros = new JSONArray(jsonCarros);
-            int progressPercent = 0;
             for (int i = 0; i < carros.length(); i++) {
                 JSONObject cj = carros.getJSONObject(i);
                 Carro c = new Carro();
@@ -369,7 +366,6 @@ public class MainActivity extends AppCompatActivity {
     private static List<Modelo> listModelos(final DaoSession session, final String select) {
         ArrayList<Modelo> result = new ArrayList<Modelo>();
         Cursor c = session.getDatabase().rawQuery(select, null);
-        ModeloDao mDao = session.getModeloDao();
         try {
             if (c.moveToFirst()) {
                 do {

@@ -10,18 +10,30 @@ import com.minhagasosa.dao.Rota;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Leonardo on 25/04/2016.
  */
-class Utils {
+public final class Utils {
+    private static final int THREE = 3;
+    private static final int FOUR = 4;
+    private static final int FIVE = 5;
+    private static final int SIX = 6;
+    private static final int SEVEN = 7;
+    private static final int EIGHT = 8;
+    private static final int ZERO = 0;
+    private static final int TWENTYFOUR = 24;
+
+    private Utils(){
+
+    }
     /**
      * @param session
      * @param select
      * @return
      */
+
     public static List<Rota> listRotas(final DaoSession session, final String select) {
         ArrayList<Rota> result = new ArrayList<Rota>();
         Cursor c = session.getDatabase().rawQuery(select, null);
@@ -30,15 +42,15 @@ class Utils {
             if (c.moveToFirst()) {
                 do {
                     Rota r = new Rota();
-                    r.setId(c.getLong(0));
+                    r.setId(c.getLong(ZERO));
                     r.setNome(c.getString(1));
-                    r.setIdaEVolta(c.getInt(2) != 0);
-                    r.setDistanciaIda(c.getFloat(3));
-                    r.setDistanciaVolta(c.getFloat(4));
-                    r.setRepeteSemana(c.getInt(5) != 0);
-                    r.setRepetoicoes(c.getInt(6));
-                    r.setDeRotina(c.getInt(7) != 0);
-                    r.setData(c.getLong(8));
+                    r.setIdaEVolta(c.getInt(2) != ZERO);
+                    r.setDistanciaIda(c.getFloat(THREE));
+                    r.setDistanciaVolta(c.getFloat(FOUR));
+                    r.setRepeteSemana(c.getInt(FIVE) != ZERO);
+                    r.setRepetoicoes(c.getInt(SIX));
+                    r.setDeRotina(c.getInt(SEVEN) != ZERO);
+                    r.setData(c.getLong(EIGHT));
                     result.add(r);
                 } while (c.moveToNext());
             }
@@ -60,11 +72,11 @@ class Utils {
         ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
         List<Pair<String, Float>> listaRotaDistancia = new ArrayList<>();
 
-        for (int i = 0; i < listaRotas.size(); i++) {
+        for (int i = ZERO; i < listaRotas.size(); i++) {
             String data = listaRotas.get(i).getData().toString();
 
             if (ano == null && mes == null ||
-                    ano.equals(data.substring(24)) && mes.equals(data.substring(4, 7))) {
+                    ano.equals(data.substring(TWENTYFOUR)) && mes.equals(data.substring(FOUR, SEVEN))) {
                 float atual;
                 if (listaRotas.get(i).getIdaEVolta()) {
                     atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
@@ -96,7 +108,7 @@ class Utils {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
         float soma = 0.0f;
 
-        for (int i = 0; i < listaRotaDistancia.size(); i++) {
+        for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
             soma += listaRotaDistancia.get(i).second;
         }
         MinhaGasosaPreference.setDistanciaTotal(soma, context);
@@ -107,14 +119,14 @@ class Utils {
         float total = 0.0f;
         Log.d("Utils", "num de rotas = " + listaRotaDistancia.size());
 
-        for (int i = 0; i < listaRotaDistancia.size(); i++) {
+        for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
             total += listaRotaDistancia.get(i).second;
         }
         return total;
     }
 
     /**
-     * Esse metodo detorna um par contendo o nome e a distancia das 3 principais rotas da semana
+     * Esse metodo detorna um par contendo o nome e a distancia das THREE principais rotas da semana
      *
      * @param session
      * @return
@@ -123,9 +135,9 @@ class Utils {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
         List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
 
-        while (listaOrdenada.size() < 3 && listaRotaDistancia.size() != 0) {
-            int index = 0;
-            for (int i = 0; i < listaRotaDistancia.size(); i++) {
+        while (listaOrdenada.size() < THREE && listaRotaDistancia.size() != ZERO) {
+            int index = ZERO;
+            for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
                 if (listaRotaDistancia.get(i).second > listaRotaDistancia.get(index).second) {
                     index = i;
                 }

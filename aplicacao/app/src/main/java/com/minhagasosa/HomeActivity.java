@@ -612,7 +612,6 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
                     }
-
                 }
             }
         });

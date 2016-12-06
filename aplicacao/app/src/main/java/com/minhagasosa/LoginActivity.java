@@ -66,16 +66,11 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
                 finish();
-
                 Log.e("ss", "ok");
             }
-
             @Override
             public void onCancel() {
-                
-                // App code
             }
-
             @Override
             public void onError(FacebookException exception) {
                 // App code

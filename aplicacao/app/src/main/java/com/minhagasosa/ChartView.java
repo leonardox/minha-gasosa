@@ -46,8 +46,6 @@ public class ChartView {
         DaoSession session = daoMaster.newSession();
 
         String dataAtual = new Date(System.currentTimeMillis()).toString();
-        String ano = dataAtual.substring(24);// Pega o ano atual
-        String mes = dataAtual.substring(4, 7);// Pega o mes atual
 
         calculaDistanciaTotal(session, null, null, mContext);
         iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
