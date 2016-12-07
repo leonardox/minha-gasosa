@@ -206,7 +206,7 @@ public class MapsActivity extends FragmentActivity
 
 
     private Float somaDistanciasRotaJSON(String json) {
-        Float soma = 0.0f;
+        Float soma = 0f;
         try {
             JSONObject result = new JSONObject(json);
 

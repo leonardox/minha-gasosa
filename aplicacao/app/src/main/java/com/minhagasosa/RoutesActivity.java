@@ -161,8 +161,12 @@ public class RoutesActivity extends AppCompatActivity {
                     float volta = res.getFloat("volta" , -1);
                     DecimalFormat df = new DecimalFormat("##.##");
                     df.setRoundingMode(RoundingMode.DOWN);
-                    if(ida != -1) distanceGoingWrapper.getEditText().setText(df.format(ida/1000.0));
-                    if(volta != -1) distanceBackWrapper.getEditText().setText(df.format(volta/1000.0));
+                    if(ida != -1){
+                        distanceGoingWrapper.getEditText().setText(df.format(ida/1000.0).replace(",", "."));
+                    }
+                    if(volta != -1){
+                        distanceBackWrapper.getEditText().setText(df.format(volta/1000.0).replace(",", "."));
+                    }
                 }
                 break;
         }
@@ -255,7 +259,7 @@ public class RoutesActivity extends AppCompatActivity {
      * @return
      */
     public final float getDistanceGoing() {
-        return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
+        return Float.parseFloat(distanceGoingWrapper.getEditText().getText().toString());
     }
 
     /**
@@ -265,9 +269,9 @@ public class RoutesActivity extends AppCompatActivity {
      */
     public final float getDistanceBack() {
         if (checkBoxRoute.isChecked()) {
-            return Integer.parseInt(distanceBackWrapper.getEditText().getText().toString());
+            return Float.parseFloat(distanceBackWrapper.getEditText().getText().toString());
         }
-        return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
+        return Float.parseFloat(distanceGoingWrapper.getEditText().getText().toString());
     }
 
     /**
