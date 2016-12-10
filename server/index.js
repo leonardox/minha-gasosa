@@ -12,11 +12,15 @@ var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
 
 
+var gasStation = require('./routes/gas');
+
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
+
+app.use('/gas', gasStation);
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -34,10 +38,10 @@ app.get('/', function(request, response) {
     comment.thumbsUp = 45;
     comment.save(function(err){
       var gas = GasModel();
-      gas.name = "Posto LulZ";
+      gas.name = "Posto Ipiranga";
       gas.comments = [comment._id];
       gas.rating = 5;
-      gas.location = {lat: 45, lng: 87};
+      gas.location = {lat: -7.2294637, lng: -35.9092364};
       gas.save();
     });
   });

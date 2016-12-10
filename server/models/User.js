@@ -1,7 +1,7 @@
 /**
  * Created by Alessandro on 04/12/2016.
  */
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'), Schema = mongoose.Schema;;
 
 
 var userSchema = mongoose.Schema({
