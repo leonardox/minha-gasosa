@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.activites.maps;
 
 import android.Manifest;
 import android.content.Context;
@@ -32,6 +32,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.minhagasosa.API.GasStationService;
+import com.minhagasosa.BaseFragmentActivity;
+import com.minhagasosa.DirectionsJSONParser;
+import com.minhagasosa.R;
+import com.minhagasosa.Transfer.GasStation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,10 +52,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Classe de Mapa.
  */
-public class MapsActivity extends FragmentActivity
+public class GasMapsActivity extends BaseFragmentActivity
         implements OnMapReadyCallback {
     /**
      *API Google Mapa
@@ -105,6 +114,18 @@ public class MapsActivity extends FragmentActivity
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        GasStationService gasService = retrofit.create(GasStationService.class);
+        gasService.getAllGasStation().enqueue(new Callback<List<GasStation>>() {
+            @Override
+            public void onResponse(Call<List<GasStation>> call, Response<List<GasStation>> response) {
+                Log.d("Stations", "Got " + response.body().size() + " Gas stations");
+            }
+
+            @Override
+            public void onFailure(Call<List<GasStation>> call, Throwable t) {
+                Log.e("Treta", "Error getting gas stations" + t.toString());
+            }
+        });
         mIdaEvolta = false;
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
@@ -312,7 +333,7 @@ public class MapsActivity extends FragmentActivity
      */
     @Override
     public final void onMapReady(GoogleMap googleMap) {
-        final MapsActivity ac = this;
+        final GasMapsActivity ac = this;
         mMap = googleMap;
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -323,13 +344,13 @@ public class MapsActivity extends FragmentActivity
                     mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                     mFab.setClickable(true);
                     mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
-                    //Toast.makeText(MapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RouteMapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
                     DownloadTask dt = new DownloadTask(ac, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
                 }else if(mOriginMark == null){
                     mOriginMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.origin)));
-                    Toast.makeText(MapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GasMapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
                 }
 
             }
