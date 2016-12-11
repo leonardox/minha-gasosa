@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.activites;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         retrofit  = new Retrofit.Builder()
-                .baseUrl("http://192.168.25.3:5000/")
+                .baseUrl("https://minha-gasosa-p1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

@@ -33,7 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.minhagasosa.API.GasStationService;
-import com.minhagasosa.BaseFragmentActivity;
+import com.minhagasosa.activites.BaseFragmentActivity;
 import com.minhagasosa.DirectionsJSONParser;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;

@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.activites;
 
 import android.Manifest;
 import android.content.Context;
@@ -62,7 +62,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         retrofit  = new Retrofit.Builder()
-                .baseUrl("http://192.168.25.3:5000/")
+                .baseUrl("https://minha-gasosa-p1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
