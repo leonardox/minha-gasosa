@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -113,12 +114,17 @@ public class GasMapsActivity extends BaseFragmentActivity
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_gas_maps);
         GasStationService gasService = retrofit.create(GasStationService.class);
         gasService.getAllGasStation().enqueue(new Callback<List<GasStation>>() {
             @Override
             public void onResponse(Call<List<GasStation>> call, Response<List<GasStation>> response) {
                 Log.d("Stations", "Got " + response.body().size() + " Gas stations");
+                for (GasStation gas: response.body()) {
+                    LatLng loc = new LatLng(gas.getLocation().getLat(), gas.getLocation().getLng());
+                    Marker m = mMap.addMarker(new MarkerOptions().position(loc).title(gas.getName()));
+                    m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
+                }
             }
 
             @Override
@@ -138,34 +144,8 @@ public class GasMapsActivity extends BaseFragmentActivity
             Toast.makeText(this, getString(R.string.select_origin) ,Toast.LENGTH_LONG).show();
         }
         mapFragment.setHasOptionsMenu(true);
-        ImageButton btUndo = (ImageButton) findViewById(R.id.undoButton);
-        btUndo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                undo();
-            }
-        });
-        Switch sIdaEVolta = (Switch) findViewById(R.id.switchIdaEVolta);
+
         final FragmentActivity self = this;
-        sIdaEVolta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-
-                mIdaEvolta = isChecked;
-                if(mOriginMark != null && mDestinyMark != null){
-                    if(mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
-                    mDesenhoRotaIda = null;
-                    if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
-                    mDesenhoRotaVolta = null;
-                    mDistanciaIda = -1;
-                    mDistanciaVolta = -1;
-                    DownloadTask dt = new DownloadTask(self, false);
-                    String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
-                    dt.execute(url);
-                }
-
-            }
-        });
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
