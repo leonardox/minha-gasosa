@@ -33,5 +33,11 @@
         android:title="Vantagem Combustível"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_import_export_white_18dp"
+        android:title="Logout"
+        app:showAsAction="always" />
+
 
 </menu>

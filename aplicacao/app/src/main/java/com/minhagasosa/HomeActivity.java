@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -32,7 +34,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.github.mikephil.charting.charts.PieChart;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -41,7 +50,7 @@ import java.util.Calendar;
 /**
  * Classe Inicial do app.
  */
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private String Home = "HomeActivity";
     private String R$ = "R$ ";
@@ -122,6 +131,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private PendingIntent pendingIntent;
 
+    private GoogleApiClient mGoogleApiClient;
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,6 +165,17 @@ public class HomeActivity extends AppCompatActivity {
         spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem2.setVisibility(View.GONE);
         layoutMain = (ScrollView) findViewById(R.id.layout_main);
+
+        sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -530,6 +553,12 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (item.getItemId() == R.id.menu_item_vantagem) {
             showDialogVantagemCombustivel();
+        } else if(item.getItemId() == R.id.menu_logout){
+            signOut();
+
+            Intent mainIntent = new Intent(HomeActivity.this,LoginActivity.class);
+            startActivity(mainIntent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -639,5 +668,36 @@ public class HomeActivity extends AppCompatActivity {
     protected final void onResume() {
         super.onResume();
         chartView.iniciaDistancias();
+    }
+
+    private void signOut() {
+        sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String login = sharedPreferences.getString(LoginActivity.USER_LOGIN, "");
+
+        if (login.equals(LoginActivity.FACEBOOK_LOGIN)) {
+            LoginManager.getInstance().logOut();
+        } else if (login.equals(LoginActivity.GOOGLE_LOGIN)){
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {}
+                    });
+        }
+
+        editor.putString(LoginActivity.USER_NOME, "");
+        editor.putString(LoginActivity.USER_URL_PHOTO, "");
+        editor.putString(LoginActivity.USER_EMAIL, "");
+        editor.putString(LoginActivity.USER_ID, "0");
+        editor.putBoolean(LoginActivity.USER_STATUS, false);
+        editor.putString(LoginActivity.USER_LOGIN, LoginActivity.NO_SOCIAL_LOGIN);
+
+        editor.apply();
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
