@@ -553,12 +553,12 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             startActivity(intent);
         } else if (item.getItemId() == R.id.menu_item_vantagem) {
             showDialogVantagemCombustivel();
-        } else if(item.getItemId() == R.id.menu_logout){
+        } else if(item.getItemId() == R.id.logout){
             signOut();
 
-            Intent mainIntent = new Intent(HomeActivity.this,LoginActivity.class);
-            startActivity(mainIntent);
-            finish();
+            Intent i = new Intent(this, LoginActivity.class);
+            i.putExtra("fromHome", true);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

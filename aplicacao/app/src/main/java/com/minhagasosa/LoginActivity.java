@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             editor.putString(USER_EMAIL, email);
             editor.putString(USER_LOGIN, GOOGLE_LOGIN);
 
-            Toast.makeText(LoginActivity.this, email, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Usuario " + email + ": logado", Toast.LENGTH_SHORT).show();
             if (foto_url != null) {
                 editor.putString(USER_URL_PHOTO, foto_url.toString());
             } else {
@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             editor.apply();
 
-            Toast.makeText(LoginActivity.this, name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Usuario " + name + ": logado", Toast.LENGTH_SHORT).show();
 
             updateUI();
         }

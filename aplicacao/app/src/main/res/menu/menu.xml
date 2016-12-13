@@ -34,10 +34,10 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_logout"
+        android:id="@+id/logout"
         android:icon="@drawable/ic_import_export_white_18dp"
-        android:title="Logout"
-        app:showAsAction="always" />
+        android:title="Sair"
+        app:showAsAction="never" />
 
 
 </menu>
