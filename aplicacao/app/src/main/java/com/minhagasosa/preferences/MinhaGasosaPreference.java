@@ -84,11 +84,49 @@ public final class MinhaGasosaPreference {
         return preferences.getFloat(context.getString(R.string.consumoUrbanoPrimario), -1);
     }
 
+    public static void setMarca(String marca, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.marcaDoCarro), marca);
+        editor.commit();
+    }
+
+    public static String getMarca(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.marcaDoCarro), null);
+    }
+
+    public static void setModelo(String modelo, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.modeloDoCarro), modelo);
+        editor.commit();
+    }
+
+    public static String getModelo(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.modeloDoCarro), null);
+    }
+
+    public static void setVersao(String versao, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.versaoDoCarro), versao);
+        editor.commit();
+    }
+
+    public static String getVersao(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.versaoDoCarro), null);
+    }
+
     public static void setConsumoUrbanoSecundario(float consumo, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
         editor.putFloat(context.getString(R.string.consumoUrbanoSecundario), consumo);
         editor.commit();
     }
+
+
 
     public static float getConsumoUrbanoSecundario(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,

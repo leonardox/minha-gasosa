@@ -98,4 +98,7 @@
     <string name="dica28">Não descanse seu pé nos pedais. Ainda que leve, o pé sobre o pedal do freio irá diminuir a velocidade do carro.</string>
     <string name="dica29">Mesmo em descidas, desça engrenado. Os carros atuais consomem mais gasolina em descida no ponto morto.</string>
     <string name="dica30">Antes de abastecer, veja qual posto tem a gasolina mais barata do seu bairro. Na sessão combustíveis do site você encontra o preço de todos os postos de todas as capitais brasileiras e ainda pode ler e deixar comentários sobre seus postos favoritos ou mais suspeitos.</string>
+    <string name="marcaDoCarro">marcaDoCarro</string>
+    <string name="modeloDoCarro">modelo</string>
+    <string name="versaoDoCarro">versao</string>
 </resources>

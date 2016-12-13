@@ -33,7 +33,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.dao.query.Query;
@@ -100,12 +102,13 @@ public class MainActivity extends AppCompatActivity {
         //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
         //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
 
-        if (MinhaGasosaPreference.getDone(getApplicationContext())
-                && !getIntent().getBooleanExtra("fromHome", false)) {
-            Intent i = new Intent(this, HomeActivity.class);
-            this.startActivity(i);
-            return;
-        }
+//        if (MinhaGasosaPreference.getDone(getApplicationContext())
+//                && !getIntent().getBooleanExtra("fromHome", false)) {
+//            Log.d("ta passando aqui", "ola");
+//            Intent i = new Intent(this, HomeActivity.class);
+//            this.startActivity(i);
+//            return;
+//        }
         spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
         spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
         spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
@@ -117,6 +120,12 @@ public class MainActivity extends AppCompatActivity {
                 "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
         spinnerMarca.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, marcas));
+
+        String selectedMarca = MinhaGasosaPreference.getMarca(getApplicationContext());
+        if(selectedMarca != null){
+            spinnerMarca.setSelection(Arrays.asList(marcas).indexOf(selectedMarca), true);
+            popularModelos(session);
+        }
 
         spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -196,6 +205,11 @@ public class MainActivity extends AppCompatActivity {
         spinnerPotencia.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, potencias));
 
+        String selectedPotencia = MinhaGasosaPreference.getVersao(getApplicationContext());
+        if(selectedPotencia != null){
+            spinnerMarca.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
+        }
+
     }
 
     /**
@@ -212,6 +226,18 @@ public class MainActivity extends AppCompatActivity {
                     CarroDao.Properties.MARCA.eq(marca),
                     CarroDao.Properties.VERSION.eq(versao)).build();
             Carro carro = (Carro) query.list().get(0);
+
+            if(carro.getMarca() != null){
+                MinhaGasosaPreference.setMarca(carro.getMarca() ,getApplicationContext());
+            }
+
+            if(carro.getModelo().getMODELO() != null){
+                MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO() ,getApplicationContext());
+            }
+
+            if(carro.getVersion() != null){
+                MinhaGasosaPreference.setVersao(carro.getVersion() ,getApplicationContext());
+            }
 
             if (carro.getIsFlex() != null) {
                 MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getApplicationContext());
@@ -264,6 +290,13 @@ public class MainActivity extends AppCompatActivity {
         }
         spinnerVersao.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, listaVersoes));
+
+        String selectedVersion = MinhaGasosaPreference.getVersao(getApplicationContext());
+        if(selectedVersion != null){
+            spinnerMarca.setSelection(Arrays.asList(listaVersoes).indexOf(selectedVersion), true);
+        }
+
+
     }
 
     /**
@@ -281,6 +314,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Modelo> listaModelos = (ArrayList<Modelo>) listModelos(session, select);
         spinnerModelo.setAdapter(new ArrayAdapter<Modelo>(this,
                 android.R.layout.simple_spinner_item, listaModelos));
+
+        String selectedModelo = MinhaGasosaPreference.getModelo(getApplicationContext());
+
+        if(selectedModelo != null){
+            spinnerMarca.setSelection(listaModelos.indexOf(selectedModelo), true);
+            popularVersoes(cDao);
+        }
     }
 
     /**
