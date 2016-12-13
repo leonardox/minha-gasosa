@@ -1,7 +1,7 @@
 /**
  * Created by Alessandro on 04/12/2016.
  */
-var mongoose = require('mongoose'), Schema = mongoose.Schema;
+var mongoose = require('mongoose');
 
 var routeSchema = mongoose.Schema({
   name: String,
@@ -14,4 +14,4 @@ var routeSchema = mongoose.Schema({
   endPoint: { lat: Number, lng: Number }
 });
 
-var Route = module.exports = mongoose.model('Route', routeSchema);
+mongoose.model('Route', routeSchema);

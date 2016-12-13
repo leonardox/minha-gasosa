@@ -1,8 +1,7 @@
 /**
  * Created by Alessandro on 04/12/2016.
  */
-var mongoose = require('mongoose'), Schema = mongoose.Schema;;
-
+var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
   firstName: String,
@@ -18,7 +17,7 @@ var userSchema = mongoose.Schema({
   accountCreationDate: Date,
   lastLogin: Date,
   birthDate: Date,
-  routes: [{ type: Schema.Types.ObjectId, ref: 'Route' }]
+  routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }]
 });
 
-var User = module.exports = mongoose.model('User', userSchema);
+mongoose.model('User', userSchema);

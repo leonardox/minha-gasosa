@@ -1,6 +1,5 @@
 var express = require('express');
 var mongoose = require('mongoose');
-var models = require('./models');
 
 var port = process.env.PORT || 5000;
 var db = process.env.DB || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx' || 'mongodb://localhost:27017/minhagasosa';
@@ -9,11 +8,14 @@ mongoose.connect(db, function(err) {
   if (err) throw err;
 });
 
+require('./models/User');
+require('./models/Route');
+require('./models/GasStation');
+
 var UserModel = mongoose.model('User');
 var RouteModel = mongoose.model('Route');
 var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
-
 
 var gasStation = require('./routes/gas');
 
