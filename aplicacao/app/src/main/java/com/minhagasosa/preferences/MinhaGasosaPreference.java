@@ -56,7 +56,7 @@ public final class MinhaGasosaPreference {
     public static float getPrice(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getFloat(context.getString(R.string.shared_price), -1);
+        return preferences.getFloat(context.getString(R.string.shared_price), 0);
 
     }
 
