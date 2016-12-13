@@ -7,7 +7,7 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema;
 
 var Comment = mongoose.Schema({
-  text: Number,
+  text: String,
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   creationDate: Date,
   thumbsUp: Number
