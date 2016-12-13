@@ -11,11 +11,13 @@ mongoose.connect(db, function(err) {
 require('./models/User');
 require('./models/Route');
 require('./models/GasStation');
+require('./models/Admin');
 
 var UserModel = mongoose.model('User');
 var RouteModel = mongoose.model('Route');
 var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
+var AdminModel = mongoose.model('Admin');
 
 var gasStation = require('./routes/gas');
 
