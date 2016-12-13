@@ -1,8 +1,9 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var handlebars = require('express-handlebars');
 
 var port = process.env.PORT || 5000;
-var db = process.env.DB || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx' || 'mongodb://localhost:27017/minhagasosa';
+var db = process.env.DB || 'mongodb://localhost:27017/minhagasosa' || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx';
 
 mongoose.connect(db, function(err) {
   if (err) throw err;
@@ -24,15 +25,17 @@ var gasStation = require('./routes/gas');
 var app = express();
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/bower_components'));
 
 app.use('/gas', gasStation);
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.engine('handlebars', handlebars({
+  defaultLayout: 'main'
+}));
+app.set('view engine', 'handlebars');
 
 app.get('/', function(request, response) {
-  response.send('ok');
+  response.render('admin_login', {})
 });
 
 app.listen(port, function() {
