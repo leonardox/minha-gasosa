@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     if (haveFacebook()) {
                         signInFacebookButton.setVisibility(View.VISIBLE);
                     } else {
-                        signInFacebookButton.setVisibility(View.GONE);
+                        signInFacebookButton.setVisibility(View.VISIBLE);
                     }
                     signInGoogleButton.setVisibility(SignInButton.VISIBLE);
                 }
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void skipSplash(){
         signInGoogleButton.setVisibility(SignInButton.INVISIBLE);
-        signInFacebookButton.setVisibility(View.INVISIBLE);
+        signInFacebookButton.setVisibility(View.VISIBLE);
         updateUI();
     }
 
@@ -368,7 +368,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     if(haveFacebook()){
                         signInFacebookButton.setVisibility(View.VISIBLE);
                     } else {
-                        signInFacebookButton.setVisibility(View.INVISIBLE);
+                        signInFacebookButton.setVisibility(View.VISIBLE);
                     }
                 }
 

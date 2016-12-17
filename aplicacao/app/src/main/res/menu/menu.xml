@@ -34,6 +34,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/gasStations"
+        android:icon="@drawable/ic_import_export_white_18dp"
+        android:title="@string/postos_de_gasolina"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_import_export_white_18dp"
         android:title="Sair"

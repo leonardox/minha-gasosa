@@ -1,6 +1,7 @@
 package com.minhagasosa.activites.maps;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -102,6 +103,7 @@ public class RouteMapsActivity extends FragmentActivity
      * atribute
      */
     private FloatingActionButton mFab;
+    boolean firstTime = true;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
@@ -355,11 +357,15 @@ public class RouteMapsActivity extends FragmentActivity
             }
 
             mMap.setMyLocationEnabled(true);
+            final Activity self = this;
             GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
                 @Override
-                public void onMyLocationChange (Location location) {
-                    LatLng loc = new LatLng (location.getLatitude(), location.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                public void onMyLocationChange(Location location) {
+                    if(firstTime){
+                        firstTime = false;
+                        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                    }
                 }
             };
             mMap.setOnMyLocationChangeListener(myLocationChangeListener);

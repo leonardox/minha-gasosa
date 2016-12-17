@@ -42,6 +42,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -559,6 +560,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             Intent i = new Intent(this, LoginActivity.class);
             i.putExtra("fromHome", true);
             startActivity(i);
+        } else if(item.getItemId() == R.id.gasStations){
+            Intent intent = new Intent(this, GasMapsActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

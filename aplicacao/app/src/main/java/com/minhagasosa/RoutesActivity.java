@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.minhagasosa.activites.maps.GasMapsActivity;
+import com.minhagasosa.activites.maps.RouteMapsActivity;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
@@ -97,7 +98,7 @@ public class RoutesActivity extends AppCompatActivity {
         botaoMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Intent i = new Intent(RoutesActivity.this, GasMapsActivity.class);
+                Intent i = new Intent(RoutesActivity.this, RouteMapsActivity.class);
                 startActivityForResult(i, MAPA_ROTA_REQUEST);
             }
         });
