@@ -10,8 +10,12 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "querystring": "~0.2.0",
+    "body-parser": "^1.14.2",
+    "jsonwebtoken": "^5.5.4",
     "ejs": "2.4.1",
     "express": "4.13.3",
+    "body-parser": "^1.15.0",
     "mongoose": "^4.7.1"
   },
   "repository": {

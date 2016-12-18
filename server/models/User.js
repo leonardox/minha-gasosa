@@ -17,7 +17,8 @@ var userSchema = mongoose.Schema({
   accountCreationDate: Date,
   lastLogin: Date,
   birthDate: Date,
-  routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }]
+  routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }],
+  fb_id: String
 });
 
 mongoose.model('User', userSchema);
