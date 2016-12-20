@@ -549,6 +549,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         } else if (item.getItemId() == R.id.menu_item_comparar) {
             Intent intent = new Intent(this, ComparaGastosActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.menu_item_detalhamento_semanal) {
+            Intent intent = new Intent(this, DetalhamentoSemanalActivity.class);
+            startActivity(intent);
         } else if(item.getItemId() == R.id.list_routes){
             Intent intent = new Intent(this, ListRoutesActivity.class);
             startActivity(intent);

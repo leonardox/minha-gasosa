@@ -42,6 +42,19 @@ public class ChartView {
         this.mChart = chart;
     }
 
+    void iniciaDistanciasSemanalmente() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+
+        String dataAtual = new Date(System.currentTimeMillis()).toString();
+
+        Utils.calculaDistanciaTotalSemanalmente(session, null, null, mContext);
+        iniciaValoresGrafico(Utils.calculaPrincipaisRotasSemanalmente(session, null, null), getDistanciaTotal());
+    }
+
+
     void iniciaDistancias() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();

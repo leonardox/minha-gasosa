@@ -76,6 +76,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.minhagasosa.HomeActivity" />
         </activity>
+        <activity
+            android:name=".DetalhamentoSemanalActivity"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.minhagasosa.HomeActivity" />
+        </activity>
 
         <receiver android:name=".MyReceiver" />
 
