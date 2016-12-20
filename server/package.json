@@ -10,6 +10,9 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "querystring": "~0.2.0",
+    "body-parser": "^1.15.0",
+    "jsonwebtoken": "^5.5.4",
     "ejs": "2.4.1",
     "express": "4.13.3",
     "express-handlebars": "^3.0.0",

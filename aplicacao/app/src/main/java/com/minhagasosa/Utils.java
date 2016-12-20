@@ -9,7 +9,9 @@ import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -96,6 +98,43 @@ public final class Utils {
         return listaRotaDistancia;
     }
 
+    public static List<Pair<String, Float>> calculaDistanciaPorRotaSemanal(final DaoSession session, final String mes, final String ano) {
+        Calendar cal = Calendar.getInstance();
+        Calendar first = (Calendar) cal.clone();
+        first.add(Calendar.DAY_OF_WEEK,
+                first.getFirstDayOfWeek() - first.get(Calendar.DAY_OF_WEEK));
+        Calendar last = (Calendar) first.clone();
+        last.add(Calendar.DAY_OF_YEAR, 6);
+
+        String select = "SELECT * FROM ROTA WHERE DE_ROTINA = 0 AND DATA >= " + first.getTimeInMillis()
+                + " AND DATA <= " + last.getTimeInMillis();
+
+        ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
+        List<Pair<String, Float>> listaRotaDistancia = new ArrayList<>();
+
+        for (int i = ZERO; i < listaRotas.size(); i++) {
+            String data = listaRotas.get(i).getData().toString();
+            if (ano == null && mes == null ||
+                    ano.equals(data.substring(TWENTYFOUR)) && mes.equals(data.substring(FOUR, SEVEN))) {
+                float atual;
+                if (listaRotas.get(i).getIdaEVolta()) {
+                    atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
+                    if (listaRotas.get(i).getRepeteSemana()) {
+                        atual = atual * listaRotas.get(i).getRepetoicoes();
+                    }
+                } else {
+                    atual = listaRotas.get(i).getDistanciaIda();
+                    if (listaRotas.get(i).getRepeteSemana()) {
+                        atual = atual * listaRotas.get(i).getRepetoicoes();
+                    }
+                }
+                Log.e("RoutesDistancia", "Indice: " + i + " " + listaRotas.get(i).getNome() + ": " + atual + " " + listaRotas.get(i).getData());
+                listaRotaDistancia.add(new Pair<>(listaRotas.get(i).getNome(), atual));
+            }
+        }
+        return listaRotaDistancia;
+    }
+
     /**
      * Metodo que calcula a distancia total
      *
@@ -106,6 +145,16 @@ public final class Utils {
      */
     public static void calculaDistanciaTotal(final DaoSession session, final String mes, final String ano, final Context context) {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
+        float soma = 0.0f;
+
+        for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
+            soma += listaRotaDistancia.get(i).second;
+        }
+        MinhaGasosaPreference.setDistanciaTotal(soma, context);
+    }
+
+    public static void calculaDistanciaTotalSemanalmente(final DaoSession session, final String mes, final String ano, final Context context) {
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRotaSemanal(session, mes, ano);
         float soma = 0.0f;
 
         for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
@@ -133,6 +182,24 @@ public final class Utils {
      */
     public static List<Pair<String, Float>> calculaPrincipaisRotas(final DaoSession session, final String mes, String ano) {
         List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRota(session, mes, ano);
+        List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
+
+        while (listaOrdenada.size() < THREE && listaRotaDistancia.size() != ZERO) {
+            int index = ZERO;
+            for (int i = ZERO; i < listaRotaDistancia.size(); i++) {
+                if (listaRotaDistancia.get(i).second > listaRotaDistancia.get(index).second) {
+                    index = i;
+                }
+            }
+            Log.e("RotasPrincipais", "RotaPrincipal: " + listaRotaDistancia.get(index).first);
+            listaOrdenada.add(listaRotaDistancia.remove(index));
+        }
+
+        return listaOrdenada;
+    }
+
+    public static List<Pair<String, Float>> calculaPrincipaisRotasSemanalmente(final DaoSession session, final String mes, String ano) {
+        List<Pair<String, Float>> listaRotaDistancia = calculaDistanciaPorRotaSemanal(session, mes, ano);
         List<Pair<String, Float>> listaOrdenada = new ArrayList<>();
 
         while (listaOrdenada.size() < THREE && listaRotaDistancia.size() != ZERO) {

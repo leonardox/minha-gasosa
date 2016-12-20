@@ -33,5 +33,22 @@
         android:title="Vantagem Combustível"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/gasStations"
+        android:icon="@drawable/ic_import_export_white_18dp"
+        android:title="@string/postos_de_gasolina"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_detalhamento_semanal"
+        android:title="Detalhamento semanal"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_import_export_white_18dp"
+        android:title="Sair"
+        app:showAsAction="never" />
+
 
 </menu>
