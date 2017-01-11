@@ -19,6 +19,18 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/* GET gas station listing. */
+router.get('/:id', function(req, res, next) {
+  var gasId = req.param('id');
+  GasModel.findOne({_id: gasId}).exec(function(err, gas){
+    if(err || !gas){
+      res.status(500).send("Error geting gas station.");
+    }else{
+      res.send(gas);
+    }
+  })
+});
+
 router.put('/', function(req, res, next) {
   var gasStation = req.body;
   new GasModel(gasStation).save(function(err, gas){
