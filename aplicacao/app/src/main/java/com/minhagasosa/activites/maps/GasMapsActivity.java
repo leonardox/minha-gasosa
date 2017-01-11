@@ -122,15 +122,19 @@ public class GasMapsActivity extends BaseFragmentActivity
         gasService.getAllGasStation().enqueue(new Callback<List<GasStation>>() {
             @Override
             public void onResponse(Call<List<GasStation>> call, Response<List<GasStation>> response) {
-                Log.d("Stations", "Got " + response.body().size() + " Gas stations");
-                for (GasStation gas : response.body()) {
-                    LatLng loc = new LatLng(gas.getLocation().getLat(), gas.getLocation().getLng());
-                    Marker m = mMap.addMarker(new MarkerOptions()
-                            .position(loc)
-                            .title(gas.getName())
-                            .snippet(getString(R.string.rating) + ": " + gas.getRating())
-                    );
-                    m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
+                if(response.code() == 200){
+                    Log.d("Stations", "Got " + response.body().size() + " Gas stations");
+                    for (GasStation gas : response.body()) {
+                        LatLng loc = new LatLng(gas.getLocation().getLat(), gas.getLocation().getLng());
+                        Marker m = mMap.addMarker(new MarkerOptions()
+                                .position(loc)
+                                .title(gas.getName())
+                                .snippet(getString(R.string.rating) + ": " + gas.getRating())
+                        );
+                        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
+                    }
+                }else{
+                    Log.e("ERROR", "error getting gas stations");
                 }
             }
 

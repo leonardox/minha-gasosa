@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -284,7 +285,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 switch (response.code()){
                     case 200:
                         try {
-                            Log.d("Login", "Usuario autênticado com token: " + response.body().string());
+                            Log.d("Login", "Usuario autênticado com token: ");
+                            SharedPreferences sharedPref = getSharedPreferences(BaseActivity.PREFERENCE_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("AUTH_TOKEN", response.body().string());
+                            editor.commit();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -343,9 +348,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        //authInServer(AccessToken.getCurrentAccessToken().getToken());
-                        logado = true;
-                        setFacebookProfile(Profile.getCurrentProfile());
+                        authInServer(AccessToken.getCurrentAccessToken().getToken());
+//                        logado = true;
+//                        setFacebookProfile(Profile.getCurrentProfile());
                     }
 
                     @Override
