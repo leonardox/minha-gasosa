@@ -9,7 +9,6 @@ var db = process.env.DB || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn
 var https = require('https');
 var querystring = require('querystring');
 var jwt = require('jsonwebtoken');
-var bodyParser = require('body-parser');
 
 mongoose.connect(db, function(err) {
   if (err) throw err;
@@ -32,7 +31,7 @@ var AdminModel = mongoose.model('Admin');
 var gasStation = require('./routes/gas');
 var routes = require('./routes/app');
 
-var app = express();
+var app = require('./config/app_config');
 var router = express.Router();
 
 app.set('fbDebugTokenUri', 'graph.facebook.com');
@@ -88,7 +87,7 @@ router.use(function(req, res, next) {
         return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
-        req.reqUser = decoded;
+        req.reqUser = decoded._doc;
         next();
       }
     });
@@ -105,7 +104,6 @@ router.use(function(req, res, next) {
   }
 });
 
-app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/bower_components'));
@@ -127,51 +125,51 @@ app.get('/', function(request, response) {
 app.listen(port, function() {
   console.log('Node app is running on port', port);
 
-  RouteModel.findOneAndUpdate({
-    name: 'AAA'
-  }, {
-    name: 'AAA',
-    goingDistance: 123.76,
-    startPoint: {lat: -5, lng: 4},
-    extraPoints: [{lat: 6, lng: 9}, {lat: 67, lng: 98}]
-  }, {
-    upsert: true,
-    'new': true
-  });
-
-  UserModel.findOneAndUpdate({ // se nao existir, insere
-    firstName: "Zé"
-  }, {
-    firstName: "Zé",
-    lastName: "Zezo",
-    login: "Zezox"
-  }, {
-    upsert: true,
-    'new': true
-  }, function(err, document) {
-    CommentModel.findOneAndUpdate({
-      text: "AAAA"
-    }, {
-      text: "AAAA",
-      author: document._id,
-      thumbsUp: 45
-    }, {
-      upsert: true,
-      'new': true
-    }, function(err2, document2){
-      GasModel.findOneAndUpdate({
-        name: "Posto Ipiranga"
-      }, {
-        name: "Posto Ipiranga",
-        comments: [document2._id],
-        rating: 5,
-        location: {lat: -7.2294637, lng: -35.9092364}
-      }, {
-        upsert: true,
-        'new': true
-      });
-    });
-  });
+  //RouteModel.findOneAndUpdate({
+  //  name: 'AAA'
+  //}, {
+  //  name: 'AAA',
+  //  goingDistance: 123.76,
+  //  startPoint: {lat: -5, lng: 4},
+  //  extraPoints: [{lat: 6, lng: 9}, {lat: 67, lng: 98}]
+  //}, {
+  //  upsert: true,
+  //  'new': true
+  //});
+  //
+  //UserModel.findOneAndUpdate({ // se nao existir, insere
+  //  firstName: "Zé"
+  //}, {
+  //  firstName: "Zé",
+  //  lastName: "Zezo",
+  //  login: "Zezox"
+  //}, {
+  //  upsert: true,
+  //  'new': true
+  //}, function(err, document) {
+  //  CommentModel.findOneAndUpdate({
+  //    text: "AAAA"
+  //  }, {
+  //    text: "AAAA",
+  //    author: document._id,
+  //    thumbsUp: 45
+  //  }, {
+  //    upsert: true,
+  //    'new': true
+  //  }, function(err2, document2){
+  //    GasModel.findOneAndUpdate({
+  //      name: "Posto Ipiranga"
+  //    }, {
+  //      name: "Posto Ipiranga",
+  //      comments: [document2._id],
+  //      rating: 5,
+  //      location: {lat: -7.2294637, lng: -35.9092364}
+  //    }, {
+  //      upsert: true,
+  //      'new': true
+  //    });
+  //  });
+  //});
 
 });
 
