@@ -97,7 +97,7 @@ router.put('/comment/:id', function(req, res, next) {
   });
 });
 
-router.get('/comments/:id', function(req, res, next) {
+router.get('/comment/:id', function(req, res, next) {
   var gasId = req.param('id');
   GasModel.findOne({_id: gasId}).populate({path:'comments', model: "Comment", populate: {path: 'author', model: "User"}}).exec(function(err, gas){
     if(err || !gas){
@@ -114,7 +114,7 @@ router.get('/comments/:id', function(req, res, next) {
   })
 });
 
-router['delete']('/comments/:id', function(req, res, next) {
+router['delete']('/comment/:id', function(req, res, next) {
   var commentId = req.param('id');
   CommentModel.remove({ _id: commentId}, function (err) {
     if(err){
