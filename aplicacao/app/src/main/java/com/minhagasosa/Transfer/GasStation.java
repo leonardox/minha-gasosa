@@ -19,6 +19,9 @@ private String state;
 @SerializedName("rating")
 @Expose
 private Integer rating;
+@SerializedName("gasPrice")
+@Expose
+private float gasPrice;
 @SerializedName("comments")
 @Expose
 private List<String> comments;
@@ -93,13 +96,32 @@ return rating;
 }
 
 /**
-* 
+*
 * @param rating
 * The rating
 */
 public void setRating(Integer rating) {
-this.rating = rating;
+        this.rating = rating;
+    }
+
+/**
+* 
+* @param gasPrice
+* The Gas Price
+*/
+public void setGasPrice(float gasPrice) {
+this.gasPrice = gasPrice;
 }
+
+/**
+*
+* @return
+* The Gas Price
+*/
+public float getGasPrice() {
+        return gasPrice;
+    }
+
 
 /**
 * 

@@ -103,4 +103,5 @@
     <string name="versaoDoCarro">versao</string>
     <string name="rating">Nota</string>
     <string name="postos_de_gasolina">Postos de gasolina</string>
+    <string name="gas_price">Preço da Gasolina</string>
 </resources>
