@@ -23,6 +23,7 @@ var gasSchema = mongoose.Schema({
   rating: Number,
   description: String,
   location: { lat: Number, lng: Number },
+  city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' }
 });
 
 mongoose.model('GasStation', gasSchema);

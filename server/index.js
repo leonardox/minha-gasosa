@@ -19,6 +19,7 @@ mongoose.connect(db, function(err) {
 
 require('./models/User');
 require('./models/Route');
+require('./models/Location');
 require('./models/GasStation');
 require('./models/Admin');
 
@@ -27,6 +28,8 @@ var RouteModel = mongoose.model('Route');
 var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
 var AdminModel = mongoose.model('Admin');
+var StateModel = mongoose.model('State');
+var CityModel = mongoose.model('City');
 
 var gasStation = require('./routes/gas');
 var routes = require('./routes/app');
@@ -125,6 +128,30 @@ app.get('/', function(request, response) {
 app.listen(port, function() {
   console.log('Node app is running on port', port);
 
+  //LocationModel.find({}, function(err, locs){
+  //  console.log('Locations: ' + locs);
+  //  for(var i = 0; i< locs.length; i++){
+  //    var location = locs[i];
+  //    var newState = {
+  //      sigla: location.sigla,
+  //      nome: location.nome
+  //    }
+  //    new StateModel(newState).save(function(err, state){
+  //      for(var i = 0; i < location.cidades.length; i++){
+  //        var cidade = location.cidades[i];
+  //        var newCity = {
+  //          nome: cidade,
+  //          state: state._id
+  //        }
+  //        new CityModel(newCity).save(function(err, newCity){
+  //          if(err){
+  //            console.log('erro salvando cidade: ' + cidade);
+  //          }
+  //        })
+  //      }
+  //    });
+  //  }
+  //});
   //RouteModel.findOneAndUpdate({
   //  name: 'AAA'
   //}, {
