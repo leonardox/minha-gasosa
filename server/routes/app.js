@@ -8,6 +8,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 
 var User = mongoose.model('User');
+var State = mongoose.model('State');
+var City = mongoose.model('City');
 
 router.post('/register', function (req, res, next) {
 
@@ -25,6 +27,29 @@ router.post('/register', function (req, res, next) {
       });
     } else {
       res.status(405).send('User already registered!');
+    }
+  });
+});
+
+router.get('/states', function (req, res, next) {
+  //If the user isn't really authenticated in the server
+  State.find({}, {}, function (err, states) {
+    if (err) {
+      res.status(500).send('Failed to get states.');
+    } else {
+      res.send(states)
+    }
+  });
+});
+
+router.get('/cities', function (req, res, next) {
+  //If the user isn't really authenticated in the server
+  var stateId = req.query.state;
+  City.find({state: stateId}, {}, function (err, cities) {
+    if (err) {
+      res.status(500).send('Failed to get cities.');
+    } else {
+      res.send(cities);
     }
   });
 });
