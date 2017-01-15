@@ -22,6 +22,12 @@ private Integer rating;
 @SerializedName("gasPrice")
 @Expose
 private float gasPrice;
+@SerializedName("gasPlusPrice")
+@Expose
+private float gasPlusPrice;
+@SerializedName("alcoolPrice")
+@Expose
+private float alcoolPrice;
 @SerializedName("comments")
 @Expose
 private List<String> comments;
@@ -105,15 +111,6 @@ public void setRating(Integer rating) {
     }
 
 /**
-* 
-* @param gasPrice
-* The Gas Price
-*/
-public void setGasPrice(float gasPrice) {
-this.gasPrice = gasPrice;
-}
-
-/**
 *
 * @return
 * The Gas Price
@@ -122,6 +119,52 @@ public float getGasPrice() {
         return gasPrice;
     }
 
+
+/**
+*
+* @param gasPrice
+* The Gas Price
+*/
+public void setGasPrice(float gasPrice) {
+this.gasPrice = gasPrice;
+}
+/**
+*
+* @return
+* The Gas Plus Price
+*/
+public float getGasPlusPrice() {
+        return gasPrice;
+    }
+
+
+/**
+*
+* @param gasPlusPrice
+* The Gas Plus Price
+*/
+public void setGasPlusPrice(float gasPlusPrice) {
+this.gasPlusPrice = gasPlusPrice;
+}
+
+/**
+*
+* @return
+* The Alcool Price
+*/
+public float getAlcoolPrice() {
+        return alcoolPrice;
+    }
+
+
+/**
+*
+* @param alcoolPrice
+* The Alcool Price
+*/
+public void setAlcoolPrice(float alcoolPrice) {
+this.alcoolPrice = alcoolPrice;
+}
 
 /**
 * 

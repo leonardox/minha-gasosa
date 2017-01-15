@@ -39,7 +39,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.minhagasosa.R.id.map;
-import static com.minhagasosa.R.id.tv_price;
 
 /**
  * Classe de Mapa.
@@ -121,13 +120,17 @@ public class GasMapsActivity extends BaseFragmentActivity
                         GasStation gas = allMarkersMap.get(marker);
 
                         TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
-                        TextView tvdetails = (TextView) v.findViewById(R.id.tv_snippet);
-                        TextView tvprice = (TextView) v.findViewById(R.id.tv_price);
+                        TextView tvDetails = (TextView) v.findViewById(R.id.tv_snippet);
+                        TextView tvGasPrice = (TextView) v.findViewById(R.id.tv_gasPrice);
+                        TextView tvGasPlusPrice = (TextView) v.findViewById(R.id.tv_gasPlusPrice);
+                        TextView tvAlcoolPrice = (TextView) v.findViewById(R.id.tv_alcoolPrice);
 
 
                         tvTitle.setText(marker.getTitle());
-                        tvdetails.setText(marker.getSnippet());
-                        tvprice.setText(getString(R.string.gas_price)+ ":" + gas.getName());
+                        tvDetails.setText(marker.getSnippet());
+                        tvGasPrice.setText(getString(R.string.gas_price)+ ": R$ " + String.format("%.2f", gas.getGasPrice()));
+                        tvGasPlusPrice.setText(getString(R.string.gas_plus_price)+ ": R$ " + String.format("%.2f", gas.getGasPlusPrice()));
+                        tvAlcoolPrice.setText(getString(R.string.alcool_price)+ ": R$ " + String.format("%.2f", gas.getAlcoolPrice()));
 
                         return v;
                     }
