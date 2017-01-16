@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +32,7 @@ import com.minhagasosa.activites.BaseFragmentActivity;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +128,17 @@ public class GasMapsActivity extends BaseFragmentActivity
                         TextView tvGasPlusPrice = (TextView) v.findViewById(R.id.tv_gasPlusPrice);
                         TextView tvAlcoolPrice = (TextView) v.findViewById(R.id.tv_alcoolPrice);
 
+                        ImageButton bt_details = (ImageButton) v.findViewById(R.id.bt_gasStationsButton);
+
+//                        bt_details.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
+//                                i.putExtra("gas", (Serializable) gas);
+//                                startActivity(i);
+//
+//                            }
+//                        });
 
                         tvTitle.setText(marker.getTitle());
                         tvDetails.setText(marker.getSnippet());
@@ -144,6 +158,17 @@ public class GasMapsActivity extends BaseFragmentActivity
                 } else {
                     Log.e("ERROR", "error getting gas stations");
                 }
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        GasStation gas = allMarkersMap.get(marker);
+
+                        Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
+                        i.putExtra("gas", gas);
+                        startActivity(i);
+                    }
+                });
             }
 
             @Override

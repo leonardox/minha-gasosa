@@ -1,11 +1,16 @@
 package com.minhagasosa.Transfer;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GasStation {
+public class GasStation implements Parcelable{
 
 @SerializedName("name")
 @Expose
@@ -220,4 +225,63 @@ public void setLocation(Location location) {
 this.location = location;
 }
 
+    protected GasStation(Parcel in) {
+        name = in.readString();
+        city = in.readString();
+        state = in.readString();
+        rating = in.readByte() == 0x00 ? null : in.readInt();
+        gasPrice = in.readFloat();
+        gasPlusPrice = in.readFloat();
+        alcoolPrice = in.readFloat();
+        if (in.readByte() == 0x01) {
+            comments = new ArrayList<String>();
+            in.readList(comments, String.class.getClassLoader());
+        } else {
+            comments = null;
+        }
+        description = in.readString();
+        location = (Location) in.readValue(Location.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(city);
+        dest.writeString(state);
+        if (rating == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(rating);
+        }
+        dest.writeFloat(gasPrice);
+        dest.writeFloat(gasPlusPrice);
+        dest.writeFloat(alcoolPrice);
+        if (comments == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(comments);
+        }
+        dest.writeString(description);
+        dest.writeValue(location);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<GasStation> CREATOR = new Parcelable.Creator<GasStation>() {
+        @Override
+        public GasStation createFromParcel(Parcel in) {
+            return new GasStation(in);
+        }
+
+        @Override
+        public GasStation[] newArray(int size) {
+            return new GasStation[size];
+        }
+    };
 }
