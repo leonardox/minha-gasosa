@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;
@@ -32,12 +34,23 @@ public class GasStationActivity extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbar.setTitle(gas.getName());
 
+        RatingBar rating = (RatingBar) findViewById(R.id.rating);
+        rating.setRating(gas.getRating());
+
+        TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
+        TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);
+        TextView tvAlcoolPrice = (TextView) findViewById(R.id.tv_gasPage_alcoolPrice);
+
+        tvGasPrice.setText("R$ " + String.format("%.2f", gas.getGasPrice()));
+        tvGasPlusPrice.setText("R$ " + String.format("%.2f", gas.getGasPlusPrice()));
+        tvAlcoolPrice.setText("R$ " + String.format("%.2f", gas.getAlcoolPrice()));
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, gas.getName(), Snackbar.LENGTH_LONG)
+                Snackbar.make(view, gas.getName() + " " + "Preço Reportado", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
