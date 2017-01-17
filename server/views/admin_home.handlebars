@@ -1,15 +1,15 @@
 <div class="row">
-    <div class="col-md-offset-4 col-md-4">
-        <div id="map"></div>
-        <div class="hidden">
+    <div id="map" class="col-md-offset-3 col-md-3"></div>
+    <div class="col-md-3">
+        <ul class="list-group">
             {{#each stations}}
-            	<div class="station">
+            	<li class="station list-group-item">
                     <div class="name">{{name}}</div>
                     <div class="lat">{{location.lat}}</div>
                     <div class="lng">{{location.lng}}</div>
-                </div>
+                </li>
             {{/each}}
-        </div>
+        </ul>
         <script type="text/javascript">
 			var map;
 			function initMap() {
@@ -17,8 +17,19 @@
                     center: {lat: 0, lng: 0},
                     zoom: 2
                 });
-                var a = $('.station').text();
-                console.log(a);
+                
+                var a = $('.station').each(function(station){
+                    var lat = $(this).find('.lat').text();//parseFloat
+                    var lng = $(this).find('.lng').text();
+                    var name = $(this).find('.name').text();
+                    var marker = new google.maps.Marker({
+                        position: {lat: parseFloat(lat), lng: parseFloat(lng)},
+                        map: map,
+                        title: name
+                    });
+                    console.log(lat)
+                    console.log(typeof lat)
+                });
 			}
 	    </script>
 	    <script async defer
@@ -29,7 +40,6 @@
 
 <style>
 #map {
-    width: 600px;
     height: 600px;
 }
 </style>
