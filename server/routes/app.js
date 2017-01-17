@@ -45,6 +45,7 @@ router.get('/states', function (req, res, next) {
 router.get('/cities', function (req, res, next) {
   //If the user isn't really authenticated in the server
   var stateId = req.query.state;
+  console.log("StateId: " + stateId);
   City.find({state: stateId}, {}, function (err, cities) {
     if (err) {
       res.status(500).send('Failed to get cities.');

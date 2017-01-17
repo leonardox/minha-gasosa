@@ -2,6 +2,7 @@ package com.minhagasosa;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,10 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -37,11 +42,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.minhagasosa.API.GasStationService;
+import com.minhagasosa.API.LocationService;
 import com.minhagasosa.API.UsersService;
+import com.minhagasosa.Transfer.City;
+import com.minhagasosa.Transfer.State;
 import com.minhagasosa.Transfer.TUser;
 import com.minhagasosa.activites.BaseActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,6 +92,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private boolean isConsentScreenOpened;
     private boolean tryLogin;
     UsersService m_usersService;
+    LocationService m_locationService;
 
 
     @Override
@@ -129,7 +139,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             }
         }
         m_usersService = retrofit.create(UsersService.class);
-
+        m_locationService = retrofit.create(LocationService.class);
     }
 
     private void skipSplash(){
@@ -252,12 +262,13 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         }
     }
 
-    private void register(){
+    private void register(String cityId){
         Profile fbProfile = Profile.getCurrentProfile();
         TUser us = new TUser();
         us.setFirstName(fbProfile.getFirstName());
         us.setLastName(fbProfile.getLastName());
         us.setFbId(fbProfile.getId());
+        us.setCity(cityId);
         m_usersService.registerUser(us).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -298,7 +309,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         break;
                     case 403:
                         Log.d("Reg", "Usuario ainda não registrado, registrando...");
-                        register();
+                        showSelectLocationDialog();
+                        //TODO Move to location selection
+                        //register();
                         break;
                     default:
                         Log.e("Err", "Erro de autenticação");
@@ -310,6 +323,76 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 System.out.print(throwable.toString());
             }
         });
+
+    }
+
+    private void showSelectLocationDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_location);
+        dialog.setTitle("Seleciona sua localização");
+
+        final Spinner stateSpinner = (Spinner) dialog.findViewById(R.id.spinner_select_state);
+        final Spinner citySpinner = (Spinner) dialog.findViewById(R.id.spinner_select_city);
+        final Button confirmbutton = (Button) dialog.findViewById(R.id.button_confirm_location);
+        confirmbutton.setEnabled(false);
+        final ArrayAdapter citiesAdapter = new ArrayAdapter<City>(dialog.getContext(),
+                android.R.layout.simple_spinner_item, new ArrayList<City>());
+        citySpinner.setAdapter(citiesAdapter);
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                State selectedState = (State) stateSpinner.getSelectedItem();
+                Log.d("state", "StateId: " + selectedState.getId());
+                m_locationService.getCities(selectedState.getId()).enqueue(new Callback<List<City>>() {
+                    @Override
+                    public void onResponse(Call<List<City>> call, Response<List<City>> response) {
+                        List<City> cities = response.body();
+                        Log.d("Citites", "Cities Size: " + cities.size());
+
+                        citiesAdapter.clear();
+                        citiesAdapter.addAll(cities);
+                        citiesAdapter.notifyDataSetChanged();
+
+                        confirmbutton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<City>> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        m_locationService.getStates().enqueue(new Callback<List<State>>() {
+            @Override
+            public void onResponse(Call<List<State>> call, Response<List<State>> response) {
+                List<State> statesList = response.body();
+
+                stateSpinner.setAdapter(new ArrayAdapter<State>(dialog.getContext(),
+                        android.R.layout.simple_spinner_item, statesList));
+            }
+
+            @Override
+            public void onFailure(Call<List<State>> call, Throwable t) {
+
+            }
+        });
+
+        confirmbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                City selectedCity = (City) citySpinner.getSelectedItem();
+                register(selectedCity.getId());
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
 
     }
 

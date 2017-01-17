@@ -10,7 +10,12 @@ var CommentModel = mongoose.model('Comment');
 
 /* GET gas station listing. */
 router.get('/', function(req, res, next) {
-  GasModel.find({}, function (err, docs) {
+  var userCity = req.reqUser.city;
+  var gasCond = {};
+  if(!(userCity == undefined || userCity == null || userCity == "")){
+    gasCond.city = userCity;
+  }
+  GasModel.find(gasCond, function (err, docs) {
     if(err){
       res.status(500).send("Error geting gas stations");
     }else {

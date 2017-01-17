@@ -5,7 +5,8 @@ var mongoose = require('mongoose');
 
 var stateSchema = new mongoose.Schema({
   sigla: String,
-  nome: String
+  nome: String,
+  index: Number
 });
 
 mongoose.model('State', stateSchema);
@@ -16,3 +17,11 @@ var citySchema = new mongoose.Schema({
 });
 
 mongoose.model('City', citySchema);
+
+var routeSchema = new mongoose.Schema({
+  sigla: String,
+  nome: String,
+  cidades: [String]
+});
+
+mongoose.model('Location', routeSchema, 'Locations');

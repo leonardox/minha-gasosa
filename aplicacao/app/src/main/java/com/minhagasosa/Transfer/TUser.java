@@ -26,6 +26,7 @@ public class TUser {
     @Expose
     private String login;
 
+
     @SerializedName("email")
     @JsonProperty("email")
     @Expose

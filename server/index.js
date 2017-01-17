@@ -28,8 +28,10 @@ var RouteModel = mongoose.model('Route');
 var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
 var AdminModel = mongoose.model('Admin');
+var LocationModel = mongoose.model('Location');
 var StateModel = mongoose.model('State');
 var CityModel = mongoose.model('City');
+
 
 var gasStation = require('./routes/gas');
 var routes = require('./routes/app');
@@ -127,28 +129,33 @@ app.get('/', function(request, response) {
 
 app.listen(port, function() {
   console.log('Node app is running on port', port);
-
+  //
   //LocationModel.find({}, function(err, locs){
   //  console.log('Locations: ' + locs);
   //  for(var i = 0; i< locs.length; i++){
   //    var location = locs[i];
   //    var newState = {
   //      sigla: location.sigla,
-  //      nome: location.nome
+  //      nome: location.nome,
+  //      index: i
   //    }
   //    new StateModel(newState).save(function(err, state){
-  //      for(var i = 0; i < location.cidades.length; i++){
-  //        var cidade = location.cidades[i];
+  //      console.log("Saving for state: " + state.nome);
+  //      for(var j = 0; j < locs[state.index].cidades.length; j++){
+  //        var cdd = locs[state.index].cidades[j];
   //        var newCity = {
-  //          nome: cidade,
+  //          nome: cdd,
   //          state: state._id
   //        }
-  //        new CityModel(newCity).save(function(err, newCity){
+  //        new CityModel(newCity).save(function(err, city){
   //          if(err){
   //            console.log('erro salvando cidade: ' + cidade);
+  //          }else{
+  //            console.log("Salvando cidade: " + city.nome);
   //          }
   //        })
   //      }
+  //      console.log("----------------------------------//--------------------------");
   //    });
   //  }
   //});
