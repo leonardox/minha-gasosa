@@ -105,6 +105,7 @@ router.use(function(req, res, next) {
   }
 });
 
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
@@ -122,6 +123,21 @@ app.set('view engine', 'handlebars');
 
 app.get('/', function(request, response) {
   response.render('admin_login', {})
+});
+
+app.post('/', function(request, response) {
+  if (request.body.username == 'admin' && request.body.password == 'admin') {
+    response.redirect('/home')
+  } else {
+    response.render('admin_login', {})
+  }
+});
+
+app.get('/home', function(req, res) {
+  GasModel.find(function(err, stations) {
+    console.log(stations);
+    res.render('admin_home', {stations: stations})
+  });
 });
 
 app.listen(port, function() {

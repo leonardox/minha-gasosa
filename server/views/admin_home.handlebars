@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+        <div id="map"></div>
+        <div class="hidden">
+            {{#each stations}}
+            	<div class="station">
+                    <div class="name">{{name}}</div>
+                    <div class="lat">{{location.lat}}</div>
+                    <div class="lng">{{location.lng}}</div>
+                </div>
+            {{/each}}
+        </div>
+        <script type="text/javascript">
+			var map;
+			function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 0, lng: 0},
+                    zoom: 2
+                });
+                var a = $('.station').text();
+                console.log(a);
+			}
+	    </script>
+	    <script async defer
+	      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
+	    </script>
+    </div>
+</div>
+
+<style>
+#map {
+    width: 600px;
+    height: 600px;
+}
+</style>
