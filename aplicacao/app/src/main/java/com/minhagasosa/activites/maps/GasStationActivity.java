@@ -19,6 +19,9 @@ import com.minhagasosa.Transfer.GasStation;
 import java.io.Serializable;
 
 public class GasStationActivity extends AppCompatActivity {
+    private FloatingActionButton fabWrongLocal;
+    private FloatingActionButton fabClosedGasStation;
+    private FloatingActionButton fabWrongPrices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +50,32 @@ public class GasStationActivity extends AppCompatActivity {
         tvGasPlusPrice.setText("R$ " + String.format("%.2f", gas.getGasPlusPrice()));
         tvAlcoolPrice.setText("R$ " + String.format("%.2f", gas.getAlcoolPrice()));
 
-//        final FloatingActionMenu fabMenu;
-//        fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
-//
-//        fabMenu.hideMenuButton(false);
-//
-//        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (fabMenu.isOpened()) {
-//                    Toast.makeText(this, fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
-//                }
-//
-//                fabMenu.toggle(true);
-//            }
-//        });
+        fabWrongLocal = (FloatingActionButton) findViewById(R.id.fab_wrong_local);
+        fabClosedGasStation = (FloatingActionButton) findViewById(R.id.fab_closed_gas_station);
+        fabWrongPrices = (FloatingActionButton) findViewById(R.id.fab_wrong_prices);
+
+        fabWrongLocal.setOnClickListener(clickListener);
+        fabClosedGasStation.setOnClickListener(clickListener);
+        fabWrongPrices.setOnClickListener(clickListener);
+
+        final FloatingActionMenu fabMenu;
+        fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+
+
+        fabWrongLocal.setEnabled(false);
+        fabMenu.setClosedOnTouchOutside(true);
+        fabMenu.hideMenuButton(false);
+
+        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isOpened()) {
+                    Toast.makeText(getApplicationContext(), fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
+                }
+
+                fabMenu.toggle(true);
+            }
+        });
 
 
 
@@ -74,4 +88,19 @@ public class GasStationActivity extends AppCompatActivity {
 //            }
 //        });
     }
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab_wrong_local:
+                    break;
+                case R.id.fab_closed_gas_station:
+                    fabWrongPrices.setVisibility(View.GONE);
+                    break;
+                case R.id.fab_wrong_prices:
+                    fabWrongPrices.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
 }

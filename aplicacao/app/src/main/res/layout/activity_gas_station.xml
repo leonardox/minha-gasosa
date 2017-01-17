@@ -47,6 +47,7 @@
         fab:menu_labels_singleLine="true">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_wrong_prices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/quantum_ic_clear_white_24"
@@ -54,6 +55,7 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_wrong_local"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/quantum_ic_clear_white_24"
@@ -61,6 +63,7 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_closed_gas_station"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/quantum_ic_clear_white_24"
