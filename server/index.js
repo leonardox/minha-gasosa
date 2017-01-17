@@ -147,51 +147,80 @@ app.get('/home', function(req, res) {
 
 app.listen(port, function() {
   console.log('Node app is running on port', port);
-
-  RouteModel.findOneAndUpdate({
-    name: 'AAA'
-  }, {
-    name: 'AAA',
-    goingDistance: 123.76,
-    startPoint: {lat: -5, lng: 4},
-    extraPoints: [{lat: 6, lng: 9}, {lat: 67, lng: 98}]
-  }, {
-    upsert: true,
-    'new': true
+  
+  LocationModel.find({}, function(err, locs){
+   console.log('Locations: ' + locs);
+   for(var i = 0; i< locs.length; i++){
+     var location = locs[i];
+     var newState = {
+       sigla: location.sigla,
+       nome: location.nome,
+       index: i
+     }
+     new StateModel(newState).save(function(err, state){
+       console.log("Saving for state: " + state.nome);
+       for(var j = 0; j < locs[state.index].cidades.length; j++){
+         var cdd = locs[state.index].cidades[j];
+         var newCity = {
+           nome: cdd,
+           state: state._id
+         }
+         new CityModel(newCity).save(function(err, city){
+           if(err){
+             console.log('erro salvando cidade: ' + cidade);
+           }else{
+             console.log("Salvando cidade: " + city.nome);
+           }
+         })
+       }
+       console.log("----------------------------------//--------------------------");
+     });
+   }
   });
-
+  RouteModel.findOneAndUpdate({
+   name: 'AAA'
+  }, {
+   name: 'AAA',
+   goingDistance: 123.76,
+   startPoint: {lat: -5, lng: 4},
+   extraPoints: [{lat: 6, lng: 9}, {lat: 67, lng: 98}]
+  }, {
+   upsert: true,
+   'new': true
+  });
+  
   UserModel.findOneAndUpdate({ // se nao existir, insere
-    firstName: "Zé"
+   firstName: "Zé"
   }, {
-    firstName: "Zé",
-    lastName: "Zezo",
-    login: "Zezox"
+   firstName: "Zé",
+   lastName: "Zezo",
+   login: "Zezox"
   }, {
-    upsert: true,
-    'new': true
+   upsert: true,
+   'new': true
   }, function(err, document) {
-    CommentModel.findOneAndUpdate({
-      text: "AAAA"
-    }, {
-      text: "AAAA",
-      author: document._id,
-      thumbsUp: 45
-    }, {
-      upsert: true,
-      'new': true
-    }, function(err2, document2){
-      GasModel.findOneAndUpdate({
-        name: "Posto Ipiranga"
-      }, {
-        name: "Posto Ipiranga",
-        comments: [document2._id],
-        rating: 5,
-        location: {lat: -7.2294637, lng: -35.9092364}
-      }, {
-        upsert: true,
-        'new': true
-      });
-    });
+   CommentModel.findOneAndUpdate({
+     text: "AAAA"
+   }, {
+     text: "AAAA",
+     author: document._id,
+     thumbsUp: 45
+   }, {
+     upsert: true,
+     'new': true
+   }, function(err2, document2){
+     GasModel.findOneAndUpdate({
+       name: "Posto Ipiranga"
+     }, {
+       name: "Posto Ipiranga",
+       comments: [document2._id],
+       rating: 5,
+       location: {lat: -7.2294637, lng: -35.9092364}
+     }, {
+       upsert: true,
+       'new': true
+     });
+   });
   });
 
 });
