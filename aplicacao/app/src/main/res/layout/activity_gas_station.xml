@@ -34,14 +34,14 @@
 
     <include
         layout="@layout/content_gas_station"
-        android:id="@+id/content_test"/>
+        android:id="@+id/content_layout"/>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        fab:layout_anchor="@id/content_test"
+        fab:layout_anchor="@id/content_layout"
         fab:layout_anchorGravity="bottom|end"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true">

@@ -3,7 +3,6 @@ package com.minhagasosa.activites.maps;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;
@@ -22,6 +22,7 @@ public class GasStationActivity extends AppCompatActivity {
     private FloatingActionButton fabWrongLocal;
     private FloatingActionButton fabClosedGasStation;
     private FloatingActionButton fabWrongPrices;
+    private FloatingActionMenu fabMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,47 +59,35 @@ public class GasStationActivity extends AppCompatActivity {
         fabClosedGasStation.setOnClickListener(clickListener);
         fabWrongPrices.setOnClickListener(clickListener);
 
-        final FloatingActionMenu fabMenu;
         fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
 
 
-        fabWrongLocal.setEnabled(false);
         fabMenu.setClosedOnTouchOutside(true);
-        fabMenu.hideMenuButton(false);
-
-        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isOpened()) {
-                    Toast.makeText(getApplicationContext(), fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
-                }
-
-                fabMenu.toggle(true);
-            }
-        });
-
-
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
+//
+//        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, gas.getName() + " " + "Preço Reportado", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+//            public void onClick(View v) {
+//                if (fabMenu.isOpened()) {
+//                    Toast.makeText(getApplicationContext(), fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                fabMenu.toggle(true);
 //            }
 //        });
+
     }
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.fab_wrong_local:
+                    Snackbar.make(v, fabWrongLocal.getLabelText() , Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     break;
                 case R.id.fab_closed_gas_station:
-                    fabWrongPrices.setVisibility(View.GONE);
+                    Snackbar.make(v, fabClosedGasStation.getLabelText() , Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     break;
                 case R.id.fab_wrong_prices:
-                    fabWrongPrices.setVisibility(View.VISIBLE);
+                    Snackbar.make(v, fabWrongPrices.getLabelText() , Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     break;
             }
         }
