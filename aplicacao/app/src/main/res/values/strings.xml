@@ -200,4 +200,7 @@
     <string name="gasolina_comum">Gasolina Comum</string>
     <string name="gasolina_aditivada">Gasolina Aditivada</string>
     <string name="alcool">Alcool</string>
+    <string name="closed_gas_station">Este Posto Fechou</string>
+    <string name="wrong_localization">Reportar Localização Incorreta</string>
+    <string name="wrong_prices">Reportar Preços Incorretos</string>
 </resources>

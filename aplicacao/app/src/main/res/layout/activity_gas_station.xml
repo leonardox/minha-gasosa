@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,28 +19,54 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            fab:contentScrim="?attr/colorPrimary"
+            fab:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                fab:layout_collapseMode="pin"
+                fab:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_gas_station" />
+    <include
+        layout="@layout/content_gas_station"
+        android:id="@+id/content_test"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        fab:layout_anchor="@id/content_test"
+        fab:layout_anchorGravity="bottom|end"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quantum_ic_clear_white_24"
+            fab:fab_label="@string/wrong_prices"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quantum_ic_clear_white_24"
+            fab:fab_label="@string/wrong_localization"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quantum_ic_clear_white_24"
+            fab:fab_label="@string/closed_gas_station"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;
 
@@ -45,14 +47,31 @@ public class GasStationActivity extends AppCompatActivity {
         tvGasPlusPrice.setText("R$ " + String.format("%.2f", gas.getGasPlusPrice()));
         tvAlcoolPrice.setText("R$ " + String.format("%.2f", gas.getAlcoolPrice()));
 
+//        final FloatingActionMenu fabMenu;
+//        fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+//
+//        fabMenu.hideMenuButton(false);
+//
+//        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (fabMenu.isOpened()) {
+//                    Toast.makeText(this, fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                fabMenu.toggle(true);
+//            }
+//        });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, gas.getName() + " " + "Preço Reportado", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, gas.getName() + " " + "Preço Reportado", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 }

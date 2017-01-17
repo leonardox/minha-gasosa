@@ -9,6 +9,7 @@
     tools:showIn="@layout/activity_gas_station">
 
     <LinearLayout
+        android:id="@+id/layout_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
