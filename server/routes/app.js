@@ -8,6 +8,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 
 var User = mongoose.model('User');
+var State = mongoose.model('State');
+var City = mongoose.model('City');
 
 router.post('/register', function (req, res, next) {
 
@@ -16,7 +18,7 @@ router.post('/register', function (req, res, next) {
   //If the user isn't really authenticated in the server
   User.find({"fb_id": user.fb_id}, {}, function (e, docs) {
     if (docs.length == 0) {
-      User.save(user, function(err, usr){
+      new User(user).save(user, function(err, usr){
         if (err) {
           res.status(500).send('Failed to register user!');
         } else {
@@ -25,6 +27,30 @@ router.post('/register', function (req, res, next) {
       });
     } else {
       res.status(405).send('User already registered!');
+    }
+  });
+});
+
+router.get('/states', function (req, res, next) {
+  //If the user isn't really authenticated in the server
+  State.find({}, {}, function (err, states) {
+    if (err) {
+      res.status(500).send('Failed to get states.');
+    } else {
+      res.send(states)
+    }
+  });
+});
+
+router.get('/cities', function (req, res, next) {
+  //If the user isn't really authenticated in the server
+  var stateId = req.query.state;
+  console.log("StateId: " + stateId);
+  City.find({state: stateId}, {}, function (err, cities) {
+    if (err) {
+      res.status(500).send('Failed to get cities.');
+    } else {
+      res.send(cities);
     }
   });
 });
@@ -63,10 +89,12 @@ router.get('/auth', function (req, res, next) {
             res.status(403).send('User not registered');
           }else{
             var user = users[0];
+            console.log("user: " + JSON.stringify(user));
             user.registered = true;
             var token = jwt.sign(user, req.app.get('superSecret'), {
               expiresInMinutes: 43200000 // expires in 24 hours
             });
+            console.log("Token: " + token);
             res.send(token);
           }
         }

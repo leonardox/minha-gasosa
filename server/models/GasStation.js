@@ -22,7 +22,11 @@ var gasSchema = mongoose.Schema({
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   rating: Number,
   description: String,
+  gasPrice: Number,
+  gasPlusPrice: Number,
+  alcoolPrice: Number,
   location: { lat: Number, lng: Number },
+  city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' }
 });
 
 mongoose.model('GasStation', gasSchema);

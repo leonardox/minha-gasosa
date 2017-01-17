@@ -18,24 +18,29 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BaseActivity extends AppCompatActivity {
+
+    public static final String PREFERENCE_NAME = "AUTH_PREFERENCE";
 
     protected Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        retrofit  = new Retrofit.Builder()
-                .baseUrl("https://minha-gasosa-p1.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+
+        retrofit  = EndpointFactory.buildEndpoint(getBaseContext());
     }
 
     @Override

@@ -2,27 +2,21 @@ package com.minhagasosa.activites.maps;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.Switch;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,30 +27,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.activites.BaseFragmentActivity;
-import com.minhagasosa.DirectionsJSONParser;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.GasStation;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.minhagasosa.R.id.map;
 
 /**
  * Classe de Mapa.
@@ -64,7 +49,7 @@ import retrofit2.Response;
 public class GasMapsActivity extends BaseFragmentActivity
         implements OnMapReadyCallback {
     /**
-     *API Google Mapa
+     * API Google Mapa
      */
     private GoogleMap mMap;
     /**
@@ -100,7 +85,7 @@ public class GasMapsActivity extends BaseFragmentActivity
      */
     private boolean mIdaEvolta;
     /**
-     *  distancia de ida
+     * distancia de ida
      */
     private float mDistanciaIda = -1;
     /**
@@ -112,6 +97,9 @@ public class GasMapsActivity extends BaseFragmentActivity
      */
     private FloatingActionButton mFab;
 
+    private Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
+
+
     boolean firstTime = true;
 
     @Override
@@ -121,17 +109,66 @@ public class GasMapsActivity extends BaseFragmentActivity
         GasStationService gasService = retrofit.create(GasStationService.class);
         gasService.getAllGasStation().enqueue(new Callback<List<GasStation>>() {
             @Override
-            public void onResponse(Call<List<GasStation>> call, Response<List<GasStation>> response) {
-                Log.d("Stations", "Got " + response.body().size() + " Gas stations");
-                for (GasStation gas : response.body()) {
-                    LatLng loc = new LatLng(gas.getLocation().getLat(), gas.getLocation().getLng());
-                    Marker m = mMap.addMarker(new MarkerOptions()
-                            .position(loc)
-                            .title(gas.getName())
-                            .snippet(getString(R.string.rating) + ": " + gas.getRating())
-                    );
-                    m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
+            public void onResponse(Call<List<GasStation>> call, final Response<List<GasStation>> response) {
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
+
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        View v = getLayoutInflater().inflate(R.layout.info_window, null);
+                        GasStation gas = allMarkersMap.get(marker);
+
+                        TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
+                        TextView tvDetails = (TextView) v.findViewById(R.id.tv_snippet);
+                        TextView tvGasPrice = (TextView) v.findViewById(R.id.tv_gasPrice);
+                        TextView tvGasPlusPrice = (TextView) v.findViewById(R.id.tv_gasPlusPrice);
+                        TextView tvAlcoolPrice = (TextView) v.findViewById(R.id.tv_alcoolPrice);
+
+                        ImageButton bt_details = (ImageButton) v.findViewById(R.id.bt_gasStationsButton);
+
+//                        bt_details.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
+//                                i.putExtra("gas", (Serializable) gas);
+//                                startActivity(i);
+//
+//                            }
+//                        });
+
+                        tvTitle.setText(marker.getTitle());
+                        tvDetails.setText(marker.getSnippet());
+                        tvGasPrice.setText(getString(R.string.gas_price)+ ": R$ " + String.format("%.2f", gas.getGasPrice()));
+                        tvGasPlusPrice.setText(getString(R.string.gas_plus_price)+ ": R$ " + String.format("%.2f", gas.getGasPlusPrice()));
+                        tvAlcoolPrice.setText(getString(R.string.alcool_price)+ ": R$ " + String.format("%.2f", gas.getAlcoolPrice()));
+
+                        return v;
+                    }
+                });
+                if (response.code() == 200) {
+                    Log.d("Stations", "Got " + response.body().size() + " Gas stations");
+                    for (GasStation gas : response.body()) {
+                        LatLng loc = new LatLng(gas.getLocation().getLat(), gas.getLocation().getLng());
+                        setMarker(gas, loc);
+                    }
+                } else {
+                    Log.e("ERROR", "error getting gas stations");
                 }
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        GasStation gas = allMarkersMap.get(marker);
+
+                        Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
+                        i.putExtra("gas", gas);
+                        startActivity(i);
+                    }
+                });
             }
 
             @Override
@@ -139,12 +176,14 @@ public class GasMapsActivity extends BaseFragmentActivity
                 Log.e("Treta", "Error getting gas stations" + t.toString());
             }
         });
+
+
         mIdaEvolta = false;
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.setHasOptionsMenu(true);
 
         final FragmentActivity self = this;
@@ -160,6 +199,17 @@ public class GasMapsActivity extends BaseFragmentActivity
             mCityLatLng = new LatLng(cityCords[0], cityCords[1]);
         }
         mapFragment.getMapAsync(this);
+
+    }
+
+    private void setMarker(GasStation gas, LatLng loc) {
+        Marker m = mMap.addMarker(new MarkerOptions()
+                .position(loc)
+                .title(gas.getName())
+                .snippet(getString(R.string.rating) + ": " + gas.getRating())
+        );
+        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
+        allMarkersMap.put(m, gas);
 
     }
 
@@ -211,7 +261,7 @@ public class GasMapsActivity extends BaseFragmentActivity
         GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                if(firstTime){
+                if (firstTime) {
                     firstTime = false;
                     LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
@@ -220,6 +270,5 @@ public class GasMapsActivity extends BaseFragmentActivity
         };
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
     }
-
 
 }

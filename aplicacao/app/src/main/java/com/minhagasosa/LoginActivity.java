@@ -1,6 +1,8 @@
 package com.minhagasosa;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,9 +10,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -34,12 +41,26 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.minhagasosa.API.GasStationService;
+import com.minhagasosa.API.LocationService;
+import com.minhagasosa.API.UsersService;
+import com.minhagasosa.Transfer.City;
+import com.minhagasosa.Transfer.State;
+import com.minhagasosa.Transfer.TUser;
+import com.minhagasosa.activites.BaseActivity;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+
+public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     public static final String PREFERENCE_NAME = "USER_PREFERENCE";
     public static final String USER_NOME = "USER_NOME";
@@ -70,6 +91,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private boolean isGoogleButtonClicked;
     private boolean isConsentScreenOpened;
     private boolean tryLogin;
+    UsersService m_usersService;
+    LocationService m_locationService;
 
 
     @Override
@@ -113,7 +136,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 if (haveFacebook()) {
                     configFacebookTrackers();
                 }
-            }}
+            }
+        }
+        m_usersService = retrofit.create(UsersService.class);
+        m_locationService = retrofit.create(LocationService.class);
     }
 
     private void skipSplash(){
@@ -236,27 +262,138 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-
-    private void handleSignInFacebookResult(){
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
+    private void register(String cityId){
+        Profile fbProfile = Profile.getCurrentProfile();
+        TUser us = new TUser();
+        us.setFirstName(fbProfile.getFirstName());
+        us.setLastName(fbProfile.getLastName());
+        us.setFbId(fbProfile.getId());
+        us.setCity(cityId);
+        m_usersService.registerUser(us).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                logado = true;
-                setFacebookProfile(Profile.getCurrentProfile());
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                switch (response.code()){
+                    case 201:
+                        Log.d("Reg", "Usuario registrando, logando...");
+                        authInServer(AccessToken.getCurrentAccessToken().getToken());
+                        break;
+                    default:
+                        Log.e("Err", "Não foi possível criar o novo usuário");
+                }
             }
 
             @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
 
             }
         });
+    }
+
+    private void authInServer(String fbAuthToken){
+        m_usersService.Auth(fbAuthToken).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                switch (response.code()){
+                    case 200:
+                        try {
+                            Log.d("Login", "Usuario autênticado com token: ");
+                            SharedPreferences sharedPref = getSharedPreferences(BaseActivity.PREFERENCE_NAME, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("AUTH_TOKEN", response.body().string());
+                            editor.commit();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        logado = true;
+                        setFacebookProfile(Profile.getCurrentProfile());
+                        break;
+                    case 403:
+                        Log.d("Reg", "Usuario ainda não registrado, registrando...");
+                        showSelectLocationDialog();
+                        //TODO Move to location selection
+                        //register();
+                        break;
+                    default:
+                        Log.e("Err", "Erro de autenticação");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                System.out.print(throwable.toString());
+            }
+        });
+
+    }
+
+    private void showSelectLocationDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_location);
+        dialog.setTitle("Seleciona sua localização");
+
+        final Spinner stateSpinner = (Spinner) dialog.findViewById(R.id.spinner_select_state);
+        final Spinner citySpinner = (Spinner) dialog.findViewById(R.id.spinner_select_city);
+        final Button confirmbutton = (Button) dialog.findViewById(R.id.button_confirm_location);
+        confirmbutton.setEnabled(false);
+        final ArrayAdapter citiesAdapter = new ArrayAdapter<City>(dialog.getContext(),
+                android.R.layout.simple_spinner_item, new ArrayList<City>());
+        citySpinner.setAdapter(citiesAdapter);
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                State selectedState = (State) stateSpinner.getSelectedItem();
+                Log.d("state", "StateId: " + selectedState.getId());
+                m_locationService.getCities(selectedState.getId()).enqueue(new Callback<List<City>>() {
+                    @Override
+                    public void onResponse(Call<List<City>> call, Response<List<City>> response) {
+                        List<City> cities = response.body();
+                        Log.d("Citites", "Cities Size: " + cities.size());
+
+                        citiesAdapter.clear();
+                        citiesAdapter.addAll(cities);
+                        citiesAdapter.notifyDataSetChanged();
+
+                        confirmbutton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<City>> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        m_locationService.getStates().enqueue(new Callback<List<State>>() {
+            @Override
+            public void onResponse(Call<List<State>> call, Response<List<State>> response) {
+                List<State> statesList = response.body();
+
+                stateSpinner.setAdapter(new ArrayAdapter<State>(dialog.getContext(),
+                        android.R.layout.simple_spinner_item, statesList));
+            }
+
+            @Override
+            public void onFailure(Call<List<State>> call, Throwable t) {
+
+            }
+        });
+
+        confirmbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                City selectedCity = (City) citySpinner.getSelectedItem();
+                register(selectedCity.getId());
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     private boolean haveFacebook(){
@@ -285,11 +422,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onStart() {
         super.onStart();
-
+        final Activity self = this;
         signInFacebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                handleSignInFacebookResult();
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(self, Arrays.asList("public_profile", "user_friends", "email"));
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        authInServer(AccessToken.getCurrentAccessToken().getToken());
+//                        logado = true;
+//                        setFacebookProfile(Profile.getCurrentProfile());
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+
+                    }
+                });
             }
         });
 

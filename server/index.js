@@ -20,6 +20,7 @@ mongoose.connect(db, function(err) {
 
 require('./models/User');
 require('./models/Route');
+require('./models/Location');
 require('./models/GasStation');
 require('./models/Admin');
 
@@ -28,11 +29,15 @@ var RouteModel = mongoose.model('Route');
 var CommentModel = mongoose.model('Comment');
 var GasModel = mongoose.model('GasStation');
 var AdminModel = mongoose.model('Admin');
+var LocationModel = mongoose.model('Location');
+var StateModel = mongoose.model('State');
+var CityModel = mongoose.model('City');
+
 
 var gasStation = require('./routes/gas');
 var routes = require('./routes/app');
 
-var app = express();
+var app = require('./config/app_config');
 var router = express.Router();
 
 app.set('fbDebugTokenUri', 'graph.facebook.com');
@@ -88,7 +93,7 @@ router.use(function(req, res, next) {
         return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
-        req.reqUser = decoded;
+        req.reqUser = decoded._doc;
         next();
       }
     });

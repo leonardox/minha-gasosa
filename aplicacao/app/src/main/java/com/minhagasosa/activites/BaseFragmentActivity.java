@@ -56,15 +56,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class BaseFragmentActivity extends FragmentActivity {
 
+    public static final String PREFERENCE_NAME = "AUTH_PREFERENCE";
+
     protected Retrofit retrofit;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        retrofit  = new Retrofit.Builder()
-                .baseUrl("https://minha-gasosa-p1.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit  = EndpointFactory.buildEndpoint(getBaseContext());
 
     }
 }

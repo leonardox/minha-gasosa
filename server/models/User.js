@@ -10,7 +10,6 @@ var userSchema = mongoose.Schema({
   email: String,
   gender: String,
   address: String,
-  city: String,
   state: String,
   country: String,
   phoneNumber: String,
@@ -18,6 +17,7 @@ var userSchema = mongoose.Schema({
   lastLogin: Date,
   birthDate: Date,
   routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }],
+  city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
   fb_id: String
 });
 
