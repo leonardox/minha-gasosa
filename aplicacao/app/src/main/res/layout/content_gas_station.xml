@@ -8,6 +8,9 @@
     tools:context="com.minhagasosa.activites.maps.GasStationActivity"
     tools:showIn="@layout/activity_gas_station">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/layout_test"
         android:layout_width="match_parent"
@@ -81,15 +84,17 @@
             android:text="x,xx" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/text_margin"
+            android:id="@+id/comments"
             android:text="Comentarios:"
             android:textSize="16sp" />
 
 
-    </LinearLayout>
 
+    </LinearLayout>
+    </ScrollView>
 
 </android.support.v4.widget.NestedScrollView>

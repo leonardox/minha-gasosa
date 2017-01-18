@@ -203,4 +203,5 @@
     <string name="closed_gas_station">Este Posto Fechou</string>
     <string name="wrong_localization">Reportar Localização Incorreta</string>
     <string name="wrong_prices">Reportar Preços Incorretos</string>
+    <string name="add_comment">Adicionar comentário</string>
 </resources>

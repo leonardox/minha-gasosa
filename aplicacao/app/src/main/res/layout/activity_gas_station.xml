@@ -47,6 +47,14 @@
         fab:menu_labels_singleLine="true">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_add_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quantum_ic_clear_white_24"
+            fab:fab_label="@string/add_comment"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_wrong_prices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
