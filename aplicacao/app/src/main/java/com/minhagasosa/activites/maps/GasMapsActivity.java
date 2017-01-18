@@ -190,7 +190,8 @@ public class GasMapsActivity extends BaseFragmentActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-
+                Intent i = new Intent(GasMapsActivity.this, GasStationListActivity.class);
+                startActivity(i);
             }
         });
         Intent i = getIntent();
