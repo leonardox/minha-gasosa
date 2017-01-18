@@ -107,6 +107,7 @@
     <string name="alcool_price">Preço do Alcool</string>
     <string name="gas_plus_price">Preço da Gas. Aditivada</string>
     <string name="title_activity_gas_station">GasStationActivity</string>
+    <string name="title_activity_gas_station_list">GasStationListActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
