@@ -7,9 +7,11 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -97,7 +99,7 @@ public class GasMapsActivity extends BaseFragmentActivity
      */
     private FloatingActionButton mFab;
 
-    private Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
+    public Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
 
 
     boolean firstTime = true;
@@ -181,6 +183,7 @@ public class GasMapsActivity extends BaseFragmentActivity
         mIdaEvolta = false;
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+        mFab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_local_gas_station_black_24dp_1x));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
