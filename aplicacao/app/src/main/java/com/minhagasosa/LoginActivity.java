@@ -309,9 +309,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         break;
                     case 403:
                         Log.d("Reg", "Usuario ainda não registrado, registrando...");
-                        showSelectLocationDialog();
+                        //showSelectLocationDialog();
                         //TODO Move to location selection
-                        //register("");
+                        register("");
                         break;
                     default:
                         Log.e("Err", "Erro de autenticação");
