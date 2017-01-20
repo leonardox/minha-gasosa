@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var State = mongoose.model('State');
 var City = mongoose.model('City');
+var Admin = mongoose.model('Admin');
 
 router.post('/register', function (req, res, next) {
 
@@ -51,6 +52,24 @@ router.get('/cities', function (req, res, next) {
       res.status(500).send('Failed to get cities.');
     } else {
       res.send(cities);
+    }
+  });
+});
+
+router.post('/admin-auth', function (req, res, next) {
+  console.log("Auth");
+  var admin = req.body.username;
+  var password = req.body.password;
+  Admin.findOne({username: admin}).exec(function(err, admin){
+    var ad = {};
+    if(admin != undefined && admin.password == password){
+      ad._doc = admin;
+      var token = jwt.sign(ad, req.app.get('superSecret'), {
+        expiresInMinutes: 43200000 // expires in 24 hours
+      });
+      res.send(token);
+    }else{
+      res.status(403).send("Invalid password");
     }
   });
 });
