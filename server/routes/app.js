@@ -74,6 +74,22 @@ router.post('/admin-auth', function (req, res, next) {
   });
 });
 
+router.get('/dbg-auth', function (req, res, next) {
+  console.log("Auth");
+  var fbId = req.query.fbId;
+  User.find({"fb_id": fbId}, function(err, users){
+    var user = users[0];
+    console.log("user: " + JSON.stringify(user));
+    user.registered = true;
+    var token = jwt.sign(user, req.app.get('superSecret'), {
+      expiresInMinutes: 43200000 // expires in 24 hours
+    });
+    console.log("Token: " + token);
+    res.send(token);
+  });
+
+});
+
 router.get('/auth', function (req, res, next) {
   console.log("Auth");
   var fbToken = req.query.fbToken;

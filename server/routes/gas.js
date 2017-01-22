@@ -36,6 +36,107 @@ router.get('/:id', function(req, res, next) {
   })
 });
 
+router.put('/wrong-price/:id', function(req, res, next) {
+  var gasId = req.param('id');
+  var userId = req.reqUser._id;
+  GasModel.findOne({
+    _id: gasId,
+    wrongPriceReports: {$ne: userId}
+  }).exec(function(err, gas){
+    if(err){
+      res.status(500).send("Error reporting price 1.");
+    }else if (!gas){
+      res.status(400).send("Already reported.");
+    }else{
+      gas.wrongPriceReports.push(userId);
+      gas.save(function(err, gas){
+        if(err){
+          res.status(500).send("Error reporting price 2.");
+        }else{
+          res.status(201).send("Reported");
+        }
+      });
+    }
+  })
+});
+
+router.put('/wrong-location/:id', function(req, res, next) {
+  var gasId = req.param('id');
+  var userId = req.reqUser._id;
+  GasModel.findOne({
+    _id: gasId,
+    wrongLocation: {$ne: userId}
+  }).exec(function(err, gas){
+    if(err){
+      res.status(500).send("Error reporting location.");
+    }else if (!gas){
+      res.status(400).send("Already reported.");
+    }else{
+      gas.wrongLocationReports.push(userId);
+      gas.save(function(err, newGas){
+        if(err){
+          res.status(500).send("Error reporting location.");
+        }else{
+          res.status(201).send("Reported");
+        }
+      });
+    }
+  })
+});
+
+
+router.put('/closed/:id', function(req, res, next) {
+  var gasId = req.param('id');
+  var userId = req.reqUser._id;
+  GasModel.findOne({
+    _id: gasId,
+    closedReports: {$ne: userId}
+  }).exec(function(err, gas){
+    if(err){
+      res.status(500).send("Error reporting location.");
+    }else if (!gas){
+      res.status(400).send("Already reported.");
+    }else{
+      gas.closedReports.push(userId);
+      gas.save(function(err, newGas){
+        if(err){
+          res.status(500).send("Error reporting location.");
+        }else{
+          res.status(201).send("Reported");
+        }
+      });
+    }
+  })
+});
+
+router.put('/rating/:id', function(req, res, next) {
+  var gasId = req.param('id');
+  var rating = req.body.rating;
+  var userId = req.reqUser._id;
+  GasModel.findOne({
+    _id: gasId,
+    ratingCount: {$ne: userId}
+  }).exec(function(err, gas){
+    if(err){
+      res.status(500).send("Error reporting location 1.");
+    }else if (!gas){
+      res.status(400).send("Already rated.");
+    }else{
+      gas.ratingCount.push(userId);
+      gas.totalRating += rating;
+      gas.rating = gas.totalRating / gas.ratingCount.length;
+      gas.save(function(err, newGas){
+        if(err){
+          res.status(500).send("Error reporting location 2.");
+        }else{
+          res.status(201).send("Rated");
+        }
+      });
+    }
+  })
+});
+
+
 router.put('/', function(req, res, next) {
   var gasStation = req.body;
   new GasModel(gasStation).save(function(err, gas){
