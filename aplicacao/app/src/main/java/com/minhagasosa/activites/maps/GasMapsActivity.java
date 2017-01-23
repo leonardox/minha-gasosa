@@ -99,7 +99,7 @@ public class GasMapsActivity extends BaseFragmentActivity
      */
     private FloatingActionButton mFab;
 
-    public Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
+    private Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
 
 
     boolean firstTime = true;

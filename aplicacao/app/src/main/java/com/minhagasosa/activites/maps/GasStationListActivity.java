@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.R;
@@ -25,6 +27,12 @@ import retrofit2.Response;
 public class GasStationListActivity extends BaseActivity {
     protected List<GasStation> gasStation;
 
+    private ImageButton alcoholButton;
+    private ImageButton gasButton;
+    private ImageButton gasPlusButton;
+
+    private ArrayAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,22 +44,19 @@ public class GasStationListActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        alcoholButton = (ImageButton) findViewById(R.id.button_alcohol);
+        alcoholButton.setOnClickListener(clickListener);
+        gasButton = (ImageButton) findViewById(R.id.button_gas);
+        gasButton.setOnClickListener(clickListener);
+        gasPlusButton = (ImageButton) findViewById(R.id.button_gas_plus);
+        gasPlusButton.setOnClickListener(clickListener);
+
         GasStationService gasService = retrofit.create(GasStationService.class);
         gasService.getAllGasStation().enqueue(new Callback<List<GasStation>>() {
             @Override
             public void onResponse(Call<List<GasStation>> call, final Response<List<GasStation>> response) {
                 if (response.code() == 200) {
                     gasStation = response.body();
-
-                    //System.out.print(response.body()); Visualização da resposta
-//                    for (GasStation gas : response.body()) {
-//                        String name = gas.getName();
-//                        String gasPrice = Float.toString(gas.getGasPrice());
-//                        String gasPlusPrice = Float.toString(gas.getGasPlusPrice());
-//                        String gasAlcoolPrice = Float.toString(gas.getAlcoolPrice());
-//
-//                        gasStation.add(new String[]{name, gasPrice, gasPlusPrice, gasAlcoolPrice});
-//                    }
                 }
 
                 for(int i = 0; i < gasStation.size(); i++){
@@ -64,8 +69,7 @@ public class GasStationListActivity extends BaseActivity {
                     }
                 }
 
-                //System.out.print(gasStation); Visualização do array
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_2, android.R.id.text1, gasStation) {
+                adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_2, android.R.id.text1, gasStation) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
@@ -76,7 +80,9 @@ public class GasStationListActivity extends BaseActivity {
                         text2.setTextColor(Color.BLACK);
 
                         text1.setText(gasStation.get(position).getName());
-                        text2.setText("Valor: " + Float.toString(gasStation.get(position).getGasPrice()) + " R$");
+                        text2.setText("Alcohol price: " + Float.toString(gasStation.get(position).getAlcoolPrice()) + " R$. \n" +
+                                "Gas price: " + Float.toString(gasStation.get(position).getGasPrice()) + " R$. \n" +
+                                "Gas Plus price: " + Float.toString(gasStation.get(position).getGasPlusPrice()) + " R$.");
                         return view;
                     }
                 };
@@ -94,4 +100,49 @@ public class GasStationListActivity extends BaseActivity {
 
 
     }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button_alcohol:
+                    for(int i = 0; i < gasStation.size(); i++){
+                        for(int j = 0; j < gasStation.size() - 1; j++){
+                            if(gasStation.get(j).getAlcoolPrice() > gasStation.get(j + 1).getAlcoolPrice()){
+                                GasStation aux = gasStation.get(j);
+                                gasStation.set(j, gasStation.get(j + 1));
+                                gasStation.set(j + 1, aux);
+                            }
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    Log.e("Log", "Alcool");
+                    break;
+                case R.id.button_gas:
+                    for(int i = 0; i < gasStation.size(); i++){
+                        for(int j = 0; j < gasStation.size() - 1; j++){
+                            if(gasStation.get(j).getGasPrice() > gasStation.get(j + 1).getGasPrice()){
+                                GasStation aux = gasStation.get(j);
+                                gasStation.set(j, gasStation.get(j + 1));
+                                gasStation.set(j + 1, aux);
+                            }
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    Log.e("Log", "Gasolina");
+                    break;
+                case R.id.button_gas_plus:
+                    for(int j = 0; j < gasStation.size() - 1; j++){
+                        if(gasStation.get(j).getGasPlusPrice() > gasStation.get(j + 1).getGasPlusPrice()){
+                            GasStation aux = gasStation.get(j);
+                            gasStation.set(j, gasStation.get(j + 1));
+                            gasStation.set(j + 1, aux);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    Log.e("Log", "Gasolina Aditivada");
+                    break;
+            }
+        }
+    };
 }
