@@ -65,7 +65,7 @@ router.put('/wrong-location/:id', function(req, res, next) {
   var userId = req.reqUser._id;
   GasModel.findOne({
     _id: gasId,
-    wrongLocation: {$ne: userId}
+    wrongLocationReports: {$ne: userId}
   }).exec(function(err, gas){
     if(err){
       res.status(500).send("Error reporting location.");

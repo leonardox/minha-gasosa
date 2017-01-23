@@ -12,6 +12,10 @@ import java.util.List;
 
 public class GasStation implements Parcelable{
 
+@SerializedName("_id")
+@Expose
+private String id;
+
 @SerializedName("name")
 @Expose
 private String name;
@@ -42,6 +46,15 @@ private String description;
 @SerializedName("location")
 @Expose
 private Location location;
+
+
+public String getId() {
+    return id;
+}
+
+public void setId(String id) {
+    this.id = id;
+}
 
 /**
 * 
@@ -226,6 +239,7 @@ this.location = location;
 }
 
     protected GasStation(Parcel in) {
+        id = in.readString();
         name = in.readString();
         city = in.readString();
         state = in.readString();
@@ -250,6 +264,7 @@ this.location = location;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(city);
         dest.writeString(state);
