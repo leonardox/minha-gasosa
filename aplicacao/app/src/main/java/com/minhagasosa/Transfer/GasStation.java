@@ -12,6 +12,10 @@ import java.util.List;
 
 public class GasStation implements Parcelable{
 
+@SerializedName("_id")
+@Expose
+private String id;
+
 @SerializedName("name")
 @Expose
 private String name;
@@ -23,7 +27,7 @@ private String city;
 private String state;
 @SerializedName("rating")
 @Expose
-private Integer rating;
+private Double rating;
 @SerializedName("gasPrice")
 @Expose
 private float gasPrice;
@@ -42,6 +46,15 @@ private String description;
 @SerializedName("location")
 @Expose
 private Location location;
+
+
+public String getId() {
+    return id;
+}
+
+public void setId(String id) {
+    this.id = id;
+}
 
 /**
 * 
@@ -102,7 +115,7 @@ this.state = state;
 * @return
 * The rating
 */
-public Integer getRating() {
+public Double getRating() {
 return rating;
 }
 
@@ -111,7 +124,7 @@ return rating;
 * @param rating
 * The rating
 */
-public void setRating(Integer rating) {
+public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -226,10 +239,11 @@ this.location = location;
 }
 
     protected GasStation(Parcel in) {
+        id = in.readString();
         name = in.readString();
         city = in.readString();
         state = in.readString();
-        rating = in.readByte() == 0x00 ? null : in.readInt();
+        rating = in.readByte() == 0x00 ? null : in.readDouble();
         gasPrice = in.readFloat();
         gasPlusPrice = in.readFloat();
         alcoolPrice = in.readFloat();
@@ -250,6 +264,7 @@ this.location = location;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(city);
         dest.writeString(state);
@@ -257,7 +272,7 @@ this.location = location;
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeInt(rating);
+            dest.writeDouble(rating);
         }
         dest.writeFloat(gasPrice);
         dest.writeFloat(gasPlusPrice);
