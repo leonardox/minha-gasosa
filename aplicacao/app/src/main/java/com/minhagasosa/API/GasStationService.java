@@ -39,6 +39,11 @@ public interface GasStationService {
             @Path("id") String gasId,
             @Body HashMap<String, String> comment);
 
+    @PUT("gas/rating/{id}")
+    public Call<ResponseBody> sendRating(
+            @Path("id") String gasId,
+            @Body HashMap<String, Double> rating);
+
     @GET("gas/comment/{id}")
     public Call<List<Comments>> getComments(
             @Path("id") String gasId);

@@ -27,7 +27,7 @@ private String city;
 private String state;
 @SerializedName("rating")
 @Expose
-private Integer rating;
+private Double rating;
 @SerializedName("gasPrice")
 @Expose
 private float gasPrice;
@@ -115,7 +115,7 @@ this.state = state;
 * @return
 * The rating
 */
-public Integer getRating() {
+public Double getRating() {
 return rating;
 }
 
@@ -124,7 +124,7 @@ return rating;
 * @param rating
 * The rating
 */
-public void setRating(Integer rating) {
+public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -243,7 +243,7 @@ this.location = location;
         name = in.readString();
         city = in.readString();
         state = in.readString();
-        rating = in.readByte() == 0x00 ? null : in.readInt();
+        rating = in.readByte() == 0x00 ? null : in.readDouble();
         gasPrice = in.readFloat();
         gasPlusPrice = in.readFloat();
         alcoolPrice = in.readFloat();
@@ -272,7 +272,7 @@ this.location = location;
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeInt(rating);
+            dest.writeDouble(rating);
         }
         dest.writeFloat(gasPrice);
         dest.writeFloat(gasPlusPrice);

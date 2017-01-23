@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -63,8 +64,38 @@ public class GasStationActivity extends BaseActivity {
         collapsingToolbar.setTitle(mGas.getName());
 
         RatingBar rating = (RatingBar) findViewById(R.id.rating);
-        rating.setRating(mGas.getRating());
+        rating.setRating(mGas.getRating().floatValue());
 
+        final Activity self = this;
+        rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(final RatingBar ratingBar, float v, boolean b) {
+                HashMap<String, Double> rating = new HashMap<String, Double>();
+                rating.put("rating", new Double(v));
+                mGasService.sendRating(mGas.getId(), rating).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.code() == 201) {
+                            System.out.println("rated");
+                            Snackbar.make(ratingBar, "Posto classificado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                        }else if(response.code() == 400){
+                            System.out.println("already");
+                            Snackbar.make(ratingBar, "Você já classificou este posto", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }else{
+                            System.out.println("huh?");
+                            //TODO
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        System.out.println("Treta: " + t.toString());
+                    }
+                });
+
+            }
+        });
         TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
         TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);
         TextView tvAlcoolPrice = (TextView) findViewById(R.id.tv_gasPage_alcoolPrice);
@@ -135,7 +166,7 @@ public class GasStationActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.code() == 201){
-                            Toast.makeText(self, "Comentário enviado", Toast.LENGTH_SHORT);
+                            Snackbar.make(edittext, "Comentário enviado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }else{
                             //TODO tratar tretas
                         }
