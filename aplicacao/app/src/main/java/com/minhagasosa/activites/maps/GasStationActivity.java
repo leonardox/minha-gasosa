@@ -1,5 +1,6 @@
 package com.minhagasosa.activites.maps;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,16 +13,23 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.R;
+import com.minhagasosa.Transfer.Comments;
 import com.minhagasosa.Transfer.GasStation;
 import com.minhagasosa.activites.BaseActivity;
+import com.minhagasosa.adapters.CommentAdapter;
+
+import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -110,16 +118,34 @@ public class GasStationActivity extends BaseActivity {
     }
 
     private void openAddCommentDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
         alert.setMessage("Digite seu comentário");
         alert.setTitle("Adicionar Comentário");
         alert.setView(edittext);
 
+        final Activity self = this;
+
         alert.setPositiveButton("Adicionar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 fabMenu.close(false);
-                mComments.add(edittext.getText().toString());
+                HashMap<String, String> comment = new HashMap<String, String>();
+                comment.put("text", edittext.getText().toString());
+                mGasService.addComment(mGas.getId(), comment).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.code() == 201){
+                            Toast.makeText(self, "Comentário enviado", Toast.LENGTH_SHORT);
+                        }else{
+                            //TODO tratar tretas
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
             }
         });
 
@@ -132,21 +158,32 @@ public class GasStationActivity extends BaseActivity {
     }
 
     private void openCommentsDialog() {
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
         builderSingle.setTitle("Comentários");
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item);
-        arrayAdapter.addAll(mComments);
-
-        builderSingle.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+        mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
+                if(response.code() == 200){
+                    List<Comments> comments = response.body();
+                    final CommentAdapter arrayAdapter = new CommentAdapter(builderSingle.getContext(), comments);
+                    builderSingle.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, null);
+                    builderSingle.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comments>> call, Throwable t) {
+                System.out.println("Treta: " + t.toString());
             }
         });
-
-        builderSingle.setAdapter(arrayAdapter, null);
-        builderSingle.show();
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {

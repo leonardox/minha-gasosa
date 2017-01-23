@@ -1,11 +1,14 @@
 package com.minhagasosa.API;
 
+import com.minhagasosa.Transfer.Comments;
 import com.minhagasosa.Transfer.GasStation;
 
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -29,5 +32,14 @@ public interface GasStationService {
 
     @PUT("gas/closed/{id}")
     public Call<ResponseBody> reportClosed(
+            @Path("id") String gasId);
+
+    @PUT("gas/comment/{id}")
+    public Call<ResponseBody> addComment(
+            @Path("id") String gasId,
+            @Body HashMap<String, String> comment);
+
+    @GET("gas/comment/{id}")
+    public Call<List<Comments>> getComments(
             @Path("id") String gasId);
 }

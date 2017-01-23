@@ -10,7 +10,7 @@ public class Comments {
 private String text;
 @SerializedName("author")
 @Expose
-private String author;
+private TUser author;
 @SerializedName("creationDate")
 @Expose
 private String creationDate;
@@ -41,7 +41,7 @@ this.text = text;
 * @return
 * The author
 */
-public String getAuthor() {
+public TUser getAuthor() {
 return author;
 }
 
@@ -50,7 +50,7 @@ return author;
 * @param author
 * The author
 */
-public void setAuthor(String author) {
+public void setAuthor(TUser author) {
 this.author = author;
 }
 
