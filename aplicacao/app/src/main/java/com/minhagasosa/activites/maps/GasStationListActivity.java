@@ -1,11 +1,13 @@
 package com.minhagasosa.activites.maps;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -32,6 +34,7 @@ public class GasStationListActivity extends BaseActivity {
     private ImageButton gasPlusButton;
 
     private ArrayAdapter adapter;
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +90,17 @@ public class GasStationListActivity extends BaseActivity {
                     }
                 };
 
-                ListView list = (ListView) findViewById(R.id.gas_station_list);
+                list = (ListView) findViewById(R.id.gas_station_list);
                 list.setAdapter(adapter);
+
+                //PEGANDO A POSIÇÃO PARA MOSTRAR O POSTO NO MAPA
+//                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                        GasStation selectedGasStation = gasStation.get(position);
+//                        Toast.makeText(getBaseContext(), selectedGasStation.getName(),Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
             }
 
@@ -97,7 +109,6 @@ public class GasStationListActivity extends BaseActivity {
                 Log.e("Error", "Error getting gas stations" + t.toString());
             }
         });
-
 
     }
 
