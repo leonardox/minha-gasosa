@@ -146,6 +146,19 @@ app.get('/home', function(req, res) {
   });
 });
 
+app.get('/station', function(req, res) {
+  res.render('new_station', {});
+});
+
+app.post('/station', function(req, res) {
+  GasModel.create({
+    name: req.body.name,
+    location: {lat: req.body.lat, lng: req.body.lng}
+  }, function() {
+    res.redirect('/home');
+  });
+});
+
 app.listen(port, function() {
   console.log('Node app is running on port', port);
   //var newAdmin = {

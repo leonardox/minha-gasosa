@@ -1,0 +1,55 @@
+<div class="row">
+    <div id="map" class="col-md-offset-3 col-md-3"></div>
+    <div class="col-md-3">
+        <form action="/station" method="post">
+            <div class="form-group">
+                <input class="form-control" name="name" placeholder="Nome">
+                <input class="form-control" name="lat" placeholder="Latitude" readonly>
+                <input class="form-control" name="lng" placeholder="Longitude" readonly>
+                <input class="form-control" type="submit" value="Enviar">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var map;
+
+    function setLatLngForm(event) {
+        $("input[name=lat]").val(event.latLng.lat());
+        $("input[name=lng]").val(event.latLng.lng());
+    }
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 0, lng: 0},
+            zoom: 2
+        });
+
+        var marker;
+        
+        google.maps.event.addListener(map, 'click', function(event) {
+            if (!marker) {
+                marker = new google.maps.Marker({
+                    draggable: true,
+                    position: event.latLng,
+                    map: map
+                });
+                setLatLngForm(event);
+                marker.addListener('drag', setLatLngForm);
+            }
+        });
+    }
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
+</script>
+
+<style>
+#map {
+    height: 600px;
+}
+input {
+    margin: 10px;
+}
+</style>
