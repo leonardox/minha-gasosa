@@ -101,7 +101,6 @@ public class GasMapsActivity extends BaseFragmentActivity
 
     private Map<Marker, GasStation> allMarkersMap = new HashMap<Marker, GasStation>();
 
-
     boolean firstTime = true;
 
     @Override
@@ -113,8 +112,7 @@ public class GasMapsActivity extends BaseFragmentActivity
             @Override
             public void onResponse(Call<List<GasStation>> call, final Response<List<GasStation>> response) {
                 mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
-
-                    @Override
+                                        @Override
                     public View getInfoWindow(Marker marker) {
                         return null;
                     }
