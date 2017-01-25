@@ -93,14 +93,15 @@ public class GasStationListActivity extends BaseActivity {
                 list = (ListView) findViewById(R.id.gas_station_list);
                 list.setAdapter(adapter);
 
-                //PEGANDO A POSIÇÃO PARA MOSTRAR O POSTO NO MAPA
-//                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                        GasStation selectedGasStation = gasStation.get(position);
-//                        Toast.makeText(getBaseContext(), selectedGasStation.getName(),Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        GasStation selectedGasStation = gasStation.get(position);
+
+                        Intent i = new Intent(GasStationListActivity.this, GasStationActivity.class);
+                        i.putExtra("gas", selectedGasStation);
+                        startActivity(i);
+                    }
+                });
 
             }
 
@@ -127,7 +128,8 @@ public class GasStationListActivity extends BaseActivity {
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    Log.e("Log", "Alcool");
+                    Toast.makeText(getBaseContext(), "Organizados pelo preço do alcool",Toast.LENGTH_SHORT).show();
+                    //Log.e("Log", "Alcool");
                     break;
                 case R.id.button_gas:
                     for(int i = 0; i < gasStation.size(); i++){
@@ -140,7 +142,8 @@ public class GasStationListActivity extends BaseActivity {
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    Log.e("Log", "Gasolina");
+                    Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina",Toast.LENGTH_SHORT).show();
+                    //Log.e("Log", "Gasolina");
                     break;
                 case R.id.button_gas_plus:
                     for(int j = 0; j < gasStation.size() - 1; j++){
@@ -151,7 +154,8 @@ public class GasStationListActivity extends BaseActivity {
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    Log.e("Log", "Gasolina Aditivada");
+                    Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina aditivada",Toast.LENGTH_SHORT).show();
+                    //Log.e("Log", "Gasolina Aditivada");
                     break;
             }
         }
