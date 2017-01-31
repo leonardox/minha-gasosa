@@ -51,6 +51,13 @@
                 android:textSize="12dp" />
 
             <TextView
+                android:id="@+id/tv_openning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ff7f7f7f"
+                android:textSize="12dp" />
+
+            <TextView
                 android:id="@+id/tv_gasPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

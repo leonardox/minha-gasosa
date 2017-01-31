@@ -29,6 +29,8 @@
                 fab:layout_collapseMode="pin"
                 fab:popupTheme="@style/AppTheme.PopupOverlay" />
 
+
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

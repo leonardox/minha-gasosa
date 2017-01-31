@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.vision.text.Text;
 import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.activites.BaseFragmentActivity;
 import com.minhagasosa.R;
@@ -127,7 +128,7 @@ public class GasMapsActivity extends BaseFragmentActivity
                         TextView tvGasPrice = (TextView) v.findViewById(R.id.tv_gasPrice);
                         TextView tvGasPlusPrice = (TextView) v.findViewById(R.id.tv_gasPlusPrice);
                         TextView tvAlcoolPrice = (TextView) v.findViewById(R.id.tv_alcoolPrice);
-
+                        TextView tvOpenning = (TextView) v.findViewById(R.id.tv_openning);
                         ImageButton bt_details = (ImageButton) v.findViewById(R.id.bt_gasStationsButton);
 
 //                        bt_details.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +143,7 @@ public class GasMapsActivity extends BaseFragmentActivity
 
                         tvTitle.setText(marker.getTitle());
                         tvDetails.setText(marker.getSnippet());
+                        tvOpenning.setText("Aberto das 7:00 ás 21:00 horas");
                         tvGasPrice.setText(getString(R.string.gas_price)+ ": R$ " + String.format("%.2f", gas.getGasPrice()));
                         tvGasPlusPrice.setText(getString(R.string.gas_plus_price)+ ": R$ " + String.format("%.2f", gas.getGasPlusPrice()));
                         tvAlcoolPrice.setText(getString(R.string.alcool_price)+ ": R$ " + String.format("%.2f", gas.getAlcoolPrice()));
