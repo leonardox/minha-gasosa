@@ -20,6 +20,8 @@ var gasSchema = mongoose.Schema({
   city: String,
   state: String,
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+  payamentsCredit: [String],
+  payamentsDebit: [String],
   rating: Number,
   totalRating: { type: Number, default: 0 },
   ratingCount: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
