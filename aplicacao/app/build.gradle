@@ -9,7 +9,8 @@ repositories {
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
-
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.minhagasosa"
         minSdkVersion 22

@@ -9,12 +9,17 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.ViewGroup.LayoutParams;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -46,6 +51,7 @@ public class GasStationActivity extends BaseActivity {
     private GasStationService mGasService;
     private List<String> mComments;
     private GasStation mGas;
+    private final int CARD_ICON_WIDTH = 85;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +105,69 @@ public class GasStationActivity extends BaseActivity {
         TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
         TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);
         TextView tvAlcoolPrice = (TextView) findViewById(R.id.tv_gasPage_alcoolPrice);
+        TextView tvCredit = (TextView) findViewById(R.id.tvCredit);
+        TextView tvDebit = (TextView) findViewById(R.id.tvDebit);
 
         tvGasPrice.setText("R$ " + String.format("%.2f", mGas.getGasPrice()));
         tvGasPlusPrice.setText("R$ " + String.format("%.2f", mGas.getGasPlusPrice()));
         tvAlcoolPrice.setText("R$ " + String.format("%.2f", mGas.getAlcoolPrice()));
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int height = displaymetrics.heightPixels;
+        int width = displaymetrics.widthPixels;
+        if(mGas.getPayamentsCredit() != null && !mGas.getPayamentsCredit().isEmpty()){
+            GridLayout glCredit = (GridLayout) findViewById(R.id.layoutCredito);
+
+            glCredit.removeAllViews();
+
+            int colCount = 4;
+            int rowCount = (int) Math.ceil((mGas.getPayamentsCredit().size() / colCount));
+
+            glCredit.setColumnCount(colCount);
+            glCredit.setRowCount(rowCount);
+
+            for(int i=0; i<mGas.getPayamentsCredit().size(); i++){
+                ImageView imv = new ImageView(this);
+                int id = imv.getContext().getResources().getIdentifier(mGas.getPayamentsCredit().get(i).toLowerCase(), "drawable", getPackageName());
+                imv.setImageResource(id);
+                if(imv != null){
+                    Log.d("card", mGas.getPayamentsCredit().get(i));
+                    imv.setLayoutParams(new LayoutParams
+                            (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                    glCredit.addView(imv);
+                }
+            }
+
+        }else{
+            tvCredit.setVisibility(View.GONE);
+        }
+
+        if(mGas.getPayamentsDebit() != null && !mGas.getPayamentsDebit().isEmpty()){
+            GridLayout glDebit = (GridLayout) findViewById(R.id.layoutDebito);
+
+            glDebit.removeAllViews();
+
+            int colCount = 4;
+            int rowCount = (int) Math.ceil((mGas.getPayamentsDebit().size() / colCount));
+
+            glDebit.setColumnCount(colCount);
+            glDebit.setRowCount(rowCount);
+
+            for(int i=0; i<mGas.getPayamentsDebit().size(); i++){
+                ImageView imv = new ImageView(this);
+                int id = imv.getContext().getResources().getIdentifier(mGas.getPayamentsDebit().get(i).toLowerCase()+"_d", "drawable", getPackageName());
+                imv.setImageResource(id);
+                if(imv != null){
+                    Log.d("card", mGas.getPayamentsDebit().get(i));
+                    imv.setLayoutParams(new LayoutParams
+                            (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                    glDebit.addView(imv);
+                }
+            }
+        }else{
+            tvDebit.setVisibility(View.GONE);
+        }
 
         TextView comments = (TextView) findViewById(R.id.comments);
         comments.setOnClickListener(new View.OnClickListener() {

@@ -102,13 +102,11 @@ public class MainActivity extends AppCompatActivity {
         //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
         //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
 
-//        if (MinhaGasosaPreference.getDone(getApplicationContext())
-//                && !getIntent().getBooleanExtra("fromHome", false)) {
-//            Log.d("ta passando aqui", "ola");
-//            Intent i = new Intent(this, HomeActivity.class);
-//            this.startActivity(i);
-//            return;
-//        }
+        if (MinhaGasosaPreference.getDone(getApplicationContext())) {
+            Intent i = new Intent(this, HomeActivity.class);
+            this.startActivity(i);
+            return;
+        }
         spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
         spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
         spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);

@@ -48,6 +48,15 @@ private String description;
 private Location location;
 
 
+    @SerializedName("payamentsCredit")
+@Expose
+private List<String> payamentsCredit;
+
+@SerializedName("payamentsDebit")
+@Expose
+private List<String> payamentsDebit;
+
+
 public String getId() {
     return id;
 }
@@ -229,6 +238,23 @@ public Location getLocation() {
 return location;
 }
 
+public List<String> getPayamentsCredit() {
+    return payamentsCredit;
+}
+
+public void setPayamentsCredit(List<String> payamentsCredit) {
+    this.payamentsCredit = payamentsCredit;
+}
+
+public List<String> getPayamentsDebit() {
+    return payamentsDebit;
+}
+
+public void setPayamentsDebit(List<String> payamentsDebit) {
+    this.payamentsDebit = payamentsDebit;
+}
+
+
 /**
 * 
 * @param location
@@ -252,6 +278,18 @@ this.location = location;
             in.readList(comments, String.class.getClassLoader());
         } else {
             comments = null;
+        }
+        if (in.readByte() == 0x01) {
+            payamentsCredit = new ArrayList<String>();
+            in.readList(payamentsCredit, String.class.getClassLoader());
+        } else {
+            payamentsCredit = null;
+        }
+        if (in.readByte() == 0x01) {
+            payamentsDebit = new ArrayList<String>();
+            in.readList(payamentsDebit, String.class.getClassLoader());
+        } else {
+            payamentsDebit = null;
         }
         description = in.readString();
         location = (Location) in.readValue(Location.class.getClassLoader());
@@ -282,6 +320,18 @@ this.location = location;
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(comments);
+        }
+        if (payamentsCredit == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(payamentsCredit);
+        }
+        if (payamentsDebit == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(payamentsDebit);
         }
         dest.writeString(description);
         dest.writeValue(location);
