@@ -17,11 +17,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:text="Aberto das 7:00 ás 21:00 horas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView7" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,28 +35,98 @@
             android:isIndicator="false"
             android:numStars="5"
             android:stepSize="0.1" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.05sp"
+            android:background="@android:color/black" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_endereco"
+                android:drawablePadding="10sp"
+                android:drawableLeft="@drawable/placeholder"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="Endereço dasd asd asd asd asd asd asd
+                asd asd asd asd asd asd asd asdas asd asda sdas das " />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:drawablePadding="10sp"
+                android:drawableLeft="@drawable/call_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="(99)99999-9999" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:drawablePadding="10sp"
+                android:drawableLeft="@drawable/wall_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="Aberto das 7:00 ás 21:00 horas" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.05sp"
+            android:background="@android:color/black" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/text_margin"
-            android:text="Tabela de Preços"
+            android:text="Preços"
+            android:textStyle="bold"
             android:textSize="16sp" />
 
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:text="@string/gasolina_comum" />
-        <TextView
-            android:id="@+id/tv_gasPage_gasPrice"
+
+    <TextView
+        android:id="@+id/tv_gasPage_gasPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="x,xx"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:textSize="18sp"
-            android:text="x,xx" />
+            android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,8 +139,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textSize="18sp"
-            android:text="x,xx" />
+            android:text="x,xx"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +160,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textSize="18sp"
-            android:text="x,xx" />
+            android:text="x,xx"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.05sp"
+            android:background="@android:color/black" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -98,7 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/text_margin"
+                android:textStyle="bold"
                 android:text="Formas de Pagamento"
                 android:textSize="16sp" />
 
@@ -155,14 +238,28 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.05sp"
+            android:background="@android:color/black" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/text_margin"
             android:id="@+id/comments"
+            android:textStyle="bold"
             android:text="Comentarios:"
             android:textSize="16sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </android.support.v7.widget.RecyclerView>
+
+
 
 
 

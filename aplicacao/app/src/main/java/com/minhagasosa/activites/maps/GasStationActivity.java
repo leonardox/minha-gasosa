@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +38,11 @@ import com.minhagasosa.adapters.CommentAdapter;
 
 import org.w3c.dom.Comment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -53,6 +61,7 @@ public class GasStationActivity extends BaseActivity {
     private GasStation mGas;
     private final int CARD_ICON_WIDTH = 85;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +69,9 @@ public class GasStationActivity extends BaseActivity {
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
+
         mGas = (GasStation) bundle.getParcelable("gas");
+        mGasService = retrofit.create(GasStationService.class);
 
         setContentView(R.layout.activity_gas_station);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,6 +82,38 @@ public class GasStationActivity extends BaseActivity {
 
         RatingBar rating = (RatingBar) findViewById(R.id.rating);
         rating.setRating(mGas.getRating().floatValue());
+
+        TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
+        TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);
+        TextView tvAlcoolPrice = (TextView) findViewById(R.id.tv_gasPage_alcoolPrice);
+        TextView tvCredit = (TextView) findViewById(R.id.tvCredit);
+        TextView tvDebit = (TextView) findViewById(R.id.tvDebit);
+        TextView tvEndereco = (TextView) findViewById(R.id.tv_endereco);
+
+        tvGasPrice.setText("R$ " + String.format("%.2f", mGas.getGasPrice()));
+        tvGasPlusPrice.setText("R$ " + String.format("%.2f", mGas.getGasPlusPrice()));
+        tvAlcoolPrice.setText("R$ " + String.format("%.2f", mGas.getAlcoolPrice()));
+
+        mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
+            @Override
+            public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
+                if(response.code() == 200){
+                    List<Comments> comments = response.body();
+                    MyAdapter adapter = new MyAdapter(comments);
+                    RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
+                    rv.setHasFixedSize(true);
+                    rv.setAdapter(adapter);
+                    rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    rv.setItemAnimator(new DefaultItemAnimator());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comments>> call, Throwable t) {
+                System.out.println("Treta: " + t.toString());
+            }
+        });
+
 
         final Activity self = this;
         rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -102,15 +145,47 @@ public class GasStationActivity extends BaseActivity {
 
             }
         });
-        TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
-        TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);
-        TextView tvAlcoolPrice = (TextView) findViewById(R.id.tv_gasPage_alcoolPrice);
-        TextView tvCredit = (TextView) findViewById(R.id.tvCredit);
-        TextView tvDebit = (TextView) findViewById(R.id.tvDebit);
 
-        tvGasPrice.setText("R$ " + String.format("%.2f", mGas.getGasPrice()));
-        tvGasPlusPrice.setText("R$ " + String.format("%.2f", mGas.getGasPlusPrice()));
-        tvAlcoolPrice.setText("R$ " + String.format("%.2f", mGas.getAlcoolPrice()));
+        Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(mGas.getLocation().getLat(), mGas.getLocation().getLng(), 1);
+
+            if(addresses != null) {
+                Address returnedAddress = addresses.get(0);
+//                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+                StringBuilder strReturnedAddress = new StringBuilder();
+                for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+//                Log.d("Endereço", strReturnedAddress.toString());
+                tvEndereco.setText(strReturnedAddress.toString());
+//                tvEndereco.setText(address);
+            }
+            else{
+                Log.d("Endereço", "Nao retornou");
+                 tvEndereco.setText("No Address returned!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("Endereço", "Cannot get Address!");
+            tvEndereco.setText("Cannot get Address!");//and tell me what is
+        }
+
+//        Geocoder geocoder;
+//        List<Address> addresses;
+//        geocoder = new Geocoder(this, Locale.getDefault());
+//
+//        addresses = geocoder.getFromLocation(mGas.getLocation().getLat(), mGas.getLocation().getLng(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//
+//        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//        String city = addresses.get(0).getLocality();
+//        String state = addresses.get(0).getAdminArea();
+//        String country = addresses.get(0).getCountryName();
+//        String postalCode = addresses.get(0).getPostalCode();
+//        String knownName = addresses.get(0).getFeatureName();
+
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -208,8 +283,6 @@ public class GasStationActivity extends BaseActivity {
 //                fabMenu.toggle(true);
 //            }
 //        });
-
-        mGasService = retrofit.create(GasStationService.class);
 
     }
 

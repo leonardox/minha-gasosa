@@ -140,7 +140,6 @@ public class GasMapsActivity extends BaseFragmentActivity
 //
 //                            }
 //                        });
-
                         tvTitle.setText(marker.getTitle());
                         tvDetails.setText(marker.getSnippet());
                         tvOpenning.setText("Aberto das 7:00 ás 21:00 horas");
