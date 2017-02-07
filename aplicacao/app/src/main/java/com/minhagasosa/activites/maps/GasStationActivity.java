@@ -51,6 +51,7 @@ import org.w3c.dom.UserDataHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -313,6 +314,14 @@ public class GasStationActivity extends BaseActivity {
             public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
                 if(response.code() == 200){
                     comments = response.body();
+
+                    int total_size = comments.size();
+                    if (total_size >= 5) {
+                        int indice_inicial = comments.size() -4;
+                        comments = comments.subList(indice_inicial, total_size);
+                    }
+
+                    Collections.reverse(comments);
                     MyAdapter adapter = new MyAdapter(comments);
                     RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
                     rv.setHasFixedSize(true);
@@ -387,6 +396,9 @@ public class GasStationActivity extends BaseActivity {
             public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
                 if(response.code() == 200){
                     List<Comments> comments = response.body();
+//                    int indice_inicial = comments.size() -5;
+//                    int indice_final = comments.size() - 1;
+//                    comments = comments.subList(indice_inicial, indice_final);
                     final CommentAdapter arrayAdapter = new CommentAdapter(builderSingle.getContext(), comments);
                     builderSingle.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                         @Override
