@@ -1,14 +1,19 @@
 package com.minhagasosa.activites.maps;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +42,12 @@ import com.minhagasosa.activites.BaseActivity;
 import com.minhagasosa.adapters.CommentAdapter;
 
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.UserDataHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,11 +72,13 @@ public class GasStationActivity extends BaseActivity {
     private GasStation mGas;
     private final int CARD_ICON_WIDTH = 85;
 
+    List<Comments> comments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mComments = new ArrayList<>();
+        comments = new ArrayList<>();
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -76,7 +89,33 @@ public class GasStationActivity extends BaseActivity {
         setContentView(R.layout.activity_gas_station);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final GasStationActivity activity = this;
+        final TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
+        tvPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_CALL);
+                if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+                    i.setPackage("com.android.server.telecom");
+                } else {
+                    i.setPackage("com.android.phone");
+                }
+                i.setData(Uri.parse("tel:"+ "99999999"));
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                activity.startActivity(i);
+            }
+        });
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbar.setTitle(mGas.getName());
 
@@ -94,25 +133,7 @@ public class GasStationActivity extends BaseActivity {
         tvGasPlusPrice.setText("R$ " + String.format("%.2f", mGas.getGasPlusPrice()));
         tvAlcoolPrice.setText("R$ " + String.format("%.2f", mGas.getAlcoolPrice()));
 
-        mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
-            @Override
-            public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
-                if(response.code() == 200){
-                    List<Comments> comments = response.body();
-                    MyAdapter adapter = new MyAdapter(comments);
-                    RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
-                    rv.setHasFixedSize(true);
-                    rv.setAdapter(adapter);
-                    rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rv.setItemAnimator(new DefaultItemAnimator());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Comments>> call, Throwable t) {
-                System.out.println("Treta: " + t.toString());
-            }
-        });
+        getComments();
 
 
         final Activity self = this;
@@ -286,6 +307,28 @@ public class GasStationActivity extends BaseActivity {
 
     }
 
+    private void getComments() {
+        mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
+            @Override
+            public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
+                if(response.code() == 200){
+                    comments = response.body();
+                    MyAdapter adapter = new MyAdapter(comments);
+                    RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
+                    rv.setHasFixedSize(true);
+                    rv.setAdapter(adapter);
+                    rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    rv.setItemAnimator(new DefaultItemAnimator());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comments>> call, Throwable t) {
+                System.out.println("Treta: " + t.toString());
+            }
+        });
+    }
+
     private void openAddCommentDialog() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
@@ -298,13 +341,22 @@ public class GasStationActivity extends BaseActivity {
         alert.setPositiveButton("Adicionar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 fabMenu.close(false);
-                HashMap<String, String> comment = new HashMap<String, String>();
+                final HashMap<String, String> comment = new HashMap<String, String>();
                 comment.put("text", edittext.getText().toString());
                 mGasService.addComment(mGas.getId(), comment).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.code() == 201){
+                            //System.out.println("Response " + response.message());
+                            //Comments newComment = new Comments();
+                            //newComment.setText(edittext.getText().toString());
+
+                            //comments.add("comment vi");
+                            //RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
+                            //MyAdapter adapter = (MyAdapter) rv.getAdapter();
+                            //adapter.notifyDataSetChanged();
                             Snackbar.make(edittext, "Comentário enviado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            getComments();
                         }else{
                             //TODO tratar tretas
                         }
@@ -419,7 +471,7 @@ public class GasStationActivity extends BaseActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == 400){
                     System.out.println("Already Reported");
-                    Snackbar.make(v, "Esta loclaização já foi reportada por você", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(v, "Esta localização já foi reportada por você", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }else if(response.code() == 201){
                     System.out.println("Reported");
                     Snackbar.make(v,"Localização reportada", Snackbar.LENGTH_LONG).setAction("Action", null).show();

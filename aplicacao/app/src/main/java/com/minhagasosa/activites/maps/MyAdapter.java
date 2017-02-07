@@ -20,13 +20,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public CardView mCardView;
-        public TextView mName, mComment;
+        public TextView mName, mComment, mDate;
         public MyViewHolder(View v) {
             super(v);
 
             mCardView = (CardView) v.findViewById(R.id.card_view);
             mName = (TextView) v.findViewById(R.id.tv_comment_name);
             mComment = (TextView) v.findViewById(R.id.tv_comment);
+            mDate = (TextView) v.findViewById(R.id.tv_date);
         }
     }
 
@@ -55,6 +56,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
             if (mDataset.get(position).getText() != null) {
                 holder.mComment.setText(mDataset.get(position).getText());
+            }
+
+            if (mDataset.get(position).getCreationDate() != null) {
+                holder.mDate.setText(mDataset.get(position).getCreationDate());
+            }else{
+                holder.mDate.setText("Enviado: 23/10/2016 as 14:37");
             }
         }
 

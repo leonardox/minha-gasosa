@@ -63,6 +63,7 @@
 
             <TextView
                 android:drawablePadding="10sp"
+                android:id="@+id/tv_phone"
                 android:drawableLeft="@drawable/call_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
