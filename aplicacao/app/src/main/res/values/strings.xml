@@ -108,6 +108,7 @@
     <string name="gas_plus_price">Preço da Gas. Aditivada</string>
     <string name="title_activity_gas_station">GasStationActivity</string>
     <string name="title_activity_gas_station_list">GasStationListActivity</string>
+    <string name="title_activity_comment_list">CommentListActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -205,4 +206,5 @@
     <string name="wrong_localization">Reportar Localização Incorreta</string>
     <string name="wrong_prices">Reportar Preços Incorretos</string>
     <string name="add_comment">Adicionar comentário</string>
+    <string name="more_commets">Mais Comentarios</string>
 </resources>

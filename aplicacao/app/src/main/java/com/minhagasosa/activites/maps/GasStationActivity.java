@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,32 +21,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.view.ViewGroup.LayoutParams;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.minhagasosa.API.GasStationService;
+import com.minhagasosa.CommentListActivity;
 import com.minhagasosa.R;
 import com.minhagasosa.Transfer.Comments;
 import com.minhagasosa.Transfer.GasStation;
 import com.minhagasosa.activites.BaseActivity;
 import com.minhagasosa.adapters.CommentAdapter;
-
-import org.w3c.dom.Comment;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.UserDataHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +45,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -91,6 +80,15 @@ public class GasStationActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final GasStationActivity activity = this;
+        final Button more_comments = (Button) findViewById(R.id.more_comments);
+        more_comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(GasStationActivity.this, CommentListActivity.class);
+                i.putExtra("gas", mGas);
+                startActivity(i);
+            }
+        });
         final TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
