@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var handlebars = require('express-handlebars');
+var cookieParser = require('cookie-parser');
 
 var port = process.env.PORT || 5000;
 //var db = process.env.DB || 'mongodb://localhost:27017/minhagasosa' || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx';
@@ -36,6 +37,7 @@ var Admin = mongoose.model('Admin');
 
 
 var gasStation = require('./routes/gas');
+var ownerRoute = require('./routes/owner');
 var routes = require('./routes/app');
 
 var app = require('./config/app_config');
@@ -79,9 +81,9 @@ router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
   var token;
   if(req.body != undefined){
-    var token = req.query.token || req.headers['x-access-token'];
+    var token = req.query.token || req.headers['x-access-token'] || req.cookies['x-access-token'];
   }else{
-    var token = req.query.token || req.headers['x-access-token'];
+    var token = req.query.token || req.headers['x-access-token'] || req.cookies['x-access-token'];
   }
 
 
@@ -114,12 +116,17 @@ router.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
+app.use(cookieParser());
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/bower_components'));
 
 app.use('/', routes);
 app.use('/api', router);
+
 app.use('/api/gas', gasStation);
+app.use('/admin', router);
+app.use('/admin/owner', ownerRoute);
 
 app.engine('handlebars', handlebars({
   defaultLayout: 'main'
@@ -127,37 +134,32 @@ app.engine('handlebars', handlebars({
 app.set('view engine', 'handlebars');
 
 
-app.get('/', function(request, response) {
-  response.render('admin_login', {})
-});
+app.get('/', function(req, res) {
+  var token;
+  if(req.body != undefined){
+    var token = req.query.token || req.headers['x-access-token'] || req.cookies['x-access-token'];
+  }else{
+    var token = req.query.token || req.headers['x-access-token'] || req.cookies['x-access-token'];
+  }
 
-app.post('/', function(request, response) {
-  if (request.body.username == 'admin' && request.body.password == 'admin') {
-    response.redirect('/home')
+
+  // decode token
+  if (token) {
+
+    // verifies secret and checks exp
+    jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+      if (err) {
+        return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        res.redirect('/admin/owner/home');
+      }
+    });
   } else {
-    response.render('admin_login', {})
+    res.render('admin_login', {});
   }
 });
 
-app.get('/home', function(req, res) {
-  GasModel.find(function(err, stations) {
-    console.log(stations);
-    res.render('admin_home', {stations: stations})
-  });
-});
-
-app.get('/station', function(req, res) {
-  res.render('new_station', {});
-});
-
-app.post('/station', function(req, res) {
-  GasModel.create({
-    name: req.body.name,
-    location: {lat: req.body.lat, lng: req.body.lng}
-  }, function() {
-    res.redirect('/home');
-  });
-});
 
 app.listen(port, function() {
   console.log('Node app is running on port', port);

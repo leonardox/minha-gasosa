@@ -148,6 +148,17 @@ router.put('/', function(req, res, next) {
   });
 });
 
+router.post('/', function(req, res, next) {
+  var gasStation = req.body;
+  new GasModel(gasStation).save(function(err, gas){
+    if (err) {
+      res.status(500).send('Failed to register gas station!');
+    } else {
+      res.status(201).send("{\"status\":\"CREATED\", \"id\": \""+ gas._id +"}");
+    }
+  });
+});
+
 router.post('/:id', function(req, res, next) {
   var editedGasStation = req.body;
   var gasId = req.param('id');

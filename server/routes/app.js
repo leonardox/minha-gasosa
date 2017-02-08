@@ -56,7 +56,9 @@ router.get('/cities', function (req, res, next) {
   });
 });
 
-router.post('/admin-auth', function (req, res, next) {
+
+
+router.post('/authenticate', function (req, res, next) {
   console.log("Auth");
   var admin = req.body.username;
   var password = req.body.password;
@@ -67,7 +69,15 @@ router.post('/admin-auth', function (req, res, next) {
       var token = jwt.sign(ad, req.app.get('superSecret'), {
         expiresInMinutes: 43200000 // expires in 24 hours
       });
-      res.send(token);
+      res.cookie('x-access-token', token, { maxAge: 900000, httpOnly: true });
+      //res.redirect(301, '/api/profile');
+      console.log(admin.gasStation);
+      if(admin.role == "OWNER"){
+        res.status(301).send("Redirect");
+      }else{
+        res.redirect('/admin/owner/home');
+      }
+      //res.status(301).send("Redirect");
     }else{
       res.status(403).send("Invalid password");
     }

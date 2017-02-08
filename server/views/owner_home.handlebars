@@ -1,0 +1,20 @@
+<div class="row">
+    <div id="map" class="col-md-offset-3 col-md-3"></div>
+    <div class="col-md-3">
+        <a href="/admin/owner/station"><button class="btn btn-primary">Adicionar posto</button></a>
+        <a href="/admin/owner/logout"><button class="btn btn-primary">Deslogar</button></a>
+        <a> Bem vindo {{owner.username}}!!</a>
+	    <script async defer
+	      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
+	    </script>
+    </div>
+</div>
+
+<style>
+#map {
+    height: 600px;
+}
+.station {
+    margin: 10px;
+}
+</style>

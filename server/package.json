@@ -16,7 +16,8 @@
     "express-handlebars": "^3.0.0",
     "jsonwebtoken": "^5.5.4",
     "mongoose": "^4.7.1",
-    "querystring": "~0.2.0"
+    "querystring": "~0.2.0",
+    "cookie-parser": "^1.4.3"
   },
   "repository": {
     "type": "git",
