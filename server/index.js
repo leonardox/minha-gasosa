@@ -149,7 +149,7 @@ app.get('/', function(req, res) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
       if (err) {
-        return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });
+        res.render('admin_login', {});
       } else {
         // if everything is good, save to request for use in other routes
         res.redirect('/admin/owner/home');

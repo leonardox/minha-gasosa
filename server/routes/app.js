@@ -73,13 +73,13 @@ router.post('/authenticate', function (req, res, next) {
       //res.redirect(301, '/api/profile');
       console.log(admin.gasStation);
       if(admin.role == "OWNER"){
-        res.status(301).send("Redirect");
-      }else{
         res.redirect('/admin/owner/home');
+      }else{
+        res.status(301).send("Redirect");
       }
       //res.status(301).send("Redirect");
     }else{
-      res.status(403).send("Invalid password");
+      res.render('admin_login', {error: {field: "password", message: "Senha inválida"}});
     }
   });
 });
