@@ -1,13 +1,23 @@
 <div class="row">
-    <div id="map" class="col-md-offset-3 col-md-3"></div>
-    <div class="col-md-3">
-        <a href="/admin/owner/station"><button class="btn btn-primary">Adicionar posto</button></a>
-        <a href="/admin/owner/logout"><button class="btn btn-primary">Deslogar</button></a>
-        <a> Bem vindo {{owner.username}}!!</a>
-	    <script async defer
-	      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
-	    </script>
+    <div id="navbar" class="navbar-collapse collapse navbar-inverse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/admin/owner/home">Inicio</a></li>
+            <li><a href="/admin/owner/station">Adicionar/editar posto</a></li>
+            <li><a href="#contact">Editar perfil</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a> Bem vindo, {{owner.username}}!</a></li>
+            <li><a href="/admin/owner/logout">Sair</a></li>
+          </ul>
     </div>
+    <div class='container'>
+        <div id="map" class="desk col-md-offset-3 col-md-3"></div>
+        <div class="desk col-md-3">
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
+            </script>
+        </div>
+    </div>    
 </div>
 
 <style>
@@ -16,5 +26,8 @@
 }
 .station {
     margin: 10px;
+}
+.container {
+    margin-top:70px;
 }
 </style>

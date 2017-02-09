@@ -1,3 +1,15 @@
+    <div id="navbar" class="navbar-collapse collapse navbar-inverse">
+          <ul class="nav navbar-nav">
+            <li><a href="/admin/owner/home">Inicio</a></li>
+            <li class="active"><a href="/admin/owner/station">Adicionar/editar posto</a></li>
+            <li><a href="#contact">Editar perfil</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a> Bem vindo, {{owner.username}}!</a></li>
+            <li><a href="/admin/owner/logout">Sair</a></li>
+          </ul>
+    </div>
+
 <div class="row">
     <div id="map" class="col-md-offset-3 col-md-3"></div>
     <div class="col-md-3">
@@ -47,7 +59,8 @@
 
 <style>
 #map {
-    height: 600px;
+    width: 400px;
+    height: 400px;
 }
 input {
     margin: 10px;
