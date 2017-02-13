@@ -83,9 +83,29 @@ public class GasStationListActivity extends BaseActivity {
                         text2.setTextColor(Color.BLACK);
 
                         text1.setText(gasStation.get(position).getName());
-                        text2.setText("Alcohol price: " + Float.toString(gasStation.get(position).getAlcoolPrice()) + " R$. \n" +
-                                "Gas price: " + Float.toString(gasStation.get(position).getGasPrice()) + " R$. \n" +
-                                "Gas Plus price: " + Float.toString(gasStation.get(position).getGasPlusPrice()) + " R$.");
+
+                        // Set price
+                        String alcoholText = "";
+                        String gasText = "";
+                        String gasPlusText = "";
+                        try { // SET GAS
+                            Float gasPrice = new Float(gasStation.get(position).getGasPrice());
+                            gasText = "Gas price: " + Float.toString(gasPrice) + " R$. \n";
+                        }catch(Exception e) {}
+
+                        try { // SET GAS PLUS
+                            Float gasPlusPrice = new Float(gasStation.get(position).getGasPlusPrice());
+                            gasPlusText = "Gas Plus price: " + Float.toString(gasPlusPrice) + " R$.";
+                        }catch(Exception e) {}
+
+                        try { // SET ALCOOL
+                            Float alcoolPrice = new Float(gasStation.get(position).getAlcoolPrice());
+                            alcoholText = "Alcohol price: " + Float.toString(alcoolPrice) + " R$. \n";
+                        }catch(Exception e) {}
+                        text2.setText(alcoholText + gasText + gasPlusText);
+//                        text2.setText("Alcohol price: " + Float.toString(gasStation.get(position).getAlcoolPrice()) + " R$. \n" +
+//                                "Gas price: " + Float.toString(gasStation.get(position).getGasPrice()) + " R$. \n" +
+//                                "Gas Plus price: " + Float.toString(gasStation.get(position).getGasPlusPrice()) + " R$.");
                         return view;
                     }
                 };

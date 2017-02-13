@@ -128,9 +128,27 @@ public class GasStationActivity extends BaseActivity {
         TextView tvDebit = (TextView) findViewById(R.id.tvDebit);
         TextView tvEndereco = (TextView) findViewById(R.id.tv_endereco);
 
-        tvGasPrice.setText("R$ " + String.format("%.2f", mGas.getGasPrice()));
-        tvGasPlusPrice.setText("R$ " + String.format("%.2f", mGas.getGasPlusPrice()));
-        tvAlcoolPrice.setText("R$ " + String.format("%.2f", mGas.getAlcoolPrice()));
+        // Set price
+        try { // SET GAS
+            Float gasPrice = new Float(mGas.getGasPrice());
+            tvGasPrice.setText("R$ " + String.format("%.2f", gasPrice));
+        }catch(Exception e) {
+            tvGasPrice.setText("Indisponivel");
+        }
+
+        try { // SET GAS PLUS
+            Float gasPlusPrice = new Float(mGas.getGasPlusPrice());
+            tvGasPlusPrice.setText("R$ " + String.format("%.2f", gasPlusPrice));
+        }catch(Exception e) {
+            tvGasPlusPrice.setText("Indisponivel");
+        }
+
+        try { // SET ALCOOL
+            Float alcoolPrice = new Float(mGas.getAlcoolPrice());
+            tvAlcoolPrice.setText("R$ " + String.format("%.2f", alcoolPrice));
+        }catch(Exception e) {
+            tvAlcoolPrice.setText("Indisponivel");
+        }
 
         getComments();
 

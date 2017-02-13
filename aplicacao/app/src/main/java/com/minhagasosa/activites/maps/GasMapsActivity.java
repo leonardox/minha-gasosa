@@ -143,10 +143,28 @@ public class GasMapsActivity extends BaseFragmentActivity
                         tvTitle.setText(marker.getTitle());
                         tvDetails.setText(marker.getSnippet());
                         tvOpenning.setText("Aberto das 7:00 ás 21:00 horas");
-                        tvGasPrice.setText(getString(R.string.gas_price)+ ": R$ " + String.format("%.2f", gas.getGasPrice()));
-                        tvGasPlusPrice.setText(getString(R.string.gas_plus_price)+ ": R$ " + String.format("%.2f", gas.getGasPlusPrice()));
-                        tvAlcoolPrice.setText(getString(R.string.alcool_price)+ ": R$ " + String.format("%.2f", gas.getAlcoolPrice()));
+                        // Set price
+                        try { // SET GAS
+                            Float gasPrice = new Float(gas.getGasPrice());
+                            //float gasPrice = gas.getGasPrice();
+                            tvGasPrice.setText(getString(R.string.gas_price) + ": R$ " + String.format("%.2f", gasPrice));
+                        }catch(Exception e) {
+                            tvGasPrice.setVisibility(View.GONE);
+                        }
 
+                        try { // SET GAS PLUS
+                            Float gasPlusPrice = new Float(gas.getGasPlusPrice());
+                            tvGasPlusPrice.setText(getString(R.string.gas_plus_price) + ": R$ " + String.format("%.2f", gasPlusPrice));
+                        }catch(Exception e) {
+                            tvGasPlusPrice.setVisibility(View.GONE);
+                        }
+
+                        try { // SET ALCOOL
+                            Float alcoolPrice = new Float(gas.getAlcoolPrice());
+                            tvAlcoolPrice.setText(getString(R.string.alcool_price) + ": R$ " + String.format("%.2f", alcoolPrice));
+                        }catch(Exception e) {
+                            tvAlcoolPrice.setVisibility(View.GONE);
+                        }
                         return v;
                     }
                 });
@@ -274,4 +292,12 @@ public class GasMapsActivity extends BaseFragmentActivity
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
     }
 
+    private void setTextViewText(TextView tv, String text, Float price){
+        if (price != null){
+            tv.setText(text + ": R$ " + String.format("%.2f", price));
+        }
+        else {
+            tv.setVisibility(View.GONE);
+        }
+    }
 }
