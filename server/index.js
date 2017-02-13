@@ -129,10 +129,30 @@ app.use('/admin', router);
 app.use('/admin/owner', ownerRoute);
 
 app.engine('handlebars', handlebars({
-  defaultLayout: 'main'
+  defaultLayout: 'main',
+  helpers: {
+    ifIn: function(elem, list, options) {
+      if(list.indexOf(elem) > -1) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    },
+    ifInDebit: function(elem, list, options) {
+      var l = list.map(function(x){
+        return x + "_d";
+      });
+      if(l.indexOf(elem) > -1) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    },
+    removeD: function(elem) {
+      return elem.split('_')[0];
+    }
+  }
 }));
-app.set('view engine', 'handlebars');
 
+app.set('view engine', 'handlebars');
 
 app.get('/', function(req, res) {
   var token;

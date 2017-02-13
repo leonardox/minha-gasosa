@@ -26,6 +26,8 @@ var gasSchema = mongoose.Schema({
   totalRating: { type: Number, default: 0 },
   ratingCount: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   description: String,
+  workingHours: String,
+  phoneNumber: String,
   gasPrice: Number,
   gasPlusPrice: Number,
   alcoolPrice: Number,

@@ -7,6 +7,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 
 var Admin = mongoose.model('Admin');
+var Location = mongoose.model('Location');
+var City = mongoose.model('City');
 
 router.get('/home', function(req, res) {
   Admin.findOne({username: req.reqUser.username}).populate('gasStation').exec(function(err, owner) {
@@ -16,7 +18,17 @@ router.get('/home', function(req, res) {
 });
 
 router.get('/station', function(req, res) {
-  res.render('new_station', {});
+  Admin.findOne({username: req.reqUser.username}).populate({path:'gasStation', model: "GasStation", populate: {path: 'city', model: "City"}}).exec(function(err, owner) {
+    var creditOptions = ["visa","master","hiper_card","dinners","elo","hiper", "amex", "union","cabal", "banes","cooper"];
+    var debitOptions = ["visa_d","master_d","hiper_d","elo_d","union_d","cabal_d"];
+    res.render('new_station', {
+      debit: debitOptions,
+      credit: creditOptions,
+      gas: owner._doc.gasStation._doc,
+      owner: owner._doc
+    });
+  });
+
 });
 
 router.get('/logout', function(req, res) {

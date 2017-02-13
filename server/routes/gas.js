@@ -152,9 +152,17 @@ router.post('/', function(req, res, next) {
   var gasStation = req.body;
   new GasModel(gasStation).save(function(err, gas){
     if (err) {
-      res.status(500).send('Failed to register gas station!');
+      if(req.reqUser.role){
+        res.redirect('/admin/owner/station?err');
+      }else{
+        res.status(500).send('Failed to register gas station!');
+      }
     } else {
-      res.status(201).send("{\"status\":\"CREATED\", \"id\": \""+ gas._id +"}");
+      if(req.reqUser.role){
+        res.redirect('/admin/owner/station');
+      }else{
+        res.status(201).send("{\"status\":\"CREATED\", \"id\": \""+ gas._id +"}");
+      }
     }
   });
 });
@@ -164,11 +172,23 @@ router.post('/:id', function(req, res, next) {
   var gasId = req.param('id');
   GasModel.update({_id: gasId}, editedGasStation, {}, function(err, numAffected) {
     if(err){
-      res.status(500).send('Failed to update gas station!');
+      if(req.reqUser.role){
+        res.redirect('/admin/owner/station?err');
+      }else{
+        res.status(500).send('Failed to update gas station!');
+      }
     }else if(numAffected == 0){
-      res.status(404).send('Gas Station not found!');
+      if(req.reqUser.role){
+        res.redirect('/admin/owner/station?err');
+      }else{
+        res.status(500).send('Failed to update gas station!');
+      }
     }else{
-      res.status(200).send("OK");
+      if(req.reqUser.role){
+        res.redirect('/admin/owner/station');
+      }else{
+        res.status(200).send("OK");
+      }
     }
   });
 });

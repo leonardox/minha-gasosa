@@ -12,26 +12,48 @@
 
 <div class="row">
     <div id="map" class="col-md-4"></div>
+
+    <form action="/api/gas{{#if gas}}/{{gas._id}}{{/if}}" method="post">
     <div class="col-md-4">
-        <form action="/api/gas" method="post">
             <div class="form-group">
-                <input class="form-control" name="name" placeholder="Nome">
-                <input class="form-control" name="lat" placeholder="Latitude" readonly>
-                <input class="form-control" name="lng" placeholder="Longitude" readonly>
+                <input class="form-control" name="name" placeholder="Nome" value="{{gas.name}}">
+                <input class="form-control" name="lat" type="number" placeholder="Latitude" readonly value="{{gas.location.lat}}">
+                <input class="form-control" name="lng" type="number" placeholder="Longitude" readonly value="{{gas.location.lng}}">
+                <label for="selectState" class="form-align">Estado</label>
+                <select class="form-control form-align" id="selectState">
+                </select>
+
+                <input class="form-control" name="workingHours" placeholder="Horário de Funcionamento" value="{{gas.workingHours}}">
+
+                <label for="selectState" class="form-align">Opções de cartão de crédito:</label>
+
+                <div class="form-group">
+                    {{#each credit}}
+                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifIn this ../gas.payamentsCredit }}check{{/ifIn}}"><input type="checkbox" {{#ifIn this ../gas.payamentsCredit }}checked{{/ifIn}} name="payamentsCredit" id="item4" value="{{this}}" class="hidden" autocomplete="off"></label></div>
+                    {{/each}}
+                </div>
+
                 <input class="form-control" type="submit" value="Enviar">
             </div>
-        </form>
     </div>
-    <div class="col-md-4">
-        <form action="/api/gas" method="post">
+        <div class="col-md-4">
             <div class="form-group">
-                <input class="form-control" name="name" placeholder="Nome">
-                <input class="form-control" name="lat" placeholder="Latitude" readonly>
-                <input class="form-control" name="lng" placeholder="Longitude" readonly>
-                <input class="form-control" type="submit" value="Enviar">
+                <input class="form-control currency" name="gasPrice" value="{{gas.gasPrice}}" placeholder="Preço da Gasolina Comum (Litro)" >
+                <input class="form-control currency" name="gasPlusPrice" placeholder="Preço da Gasolina Aditivada (Litro)" value="{{gas.gasPlusPrice}}">
+                <input class="form-control currency" name="alcoolPrice" placeholder="Preço do Alcool (Litro)" value="{{gas.alcoolPrice}}">
+                <label for="selectCity" class="form-align">Cidade</label>
+                <select class="form-control form-align" name="city" id="selectCity"></select>
+                <input class="form-control phone" name="phoneNumber" placeholder="Telefone" value="{{gas.phoneNumber}}">
+                <label for="" class="form-align">Opções de cartão de débito:</label>
+                <div class="content row">
+                    {{#each debit}}
+                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifInDebit this ../gas.payamentsDebit }}check{{/ifInDebit}}"><input type="checkbox" {{#ifInDebit this ../gas.payamentsDebit }}checked{{/ifInDebit}} name="payamentsDebit" id="item4" value="{{removeD this}}" class="hidden" autocomplete="off"></label></div>
+                    {{/each}}
+                </div>
+                </select>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 <script type="text/javascript">
@@ -46,6 +68,56 @@
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 0, lng: 0},
             zoom: 13
+        });
+
+        $(document).ready(function () {
+
+            $(".img-check").click(function(){
+                $(this).toggleClass("check");
+            });
+
+            $('.phone').mask('(00) 0000-0000');
+
+            $('.currency').maskMoney({
+            });
+
+            var currentState;
+            var currentCity;
+
+            {{#if gas}}
+                currentState = "{{gas.city.state}}";
+                currentCity = "{{gas.city._id}}";
+            {{/if}}
+
+
+
+            var selectStates = $('#selectState');
+            $.getJSON( "/states", function( data ) {
+                $.each(data, function() {
+                    selectStates.append(new Option(this.nome, this._id));
+                });
+                if(currentState){
+                    selectStates.val(currentState).trigger('change');
+                    selectCities.val(currentCity);
+                }
+
+            });
+
+            var selectCities = $('#selectCity');
+
+            selectStates.on('change', function() {
+                var value = $(this).val();
+                selectCities.find('option').remove();
+                $.getJSON( "/cities?state=" + value, function( data ) {
+                    $.each(data, function() {
+                        selectCities.append(new Option(this.nome, this._id));
+                    });
+                    if(currentCity){
+                        selectCities.val(currentCity);
+                    }
+                });
+            });
+
         });
 
         var marker;
@@ -85,7 +157,24 @@
     width: 400px;
     height: 400px;
 }
+
+.check
+{
+    opacity:0.5;
+    color:#996;
+
+}
+
 input {
     margin: 10px;
+}
+
+.mgt{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.form-align{
+    margin-left: 10px;
 }
 </style>
