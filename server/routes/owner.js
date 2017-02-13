@@ -24,7 +24,7 @@ router.get('/station', function(req, res) {
     res.render('new_station', {
       debit: debitOptions,
       credit: creditOptions,
-      gas: owner._doc.gasStation._doc,
+      gas: owner._doc.gasStation ? owner._doc.gasStation._doc : undefined,
       owner: owner._doc
     });
   });

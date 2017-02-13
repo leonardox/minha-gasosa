@@ -132,12 +132,18 @@ app.engine('handlebars', handlebars({
   defaultLayout: 'main',
   helpers: {
     ifIn: function(elem, list, options) {
+      if(list == undefined){
+        return false;
+      }
       if(list.indexOf(elem) > -1) {
         return options.fn(this);
       }
       return options.inverse(this);
     },
     ifInDebit: function(elem, list, options) {
+      if(list == undefined){
+        return false;
+      }
       var l = list.map(function(x){
         return x + "_d";
       });

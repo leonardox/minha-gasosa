@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 
 var GasModel = mongoose.model('GasStation');
 var CommentModel = mongoose.model('Comment');
+var AdminModel = mongoose.model('Admin');
+
 
 /* GET gas station listing. */
 router.get('/', function(req, res, next) {
@@ -150,8 +152,10 @@ router.put('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   var gasStation = req.body;
+  gasStation.location = {};
   gasStation.location.lat = req.body.lat;
   gasStation.location.lng = req.body.lng;
+
   new GasModel(gasStation).save(function(err, gas){
     if (err) {
       if(req.reqUser.role){
@@ -161,7 +165,9 @@ router.post('/', function(req, res, next) {
       }
     } else {
       if(req.reqUser.role){
-        res.redirect('/admin/owner/station');
+        AdminModel.update({ _id: req.reqUser._id }, { $set: { gasStation: gas._id }}, function(err, adm){
+          res.redirect('/admin/owner/station');
+        });
       }else{
         res.status(201).send("{\"status\":\"CREATED\", \"id\": \""+ gas._id +"}");
       }
