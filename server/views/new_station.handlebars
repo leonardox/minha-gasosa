@@ -83,13 +83,18 @@
 
             var currentState;
             var currentCity;
+            var currentPos = {};
 
             {{#if gas}}
                 currentState = "{{gas.city.state}}";
                 currentCity = "{{gas.city._id}}";
+                currentPos.lat = {{gas.location.lat}};
+                currentPos.lng = {{gas.location.lng}};
             {{/if}}
 
-
+            if(map && currentPos.lat){
+                map.setCenter(currentPos);
+            }
 
             var selectStates = $('#selectState');
             $.getJSON( "/states", function( data ) {
@@ -134,7 +139,25 @@
             map.setCenter(pos);
           });
         }
-        
+
+        var currentPos = {};
+
+        {{#if gas}}
+            currentPos.lat = {{gas.location.lat}};
+            currentPos.lng = {{gas.location.lng}};
+        {{/if}}
+
+        if(map && currentPos.lat){
+            if(!marker){
+                marker = new google.maps.Marker({
+                    draggable: true,
+                    position: currentPos,
+                    map: map
+                });
+                marker.addListener('drag', setLatLngForm);
+            }
+        }
+
         google.maps.event.addListener(map, 'click', function(event) {
             if (!marker) {
                 marker = new google.maps.Marker({
@@ -144,8 +167,13 @@
                 });
                 setLatLngForm(event);
                 marker.addListener('drag', setLatLngForm);
+            }else{
+                setLatLngForm(event);
+                marker.addListener('drag', setLatLngForm);
             }
         });
+        
+
     }
 </script>
 <script async defer

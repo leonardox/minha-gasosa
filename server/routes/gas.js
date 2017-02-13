@@ -150,6 +150,8 @@ router.put('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   var gasStation = req.body;
+  gasStation.location.lat = req.body.lat;
+  gasStation.location.lng = req.body.lng;
   new GasModel(gasStation).save(function(err, gas){
     if (err) {
       if(req.reqUser.role){
@@ -169,6 +171,9 @@ router.post('/', function(req, res, next) {
 
 router.post('/:id', function(req, res, next) {
   var editedGasStation = req.body;
+  editedGasStation.location = {}
+  editedGasStation.location.lat = req.body.lat;
+  editedGasStation.location.lng = req.body.lng;
   var gasId = req.param('id');
   GasModel.update({_id: gasId}, editedGasStation, {}, function(err, numAffected) {
     if(err){
