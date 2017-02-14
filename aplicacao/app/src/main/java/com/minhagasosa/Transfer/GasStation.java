@@ -43,7 +43,17 @@ private List<String> comments;
 @SerializedName("description")
 @Expose
 private String description;
-@SerializedName("location")
+
+@SerializedName("phoneNumber")
+@Expose
+private String phoneNumer;
+
+@SerializedName("workingHours")
+@Expose
+private String workingHours;
+
+
+    @SerializedName("location")
 @Expose
 private Location location;
 
@@ -81,6 +91,23 @@ return name;
 */
 public void setName(String name) {
 this.name = name;
+}
+
+
+public String getPhoneNumer() {
+    return phoneNumer;
+}
+
+public void setPhoneNumer(String phoneNumer) {
+    this.phoneNumer = phoneNumer;
+}
+
+public String getWorkingHours() {
+    return workingHours;
+}
+
+public void setWorkingHours(String workingHours) {
+    this.workingHours = workingHours;
 }
 
 /**
@@ -267,6 +294,8 @@ this.location = location;
     protected GasStation(Parcel in) {
         id = in.readString();
         name = in.readString();
+        phoneNumer = in.readString();
+        workingHours = in.readString();
         city = in.readString();
         state = in.readString();
         rating = in.readByte() == 0x00 ? null : in.readDouble();
@@ -304,6 +333,8 @@ this.location = location;
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
+        dest.writeString(phoneNumer);
+        dest.writeString(workingHours);
         dest.writeString(city);
         dest.writeString(state);
         if (rating == null) {

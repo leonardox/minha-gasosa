@@ -90,6 +90,7 @@ public class GasStationActivity extends BaseActivity {
             }
         });
         final TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
+        tvPhone.setText(mGas.getPhoneNumer());
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,8 +119,11 @@ public class GasStationActivity extends BaseActivity {
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbar.setTitle(mGas.getName());
 
+
         RatingBar rating = (RatingBar) findViewById(R.id.rating);
-        rating.setRating(mGas.getRating().floatValue());
+        if(mGas.getRating() != null){
+            rating.setRating(mGas.getRating().floatValue());
+        }
 
         TextView tvGasPrice = (TextView) findViewById(R.id.tv_gasPage_gasPrice);
         TextView tvGasPlusPrice = (TextView) findViewById(R.id.tv_gasPage_gasPlusPrice);

@@ -153,6 +153,8 @@ router.put('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   var gasStation = req.body;
   gasStation.location = {};
+  gasStation.rating = 3;
+
   gasStation.location.lat = req.body.lat;
   gasStation.location.lng = req.body.lng;
 
