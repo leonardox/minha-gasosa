@@ -9,17 +9,19 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,8 +79,13 @@ public class GasStationActivity extends BaseActivity {
         mGasService = retrofit.create(GasStationService.class);
 
         setContentView(R.layout.activity_gas_station);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
         final GasStationActivity activity = this;
         final Button more_comments = (Button) findViewById(R.id.more_comments);
         more_comments.setOnClickListener(new View.OnClickListener() {
@@ -94,26 +101,17 @@ public class GasStationActivity extends BaseActivity {
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_CALL);
-                if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
-                    i.setPackage("com.android.server.telecom");
-                } else {
-                    i.setPackage("com.android.phone");
-                }
-                i.setData(Uri.parse("tel:"+ "99999999"));
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Log.e("aquiiii","ss");
+                int permissionCheck = ContextCompat.checkSelfPermission(GasStationActivity.this, Manifest.permission.CALL_PHONE);
 
-                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            GasStationActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            123);
+                } else {
+                    startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+mGas.getPhoneNumer())));
                 }
-                activity.startActivity(i);
             }
         });
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -328,6 +326,7 @@ public class GasStationActivity extends BaseActivity {
 
     }
 
+
     private void getComments() {
         mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
             @Override
@@ -515,5 +514,32 @@ public class GasStationActivity extends BaseActivity {
                 System.out.println("TretA: " + t.toString());
             }
         });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case 123:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:12345678901")));
+                } else {
+                    Log.d("TAG", "Call Permission Not Granted");
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

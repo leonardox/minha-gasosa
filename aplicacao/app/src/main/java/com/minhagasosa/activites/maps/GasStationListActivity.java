@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,9 +65,9 @@ public class GasStationListActivity extends BaseActivity {
                     gasStation = response.body();
                 }
 
-                for(int i = 0; i < gasStation.size(); i++){
-                    for(int j = 0; j < gasStation.size() - 1; j++){
-                        if(gasStation.get(j).getGasPrice() > gasStation.get(j + 1).getGasPrice()){
+                for (int i = 0; i < gasStation.size(); i++) {
+                    for (int j = 0; j < gasStation.size() - 1; j++) {
+                        if (gasStation.get(j).getGasPrice() > gasStation.get(j + 1).getGasPrice()) {
                             GasStation aux = gasStation.get(j);
                             gasStation.set(j, gasStation.get(j + 1));
                             gasStation.set(j + 1, aux);
@@ -91,17 +94,20 @@ public class GasStationListActivity extends BaseActivity {
                         try { // SET GAS
                             Float gasPrice = new Float(gasStation.get(position).getGasPrice());
                             gasText = "Gas price: " + Float.toString(gasPrice) + " R$. \n";
-                        }catch(Exception e) {}
+                        } catch (Exception e) {
+                        }
 
                         try { // SET GAS PLUS
                             Float gasPlusPrice = new Float(gasStation.get(position).getGasPlusPrice());
                             gasPlusText = "Gas Plus price: " + Float.toString(gasPlusPrice) + " R$.";
-                        }catch(Exception e) {}
+                        } catch (Exception e) {
+                        }
 
                         try { // SET ALCOOL
                             Float alcoolPrice = new Float(gasStation.get(position).getAlcoolPrice());
                             alcoholText = "Alcohol price: " + Float.toString(alcoolPrice) + " R$. \n";
-                        }catch(Exception e) {}
+                        } catch (Exception e) {
+                        }
                         text2.setText(alcoholText + gasText + gasPlusText);
 //                        text2.setText("Alcohol price: " + Float.toString(gasStation.get(position).getAlcoolPrice()) + " R$. \n" +
 //                                "Gas price: " + Float.toString(gasStation.get(position).getGasPrice()) + " R$. \n" +
@@ -180,4 +186,16 @@ public class GasStationListActivity extends BaseActivity {
             }
         }
     };
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

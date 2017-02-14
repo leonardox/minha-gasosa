@@ -279,7 +279,9 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
-            android:id="@+id/more_comments" />
+            android:id="@+id/more_comments"
+            android:textColor="@android:color/white"
+            android:background="@color/com_facebook_blue"/>
         </LinearLayout>
 
 
