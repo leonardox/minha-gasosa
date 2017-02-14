@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -82,7 +84,7 @@ public class GasStationActivity extends BaseActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
@@ -101,16 +103,14 @@ public class GasStationActivity extends BaseActivity {
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("aquiiii","ss");
                 int permissionCheck = ContextCompat.checkSelfPermission(GasStationActivity.this, Manifest.permission.CALL_PHONE);
-
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
                             GasStationActivity.this,
                             new String[]{Manifest.permission.CALL_PHONE},
                             123);
                 } else {
-                    startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+mGas.getPhoneNumer())));
+                    startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:" + mGas.getPhoneNumer())));
                 }
             }
         });
@@ -119,7 +119,7 @@ public class GasStationActivity extends BaseActivity {
 
 
         RatingBar rating = (RatingBar) findViewById(R.id.rating);
-        if(mGas.getRating() != null){
+        if (mGas.getRating() != null) {
             rating.setRating(mGas.getRating().floatValue());
         }
 
@@ -134,21 +134,21 @@ public class GasStationActivity extends BaseActivity {
         try { // SET GAS
             Float gasPrice = new Float(mGas.getGasPrice());
             tvGasPrice.setText("R$ " + String.format("%.2f", gasPrice));
-        }catch(Exception e) {
+        } catch (Exception e) {
             tvGasPrice.setText("Indisponivel");
         }
 
         try { // SET GAS PLUS
             Float gasPlusPrice = new Float(mGas.getGasPlusPrice());
             tvGasPlusPrice.setText("R$ " + String.format("%.2f", gasPlusPrice));
-        }catch(Exception e) {
+        } catch (Exception e) {
             tvGasPlusPrice.setText("Indisponivel");
         }
 
         try { // SET ALCOOL
             Float alcoolPrice = new Float(mGas.getAlcoolPrice());
             tvAlcoolPrice.setText("R$ " + String.format("%.2f", alcoolPrice));
-        }catch(Exception e) {
+        } catch (Exception e) {
             tvAlcoolPrice.setText("Indisponivel");
         }
 
@@ -168,10 +168,10 @@ public class GasStationActivity extends BaseActivity {
                             System.out.println("rated");
                             Snackbar.make(ratingBar, "Posto classificado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-                        }else if(response.code() == 400){
+                        } else if (response.code() == 400) {
                             System.out.println("already");
                             Snackbar.make(ratingBar, "Você já classificou este posto", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                        }else{
+                        } else {
                             System.out.println("huh?");
                             //TODO
                         }
@@ -191,21 +191,28 @@ public class GasStationActivity extends BaseActivity {
         try {
             List<Address> addresses = geocoder.getFromLocation(mGas.getLocation().getLat(), mGas.getLocation().getLng(), 1);
 
-            if(addresses != null) {
+            if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
 //                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 
-                StringBuilder strReturnedAddress = new StringBuilder();
-                for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
+                final StringBuilder strReturnedAddress = new StringBuilder();
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                 }
 //                Log.d("Endereço", strReturnedAddress.toString());
                 tvEndereco.setText(strReturnedAddress.toString());
 //                tvEndereco.setText(address);
-            }
-            else{
+                // abre a localizacao do mapa clicando no marcador do endereco
+                tvEndereco.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uri = "geo:0,0?q=" + TextUtils.htmlEncode(strReturnedAddress.toString());
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+                    }
+                });
+            } else {
                 Log.d("Endereço", "Nao retornou");
-                 tvEndereco.setText("No Address returned!");
+                tvEndereco.setText("No Address returned!");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,7 +238,7 @@ public class GasStationActivity extends BaseActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
-        if(mGas.getPayamentsCredit() != null && !mGas.getPayamentsCredit().isEmpty()){
+        if (mGas.getPayamentsCredit() != null && !mGas.getPayamentsCredit().isEmpty()) {
             GridLayout glCredit = (GridLayout) findViewById(R.id.layoutCredito);
 
             glCredit.removeAllViews();
@@ -242,11 +249,11 @@ public class GasStationActivity extends BaseActivity {
             glCredit.setColumnCount(colCount);
             glCredit.setRowCount(rowCount);
 
-            for(int i=0; i<mGas.getPayamentsCredit().size(); i++){
+            for (int i = 0; i < mGas.getPayamentsCredit().size(); i++) {
                 ImageView imv = new ImageView(this);
                 int id = imv.getContext().getResources().getIdentifier(mGas.getPayamentsCredit().get(i).toLowerCase(), "drawable", getPackageName());
                 imv.setImageResource(id);
-                if(imv != null){
+                if (imv != null) {
                     Log.d("card", mGas.getPayamentsCredit().get(i));
                     imv.setLayoutParams(new LayoutParams
                             (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -254,11 +261,11 @@ public class GasStationActivity extends BaseActivity {
                 }
             }
 
-        }else{
+        } else {
             tvCredit.setVisibility(View.GONE);
         }
 
-        if(mGas.getPayamentsDebit() != null && !mGas.getPayamentsDebit().isEmpty()){
+        if (mGas.getPayamentsDebit() != null && !mGas.getPayamentsDebit().isEmpty()) {
             GridLayout glDebit = (GridLayout) findViewById(R.id.layoutDebito);
 
             glDebit.removeAllViews();
@@ -269,18 +276,18 @@ public class GasStationActivity extends BaseActivity {
             glDebit.setColumnCount(colCount);
             glDebit.setRowCount(rowCount);
 
-            for(int i=0; i<mGas.getPayamentsDebit().size(); i++){
+            for (int i = 0; i < mGas.getPayamentsDebit().size(); i++) {
                 ImageView imv = new ImageView(this);
-                int id = imv.getContext().getResources().getIdentifier(mGas.getPayamentsDebit().get(i).toLowerCase()+"_d", "drawable", getPackageName());
+                int id = imv.getContext().getResources().getIdentifier(mGas.getPayamentsDebit().get(i).toLowerCase() + "_d", "drawable", getPackageName());
                 imv.setImageResource(id);
-                if(imv != null){
+                if (imv != null) {
                     Log.d("card", mGas.getPayamentsDebit().get(i));
                     imv.setLayoutParams(new LayoutParams
                             (LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                     glDebit.addView(imv);
                 }
             }
-        }else{
+        } else {
             tvDebit.setVisibility(View.GONE);
         }
 
@@ -331,12 +338,12 @@ public class GasStationActivity extends BaseActivity {
         mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
             @Override
             public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     comments = response.body();
 
                     int total_size = comments.size();
                     if (total_size >= 5) {
-                        int indice_inicial = comments.size() -4;
+                        int indice_inicial = comments.size() - 4;
                         comments = comments.subList(indice_inicial, total_size);
                     }
 
@@ -374,7 +381,7 @@ public class GasStationActivity extends BaseActivity {
                 mGasService.addComment(mGas.getId(), comment).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(response.code() == 201){
+                        if (response.code() == 201) {
                             //System.out.println("Response " + response.message());
                             //Comments newComment = new Comments();
                             //newComment.setText(edittext.getText().toString());
@@ -385,7 +392,7 @@ public class GasStationActivity extends BaseActivity {
                             //adapter.notifyDataSetChanged();
                             Snackbar.make(edittext, "Comentário enviado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                             getComments();
-                        }else{
+                        } else {
                             //TODO tratar tretas
                         }
                     }
@@ -413,7 +420,7 @@ public class GasStationActivity extends BaseActivity {
         mGasService.getComments(mGas.getId()).enqueue(new Callback<List<Comments>>() {
             @Override
             public void onResponse(Call<List<Comments>> call, Response<List<Comments>> response) {
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     List<Comments> comments = response.body();
 //                    int indice_inicial = comments.size() -5;
 //                    int indice_final = comments.size() - 1;
@@ -463,10 +470,10 @@ public class GasStationActivity extends BaseActivity {
         mGasService.reportWrongPrice(mGas.getId()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code() == 400){
+                if (response.code() == 400) {
                     Snackbar.make(v, "Esta preço já foi reportado por você", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                }else if(response.code() == 201){
-                    Snackbar.make(v,"Preço incorreto reportado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } else if (response.code() == 201) {
+                    Snackbar.make(v, "Preço incorreto reportado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
             }
 
@@ -481,10 +488,10 @@ public class GasStationActivity extends BaseActivity {
         mGasService.reportClosed(mGas.getId()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code() == 400){
+                if (response.code() == 400) {
                     Snackbar.make(v, "Esta posto já foi reportado por você", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                }else if(response.code() == 201){
-                    Snackbar.make(v,"Posto reportado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } else if (response.code() == 201) {
+                    Snackbar.make(v, "Posto reportado", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
             }
 
@@ -500,12 +507,12 @@ public class GasStationActivity extends BaseActivity {
         mGasService.reportWrongLocation(mGas.getId()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code() == 400){
+                if (response.code() == 400) {
                     System.out.println("Already Reported");
                     Snackbar.make(v, "Esta localização já foi reportada por você", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                }else if(response.code() == 201){
+                } else if (response.code() == 201) {
                     System.out.println("Reported");
-                    Snackbar.make(v,"Localização reportada", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(v, "Localização reportada", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
             }
 
@@ -515,6 +522,7 @@ public class GasStationActivity extends BaseActivity {
             }
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -523,7 +531,7 @@ public class GasStationActivity extends BaseActivity {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:12345678901")));
                 } else {
-                    Log.d("TAG", "Call Permission Not Granted");
+                    Toast.makeText(GasStationActivity.this, "Permissão de chamada não concedida", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
