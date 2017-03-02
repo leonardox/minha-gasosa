@@ -227,7 +227,7 @@ public class GasMapsActivity extends BaseFragmentActivity
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .title(gas.getName())
-                .snippet(getString(R.string.rating) + ": " + gas.getRating())
+                .snippet(getString(R.string.rating) + ": " + String.format("%.2f", gas.getRating()))
         );
         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_local_gas_station_black_24dp_1x));
         allMarkersMap.put(m, gas);
