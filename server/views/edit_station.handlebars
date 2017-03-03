@@ -10,49 +10,64 @@
     </div>
 
 <div class="row" style="margin-top:10px; padding: 15px;">
-    <div class="col-md-12" style="background: #ccc; border-radius: 8px;">
-        <div id="map" class="col-md-4" style="margin-top: 1%;"></div>
-        <form action="/api/gas{{#if gas}}/{{gas._id}}{{/if}}" method="post">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input class="form-control" name="name" placeholder="Nome" value="{{gas.name}}">
-                    <input class="form-control" name="lat" type="number" placeholder="Latitude" readonly value="{{gas.location.lat}}">
-                    <input class="form-control" name="lng" type="number" placeholder="Longitude" readonly value="{{gas.location.lng}}">
-                    <label for="selectState" class="form-align">Estado</label>
-                    <select class="form-control form-align" id="selectState">
-                    </select>
-
-                    <input class="form-control" name="workingHours" placeholder="Horário de Funcionamento" value="{{gas.workingHours}}">
-
-                    <label for="selectState" class="form-align">Opções de cartão de crédito:</label>
-
+    <div class="col-md-3">
+        <a href="/admin/owner/new"> <button type="button" data-toggle="modal" data-target="#myModal" class="btn-primary btn-lg btn-block">Adicionar Posto</button></a>
+        <div class="list-group" style="margin-top: 2%;">
+            {{#each gasList}}
+                <a href="/admin/owner/station/{{_id}}" class="list-group-item {{#ifCond _id ../gas._id}} active {{/ifCond}}">{{name}}</a>
+            {{else}}
+                <a class="list-group-item">Você não possui nenhum posto</a>
+            {{/each}}
+        </div>
+    </div>
+    <div class="col-md-9" style="background: #ccc; border-radius: 8px;">
+        {{#if gasList.length}}
+            <div id="map" class="col-md-4" style="margin-top: 1%;"></div>
+            <form action="/api/gas{{#if gas}}/{{gas._id}}{{/if}}" method="post">
+                <div class="col-md-4">
                     <div class="form-group">
-                        {{#each credit}}
-                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifIn this ../gas.payamentsCredit }}check{{/ifIn}}"><input type="checkbox" {{#ifIn this ../gas.payamentsCredit }}checked{{/ifIn}} name="payamentsCredit" id="item4" value="{{this}}" class="hidden" autocomplete="off"></label></div>
-                        {{/each}}
-                    </div>
+                        <input class="form-control" name="name" placeholder="Nome" value="{{gas.name}}">
+                        <input class="form-control" name="lat" type="number" placeholder="Latitude" readonly value="{{gas.location.lat}}">
+                        <input class="form-control" name="lng" type="number" placeholder="Longitude" readonly value="{{gas.location.lng}}">
+                        <label for="selectState" class="form-align">Estado</label>
+                        <select class="form-control form-align" id="selectState">
+                        </select>
 
-                    <input class="form-control" type="submit" value="Enviar">
-                </div>
-            </div>
-            <div  class="col-md-4" style="margin-right: 0px; padding-right: 1%;">
-                <div class="form-group">
-                    <input class="form-control currency" name="gasPrice" value="{{gas.gasPrice}}" placeholder="Preço da Gasolina Comum (Litro)" >
-                    <input class="form-control currency" name="gasPlusPrice" placeholder="Preço da Gasolina Aditivada (Litro)" value="{{gas.gasPlusPrice}}">
-                    <input class="form-control currency" name="alcoolPrice" placeholder="Preço do Alcool (Litro)" value="{{gas.alcoolPrice}}">
-                    <label for="selectCity" class="form-align">Cidade</label>
-                    <select class="form-control form-align" name="city" id="selectCity"></select>
-                    <input class="form-control phone" name="phoneNumber" placeholder="Telefone" value="{{gas.phoneNumber}}">
-                    <label for="" class="form-align">Opções de cartão de débito:</label>
-                    <div class="content row">
-                        {{#each debit}}
-                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifInDebit this ../gas.payamentsDebit }}check{{/ifInDebit}}"><input type="checkbox" {{#ifInDebit this ../gas.payamentsDebit }}checked{{/ifInDebit}} name="payamentsDebit" id="item4" value="{{removeD this}}" class="hidden" autocomplete="off"></label></div>
-                        {{/each}}
+                        <input class="form-control" name="workingHours" placeholder="Horário de Funcionamento" value="{{gas.workingHours}}">
+
+                        <label for="selectState" class="form-align">Opções de cartão de crédito:</label>
+
+                        <div class="form-group">
+                            {{#each credit}}
+                                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifIn this ../gas.payamentsCredit }}check{{/ifIn}}"><input type="checkbox" {{#ifIn this ../gas.payamentsCredit }}checked{{/ifIn}} name="payamentsCredit" id="item4" value="{{this}}" class="hidden" autocomplete="off"></label></div>
+                            {{/each}}
+                        </div>
+
+                        <input class="form-control" type="submit" value="Enviar">
                     </div>
-                    </select>
                 </div>
-            </div>
-        </form>
+                <div  class="col-md-4" style="margin-right: 0px; padding-right: 1%;">
+                    <div class="form-group">
+                        <input class="form-control currency" name="gasPrice" value="{{gas.gasPrice}}" placeholder="Preço da Gasolina Comum (Litro)" >
+                        <input class="form-control currency" name="gasPlusPrice" placeholder="Preço da Gasolina Aditivada (Litro)" value="{{gas.gasPlusPrice}}">
+                        <input class="form-control currency" name="alcoolPrice" placeholder="Preço do Alcool (Litro)" value="{{gas.alcoolPrice}}">
+                        <label for="selectCity" class="form-align">Cidade</label>
+                        <select class="form-control form-align" name="city" id="selectCity"></select>
+                        <input class="form-control phone" name="phoneNumber" placeholder="Telefone" value="{{gas.phoneNumber}}">
+                        <label for="" class="form-align">Opções de cartão de débito:</label>
+                        <div class="content row">
+                            {{#each debit}}
+                                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifInDebit this ../gas.payamentsDebit }}check{{/ifInDebit}}"><input type="checkbox" {{#ifInDebit this ../gas.payamentsDebit }}checked{{/ifInDebit}} name="payamentsDebit" id="item4" value="{{removeD this}}" class="hidden" autocomplete="off"></label></div>
+                            {{/each}}
+                        </div>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        {{else}}
+            <p>Você não possui nenhum posto</p>
+        {{/if}}
+
     </div>
 </div>
 

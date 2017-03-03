@@ -5,7 +5,7 @@ var adminSchema = new mongoose.Schema({
     email: String,
     password: String,
     role: String,
-    gasStation: { type: mongoose.Schema.Types.ObjectId, ref: 'GasStation' }
+    gasStation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GasStation' }]
 }, {
     timestamps: true
 });

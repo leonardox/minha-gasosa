@@ -17,7 +17,8 @@
     "jsonwebtoken": "^5.5.4",
     "mongoose": "^4.7.1",
     "querystring": "~0.2.0",
-    "cookie-parser": "^1.4.3"
+    "cookie-parser": "^1.4.3",
+    "bower": "latest"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,8 @@
     "heroku",
     "express"
   ],
+"scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+},
   "license": "MIT"
 }

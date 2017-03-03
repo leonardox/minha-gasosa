@@ -154,6 +154,12 @@ app.engine('handlebars', handlebars({
     },
     removeD: function(elem) {
       return elem.split('_')[0];
+    },
+    ifCond: function(v1, v2, options) {
+      if(v1 === v2) {
+          return options.fn(this);
+      }
+      return options.inverse(this);
     }
   }
 }));

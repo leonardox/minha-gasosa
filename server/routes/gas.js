@@ -167,8 +167,19 @@ router.post('/', function(req, res, next) {
       }
     } else {
       if(req.reqUser.role){
-        AdminModel.update({ _id: req.reqUser._id }, { $set: { gasStation: gas._id }}, function(err, adm){
-          res.redirect('/admin/owner/station');
+        AdminModel.findOne({_id: req.reqUser._id}, function(err, adm){
+          if(err){
+            res.send(err);
+          }else{
+            adm.gasStation.push(gas._id);
+            adm.save(function(err, newAd){
+              if(err){
+                res.send(err);
+              }else{
+                res.redirect('/admin/owner/station/'+gas._id);
+              }
+            });
+          }
         });
       }else{
         res.status(201).send("{\"status\":\"CREATED\", \"id\": \""+ gas._id +"}");

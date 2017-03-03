@@ -11,24 +11,70 @@ var Location = mongoose.model('Location');
 var City = mongoose.model('City');
 
 router.get('/home', function(req, res) {
-  Admin.findOne({username: req.reqUser.username}).populate('gasStation').exec(function(err, owner) {
-    console.log(JSON.stringify(req.reqUser));
-    res.render('owner_home', {owner: owner})
+  var selectedStationId = req.params.stationId;
+
+  Admin.findOne({username: req.reqUser.username}).populate({path:'gasStation', model: "GasStation", populate: {path: 'city', model: "City"}}).exec(function(err, owner) {
+    var creditOptions = ["visa","master","hiper_card","dinners","elo","hiper", "amex", "union","cabal", "banes","cooper"];
+    var debitOptions = ["visa_d","master_d","hiper_d","elo_d","union_d","cabal_d"];
+    var selectedGasList = owner.gasStation.filter(function(gs){
+      return gs._id == selectedStationId;
+    });
+    if(selectedGasList.length == 0 && (typeof owner.gasStation != 'undefined' && owner.gasStation.length > 0)){
+      selectedGasList.push(owner.gasStation[0]);
+    }
+    res.render('edit_station', {
+      debit: debitOptions,
+      credit: creditOptions,
+      gas: selectedGasList.length > 0 ? selectedGasList[0] : undefined,
+      gasList: owner.gasStation,
+      owner: owner._doc
+    });
   });
+});
+
+
+
+router.get('/station/:stationId', function(req, res) {
+    var selectedStationId = req.params.stationId;
+
+    Admin.findOne({username: req.reqUser.username}).populate({path:'gasStation', model: "GasStation", populate: {path: 'city', model: "City"}}).exec(function(err, owner) {
+        var creditOptions = ["visa","master","hiper_card","dinners","elo","hiper", "amex", "union","cabal", "banes","cooper"];
+        var debitOptions = ["visa_d","master_d","hiper_d","elo_d","union_d","cabal_d"];
+        var selectedGasList = owner.gasStation.filter(function(gs){
+          return gs._id == selectedStationId;
+        });
+        res.render('edit_station', {
+            debit: debitOptions,
+            credit: creditOptions,
+            gas: selectedGasList.length > 0 ? selectedGasList[0] : undefined,
+            gasList: owner.gasStation,
+            owner: owner._doc
+        });
+    });
 });
 
 router.get('/station', function(req, res) {
   Admin.findOne({username: req.reqUser.username}).populate({path:'gasStation', model: "GasStation", populate: {path: 'city', model: "City"}}).exec(function(err, owner) {
-    var creditOptions = ["visa","master","hiper_card","dinners","elo","hiper", "amex", "union","cabal", "banes","cooper"];
-    var debitOptions = ["visa_d","master_d","hiper_d","elo_d","union_d","cabal_d"];
-    res.render('new_station', {
-      debit: debitOptions,
-      credit: creditOptions,
-      gas: owner._doc.gasStation ? owner._doc.gasStation._doc : undefined,
-      owner: owner._doc
-    });
+    if(typeof owner.gasStation != 'undefined' && owner.gasStation.length > 0){
+      res.redirect('/admin/owner/station/'+ owner.gasStation[0]._id)
+    }else{
+        res.render('edit_station', {
+            owner: owner._doc
+        });
+    }
   });
+});
 
+router.get('/new', function(req, res) {
+    Admin.findOne({username: req.reqUser.username}).populate({path:'gasStation', model: "GasStation", populate: {path: 'city', model: "City"}}).exec(function(err, owner) {
+        var creditOptions = ["visa","master","hiper_card","dinners","elo","hiper", "amex", "union","cabal", "banes","cooper"];
+        var debitOptions = ["visa_d","master_d","hiper_d","elo_d","union_d","cabal_d"];
+        res.render('new_station', {
+            debit: debitOptions,
+            credit: creditOptions,
+            owner: owner._doc
+        });
+    });
 });
 
 router.get('/logout', function(req, res) {
