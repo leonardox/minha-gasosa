@@ -30,6 +30,7 @@ var gasSchema = mongoose.Schema({
   phoneNumber: String,
   gasPrice: Number,
   gasPlusPrice: Number,
+  services: [String],
   alcoolPrice: Number,
   location: { lat: Number, lng: Number },
   closedReports: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

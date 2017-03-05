@@ -209,7 +209,7 @@ router.post('/:id', function(req, res, next) {
       }
     }else{
       if(req.reqUser.role){
-        res.redirect('/admin/owner/station');
+        res.redirect('/admin/owner/station/'+gasId);
       }else{
         res.status(200).send("OK");
       }
