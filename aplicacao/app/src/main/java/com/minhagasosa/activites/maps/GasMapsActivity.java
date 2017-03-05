@@ -221,6 +221,24 @@ public class GasMapsActivity extends BaseFragmentActivity
         }
         mapFragment.getMapAsync(this);
 
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (permissionGranted) {
+            // {Some Code}
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // {Some Code}
+                }
+            }
+        }
     }
 
     private void setMarker(GasStation gas, LatLng loc) {

@@ -56,7 +56,7 @@ import java.util.List;
 public class RouteMapsActivity extends FragmentActivity
         implements OnMapReadyCallback {
     /**
-     *API Google Mapa
+     * API Google Mapa
      */
     private GoogleMap mMap;
     /**
@@ -92,7 +92,7 @@ public class RouteMapsActivity extends FragmentActivity
      */
     private boolean mIdaEvolta;
     /**
-     *  distancia de ida
+     * distancia de ida
      */
     private float mDistanciaIda = -1;
     /**
@@ -115,10 +115,10 @@ public class RouteMapsActivity extends FragmentActivity
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        if(this.getIntent().getStringArrayListExtra("LatLng") != null){
+        if (this.getIntent().getStringArrayListExtra("LatLng") != null) {
             //LatLng h = new LatLng();
-        }else{
-            Toast.makeText(this, getString(R.string.select_origin) ,Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, getString(R.string.select_origin), Toast.LENGTH_LONG).show();
         }
         mapFragment.setHasOptionsMenu(true);
         ImageButton btUndo = (ImageButton) findViewById(R.id.undoButton);
@@ -135,10 +135,10 @@ public class RouteMapsActivity extends FragmentActivity
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
 
                 mIdaEvolta = isChecked;
-                if(mOriginMark != null && mDestinyMark != null){
-                    if(mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
+                if (mOriginMark != null && mDestinyMark != null) {
+                    if (mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
                     mDesenhoRotaIda = null;
-                    if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
+                    if (mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
                     mDesenhoRotaVolta = null;
                     mDistanciaIda = -1;
                     mDistanciaVolta = -1;
@@ -171,20 +171,38 @@ public class RouteMapsActivity extends FragmentActivity
         });
         Intent i = getIntent();
         double[] cityCords = i.getDoubleArrayExtra("cityCoords");
-        if(cityCords != null){
+        if (cityCords != null) {
             mCityLatLng = new LatLng(cityCords[0], cityCords[1]);
         }
         mapFragment.getMapAsync(this);
 
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (permissionGranted) {
+            // {Some Code}
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // {Some Code}
+                }
+            }
+        }
+    }
+
+
     /**
-     *
      * @param origin
      * @param dest
      * @return
      */
-    private String getDirectionsUrl(final LatLng origin, final LatLng dest){
+    private String getDirectionsUrl(final LatLng origin, final LatLng dest) {
 
         // Origin of route
         String strOrigin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -201,7 +219,7 @@ public class RouteMapsActivity extends FragmentActivity
         // Output format
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
                 origin.latitude + "," + origin.longitude + "&destination=" + dest.latitude + "," + dest.longitude +
                 "&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
 
@@ -231,11 +249,11 @@ public class RouteMapsActivity extends FragmentActivity
         return soma;
     }
 
-    private void undo(){
-        if(mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
-        if(mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
-        if(mOriginMark != null) mOriginMark.remove();
-        if(mDestinyMark != null) mDestinyMark.remove();
+    private void undo() {
+        if (mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
+        if (mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
+        if (mOriginMark != null) mOriginMark.remove();
+        if (mDestinyMark != null) mDestinyMark.remove();
         mDesenhoRotaIda = null;
         mDesenhoRotaVolta = null;
         mOriginMark = null;
@@ -246,12 +264,14 @@ public class RouteMapsActivity extends FragmentActivity
         mDistanciaVolta = -1;
     }
 
-    /** A method to download json data from url */
+    /**
+     * A method to download json data from url
+     */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
-        try{
+        try {
             URL url = new URL(strUrl);
 
             // Creating an http connection to communicate with url
@@ -265,10 +285,10 @@ public class RouteMapsActivity extends FragmentActivity
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
 
-            StringBuffer sb  = new StringBuffer();
+            StringBuffer sb = new StringBuffer();
 
             String line = "";
-            while( ( line = br.readLine())  != null){
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
@@ -276,9 +296,9 @@ public class RouteMapsActivity extends FragmentActivity
 
             br.close();
 
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("Exception whi", e.toString());
-        }finally{
+        } finally {
             iStream.close();
             urlConnection.disconnect();
         }
@@ -304,7 +324,6 @@ public class RouteMapsActivity extends FragmentActivity
     }
 
 
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -323,7 +342,7 @@ public class RouteMapsActivity extends FragmentActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                if(mOriginMark != null && mDestinyMark == null){
+                if (mOriginMark != null && mDestinyMark == null) {
                     mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                     mFab.setClickable(true);
                     mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
@@ -331,7 +350,7 @@ public class RouteMapsActivity extends FragmentActivity
                     DownloadTask dt = new DownloadTask(ac, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
-                }else if(mOriginMark == null){
+                } else if (mOriginMark == null) {
                     mOriginMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.origin)));
                     Toast.makeText(RouteMapsActivity.this, R.string.origin_text, Toast.LENGTH_SHORT).show();
                 }
@@ -341,9 +360,9 @@ public class RouteMapsActivity extends FragmentActivity
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        if(mCityLatLng != null){
+        if (mCityLatLng != null) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCityLatLng, (float) 16.0));
-        }else{
+        } else {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2233);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -361,7 +380,7 @@ public class RouteMapsActivity extends FragmentActivity
             GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {
-                    if(firstTime){
+                    if (firstTime) {
                         firstTime = false;
                         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
@@ -371,6 +390,7 @@ public class RouteMapsActivity extends FragmentActivity
             mMap.setOnMyLocationChangeListener(myLocationChangeListener);
         }
     }
+
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         /**
@@ -378,19 +398,19 @@ public class RouteMapsActivity extends FragmentActivity
          */
         private Context mContext;
         /**
-         *boolean volta
+         * boolean volta
          */
         private boolean mIsVolta;
 
         /**
-         *
          * @param c
          * @param isVolta
          */
-        DownloadTask(final Context c, final boolean isVolta){
+        DownloadTask(final Context c, final boolean isVolta) {
             mIsVolta = isVolta;
             mContext = c;
         }
+
         // Downloading data in non-ui thread
         @Override
         protected String doInBackground(final String... url) {
@@ -398,11 +418,11 @@ public class RouteMapsActivity extends FragmentActivity
             // For storing data from web service
             String data = "";
 
-            try{
+            try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
             }
             return data;
         }
@@ -422,9 +442,10 @@ public class RouteMapsActivity extends FragmentActivity
     }
 
 
-
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>{
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
         /**
          *
          */
@@ -435,14 +456,14 @@ public class RouteMapsActivity extends FragmentActivity
         private boolean mIsVolta;
 
         /**
-         *
          * @param c
          * @param isVolta
          */
-        ParserTask(final Context c, final boolean isVolta){
+        ParserTask(final Context c, final boolean isVolta) {
             mIsVolta = isVolta;
             mContext = c;
         }
+
         // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(final String... jsonData) {
@@ -450,7 +471,7 @@ public class RouteMapsActivity extends FragmentActivity
             final JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
-            try{
+            try {
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
@@ -458,16 +479,16 @@ public class RouteMapsActivity extends FragmentActivity
                 routes = parser.parse(jObject);
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        if(mIsVolta){
+                        if (mIsVolta) {
                             mDistanciaVolta = somaDistanciasRotaJSON(jsonData[0]);
-                        }else{
+                        } else {
                             mDistanciaIda = somaDistanciasRotaJSON(jsonData[0]);
                         }
                         //Chamar método de léo aqui...
                     }
                 });
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return routes;
@@ -484,15 +505,14 @@ public class RouteMapsActivity extends FragmentActivity
             String duration = "";
 
 
-
-            if(result.size()<1){
+            if (result.size() < 1) {
                 Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
                 return;
             }
 
 
             // Traversing through all the routes
-            for(int i = 0; i < result.size(); i++){
+            for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<LatLng>();
                 lineOptions = new PolylineOptions();
 
@@ -500,13 +520,13 @@ public class RouteMapsActivity extends FragmentActivity
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j = 0 ; j < path.size(); j++){
+                for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
 
-                    if(j == 0){   // Get distance from the list
+                    if (j == 0) {   // Get distance from the list
                         distance = (String) point.get("distance");
                         continue;
-                    }else if(j == 1){ // Get duration from the list
+                    } else if (j == 1) { // Get duration from the list
                         duration = (String) point.get("duration");
                         continue;
                     }
@@ -521,9 +541,9 @@ public class RouteMapsActivity extends FragmentActivity
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(2);
-                if(!mIsVolta){
+                if (!mIsVolta) {
                     lineOptions.color(Color.RED);
-                }else{
+                } else {
                     lineOptions.color(Color.CYAN);
                 }
             }
@@ -531,14 +551,14 @@ public class RouteMapsActivity extends FragmentActivity
             //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
             // Drawing polyline in the Google Map for the i-th route
             //if(mDesenhoRotaIda != null && !mIsVolta) mDesenhoRotaIda.remove();
-            if(!mIsVolta){
+            if (!mIsVolta) {
                 mDesenhoRotaIda = mMap.addPolyline(lineOptions);
-                if(mIdaEvolta){
+                if (mIdaEvolta) {
                     DownloadTask dt = new DownloadTask(mContext, true);
                     String url = getDirectionsUrl(mDestinyMark.getPosition(), mOriginMark.getPosition());
                     dt.execute(url);
                 }
-            }else{
+            } else {
                 mDesenhoRotaVolta = mMap.addPolyline(lineOptions);
             }
 
