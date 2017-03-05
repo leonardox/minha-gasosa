@@ -67,6 +67,12 @@ private List<String> payamentsCredit;
 private List<String> payamentsDebit;
 
 
+
+
+    @SerializedName("services")
+@Expose
+private List<String> services;
+
 public String getId() {
     return id;
 }
@@ -96,6 +102,14 @@ this.name = name;
 
 public String getPhoneNumer() {
     return phoneNumer;
+}
+
+public List<String> getServices() {
+    return services;
+}
+
+public void setServices(List<String> services) {
+    this.services = services;
 }
 
 public void setPhoneNumer(String phoneNumer) {
@@ -320,6 +334,12 @@ this.location = location;
         } else {
             payamentsDebit = null;
         }
+        if (in.readByte() == 0x01) {
+            services = new ArrayList<String>();
+            in.readList(services, String.class.getClassLoader());
+        } else {
+            services = null;
+        }
         description = in.readString();
         location = (Location) in.readValue(Location.class.getClassLoader());
     }
@@ -363,6 +383,12 @@ this.location = location;
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(payamentsDebit);
+        }
+        if (services == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(services);
         }
         dest.writeString(description);
         dest.writeValue(location);

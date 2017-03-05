@@ -106,6 +106,14 @@
     <string name="gas_price">Preço da Gasolina</string>
     <string name="alcool_price">Preço do Alcool</string>
     <string name="gas_plus_price">Preço da Gas. Aditivada</string>
+    <string name="oil">Troca de Óleo</string>
+    <string name="restaurant">Restaurante</string>
+    <string name="sleep">Dormido</string>
+    <string name="tire">Calibragem de Pneus</string>
+    <string name="atm">Caixa Eletrônico</string>
+    <string name="glass">Limpeza de Parabrizas</string>
+    <string name="depStore">Loja de Conveniência</string>
+
     <string name="title_activity_gas_station">Posto de Combustível</string>
     <string name="title_activity_gas_station_list">Postos ordenados por preço</string>
     <string name="title_activity_comment_list">Lista de Comentários</string>

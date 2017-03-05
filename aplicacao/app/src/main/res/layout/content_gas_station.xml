@@ -246,6 +246,26 @@
             android:background="@android:color/black" />
 
         <TextView
+            android:text="Serviços Oferecidos:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/tvServices" />
+
+        <ListView
+            android:id="@+id/services_list"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </ListView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.05sp"
+            android:background="@android:color/black" />
+
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
