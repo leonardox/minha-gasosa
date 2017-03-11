@@ -3,6 +3,7 @@ package com.minhagasosa;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +11,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,13 +43,14 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.API.LocationService;
 import com.minhagasosa.API.UsersService;
 import com.minhagasosa.Transfer.City;
 import com.minhagasosa.Transfer.State;
 import com.minhagasosa.Transfer.TUser;
 import com.minhagasosa.activites.BaseActivity;
+import com.minhagasosa.activites.NavigationActivity;
+import com.minhagasosa.fragments.Home.HomeFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,15 +145,15 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         m_locationService = retrofit.create(LocationService.class);
     }
 
-    private void skipSplash(){
+    private void skipSplash() {
         signInGoogleButton.setVisibility(SignInButton.INVISIBLE);
         signInFacebookButton.setVisibility(View.VISIBLE);
         updateUI();
     }
 
     private void updateUI() {
-        if (!isActivityRunning(MainActivity.class) && !closed) {
-            startActivity(new Intent(this, MainActivity.class));
+        if (!isActivityRunning(NavigationActivity.class) && !closed) {
+            startActivity(new Intent(this, NavigationActivity.class));
         }
         closed = true;
         finish();
@@ -215,7 +218,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         callbackManager = CallbackManager.Factory.create();
     }
 
-    private void configFacebookTrackers(){
+    private void configFacebookTrackers() {
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -262,7 +265,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         }
     }
 
-    private void register(String cityId){
+    private void register(String cityId) {
         Profile fbProfile = Profile.getCurrentProfile();
         TUser us = new TUser();
         us.setFirstName(fbProfile.getFirstName());
@@ -272,7 +275,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         m_usersService.registerUser(us).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
+                switch (response.code()) {
                     case 201:
                         Log.d("Reg", "Usuario registrando, logando...");
                         authInServer(AccessToken.getCurrentAccessToken().getToken());
@@ -289,11 +292,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         });
     }
 
-    private void authInServer(String fbAuthToken){
+    private void authInServer(String fbAuthToken) {
         m_usersService.Auth(fbAuthToken).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
+                switch (response.code()) {
                     case 200:
                         try {
                             Log.d("Login", "Usuario autênticado com token: ");
@@ -396,15 +399,29 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     }
 
-    private boolean haveFacebook(){
-        try{
+    private boolean haveFacebook() {
+        try {
             ApplicationInfo info = getPackageManager().
-                    getApplicationInfo("com.facebook.katana", 0 );
+                    getApplicationInfo("com.facebook.katana", 0);
             return true;
-        } catch( PackageManager.NameNotFoundException e ){
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
+
+//    protected Boolean isActivityRunning(Fragment fragmentClass) {
+////        FragmentManager fragmentManager = (FragmentManager)getApplicationContext().getSystemService(Context.FA);
+//        FragmentManager fragmentManager = (FragmentManager) getBaseContext().getSystemService(ACTIVITY_SERVICE);
+//
+//        List<FragmentManager.BackStackEntry> tasks = (List<FragmentManager.BackStackEntry>) fragmentManager.getBackStackEntryAt(Integer.MAX_VALUE);
+//        //List<FragmentManager.BackStackEntry> tasks = fragmentManager.getBackStackEntryAt(Integer.MAX_VALUE);
+//
+//        for (FragmentManager.BackStackEntry task : tasks) {
+//            if (fragmentClass.getActivity().equals(task.getClass().getName())) {
+//                return true;
+//            }
+//        }
+
 
     protected Boolean isActivityRunning(Class activityClass) {
         ActivityManager activityManager = (ActivityManager) getBaseContext().getSystemService(Context.ACTIVITY_SERVICE);
@@ -521,7 +538,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             if (!isConsentScreenOpened) {
                 if (tryLogin) {
                     signInGoogleButton.setVisibility(SignInButton.VISIBLE);
-                    if(haveFacebook()){
+                    if (haveFacebook()) {
                         signInFacebookButton.setVisibility(View.VISIBLE);
                     } else {
                         signInFacebookButton.setVisibility(View.VISIBLE);

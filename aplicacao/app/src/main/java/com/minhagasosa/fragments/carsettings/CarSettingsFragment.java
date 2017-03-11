@@ -1,27 +1,29 @@
-package com.minhagasosa;
+package com.minhagasosa.fragments.carsettings;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import com.minhagasosa.R;
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.CarroDao;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Modelo;
 import com.minhagasosa.dao.ModeloDao;
+import com.minhagasosa.fragments.Home.HomeFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.JobManager;
@@ -33,17 +35,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.dao.query.Query;
 
-/**
- * Classe Main.
- */
-public class MainActivity extends AppCompatActivity {
+public class CarSettingsFragment extends Fragment {
+
+
     /**
      * atributo de MARCA do carro
      */
@@ -71,25 +71,23 @@ public class MainActivity extends AppCompatActivity {
     /**
      *
      */
-    public static Activity self;
+    public static CarSettingsFragment self;
     /**
      * instancia da classe CarroDao
      */
     private CarroDao cDao;
 
-    @Override
-    protected final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setTitle("Configurar Carro");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "casosa-db", null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        getActivity().setTitle("Configurar Carro");
+        View view = inflater.inflate(R.layout.activity_main, container, false);
+
+        setHasOptionsMenu(true);
+
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "casosa-db", null);
         self = this;
-        JobManager jobManager = new JobManager(this);
+        JobManager jobManager = new JobManager(getContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         final DaoSession session = daoMaster.newSession();
@@ -102,25 +100,29 @@ public class MainActivity extends AppCompatActivity {
         //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
         //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
 
-        if (MinhaGasosaPreference.getDone(getApplicationContext())) {
-            Intent i = new Intent(this, HomeActivity.class);
-            this.startActivity(i);
-            return;
-        }
-        spinnerMarca = (Spinner) findViewById(R.id.spinnerMarca);
-        spinnerModelo = (Spinner) findViewById(R.id.spinnerModelo);
-        spinnerVersao = (Spinner) findViewById(R.id.spinnerVersao);
-        spinnerPotencia = (Spinner) findViewById(R.id.spinnerPot);
+        // todo é para deixar? start
+//        if (MinhaGasosaPreference.getDone(getContext())) {
+//            Fragment fragment = new HomeFragment();
+//            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//            ft.replace(R.id.content_frame, fragment);
+//            ft.commit();
+//            return view;
+//        }
+        // todo é para deixar? end
+        spinnerMarca = (Spinner) view.findViewById(R.id.spinnerMarca);
+        spinnerModelo = (Spinner) view.findViewById(R.id.spinnerModelo);
+        spinnerVersao = (Spinner) view.findViewById(R.id.spinnerVersao);
+        spinnerPotencia = (Spinner) view.findViewById(R.id.spinnerPot);
 
         String[] marcas = {"Aston Martin", "Audi", "Bentley", "BMW", "Chery", "Chevrolet", "Citroen", "Dodge", "Ferrari", "Fiat",
                 "Ford", "Geely", "Honda", "Hyundai", "JAC", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Lifan",
                 "Maserati", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Peugeot", "Porsche", "Rely", "Renault", "Shineray",
                 "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
-        spinnerMarca.setAdapter(new ArrayAdapter<String>(this,
+        spinnerMarca.setAdapter(new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, marcas));
 
-        String selectedMarca = MinhaGasosaPreference.getMarca(getApplicationContext());
-        if(selectedMarca != null){
+        String selectedMarca = MinhaGasosaPreference.getMarca(getContext());
+        if (selectedMarca != null) {
             spinnerMarca.setSelection(Arrays.asList(marcas).indexOf(selectedMarca), true);
             popularModelos(session);
         }
@@ -149,8 +151,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (mDao.count() == 0) {
-            setFinishOnTouchOutside(false);
-            progress = new ProgressDialog(this);
+            getActivity().setFinishOnTouchOutside(false);
+            progress = new ProgressDialog(getContext());
             progress.setCancelable(false);
             progress.setCanceledOnTouchOutside(false);
             progress.setMessage("Populando carros, isso so sera feito uma vez");
@@ -184,38 +186,42 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String selectedPot = (String) spinnerPotencia.getSelectedItem();
                 if (selectedPot.isEmpty()) {
-                    MinhaGasosaPreference.putWithPotency(false, getApplicationContext());
-                    MinhaGasosaPreference.putPotency(0.0f, getApplicationContext());
+                    MinhaGasosaPreference.putWithPotency(false, getContext());
+                    MinhaGasosaPreference.putPotency(0.0f, getContext());
                 } else {
-                    MinhaGasosaPreference.putWithPotency(true, getApplicationContext());
-                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getApplicationContext());
-                    MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getApplicationContext());
-                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getApplicationContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getApplicationContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getApplicationContext());
+                    MinhaGasosaPreference.putWithPotency(true, getContext());
+                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getContext());
+                    MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getContext());
+                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getContext());
+                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getContext());
+                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getContext());
                 }
             }
+
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
         String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
-        spinnerPotencia.setAdapter(new ArrayAdapter<String>(this,
+        spinnerPotencia.setAdapter(new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, potencias));
 
-        String selectedPotencia = MinhaGasosaPreference.getVersao(getApplicationContext());
-        if(selectedPotencia != null){
+        String selectedPotencia = MinhaGasosaPreference.getVersao(getContext());
+        if (selectedPotencia != null) {
             spinnerMarca.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
         }
 
+
+        return view;
     }
 
     /**
      * metodo que salva todas as informacoes do carro no banco
+     *
      * @param cDao
      */
-    private void salvarInformacoesCarro(final CarroDao cDao) {
-        if (!MinhaGasosaPreference.getWithPotency(getApplicationContext())) {
+    private void salvarInformacoesCarro(final CarroDao cDao, View view) {
+        if (!MinhaGasosaPreference.getWithPotency(getContext())) {
             String marca = (String) spinnerMarca.getSelectedItem();
             Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
             long modeloId = modelo.getId();
@@ -225,57 +231,58 @@ public class MainActivity extends AppCompatActivity {
                     CarroDao.Properties.VERSION.eq(versao)).build();
             Carro carro = (Carro) query.list().get(0);
 
-            if(carro.getMarca() != null){
-                MinhaGasosaPreference.setMarca(carro.getMarca() ,getApplicationContext());
+            if (carro.getMarca() != null) {
+                MinhaGasosaPreference.setMarca(carro.getMarca(), getContext());
             }
 
-            if(carro.getModelo().getMODELO() != null){
-                MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO() ,getApplicationContext());
+            if (carro.getModelo().getMODELO() != null) {
+                MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO(), getContext());
             }
 
-            if(carro.getVersion() != null){
-                MinhaGasosaPreference.setVersao(carro.getVersion() ,getApplicationContext());
+            if (carro.getVersion() != null) {
+                MinhaGasosaPreference.setVersao(carro.getVersion(), getContext());
             }
 
             if (carro.getIsFlex() != null) {
-                MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getApplicationContext());
+                MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getContext());
             }
             if (carro.getConsumoUrbanoGasolina() != null) {
                 MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
-                        getApplicationContext());
+                        getContext());
             }
             if (carro.getConsumoRodoviarioGasolina() != null) {
                 MinhaGasosaPreference.setConsumoRodoviarioPrimario(carro.getConsumoRodoviarioGasolina(),
-                        getApplicationContext());
+                        getContext());
             }
             if (carro.getConsumoUrbanoAlcool() != null) {
                 MinhaGasosaPreference.setConsumoUrbanoSecundario(carro.getConsumoUrbanoAlcool(),
-                        getApplicationContext());
+                        getContext());
             }
             if (carro.getConsumoRodoviarioAlcool() != null) {
                 MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
-                        getApplicationContext());
+                        getContext());
             }
         }
-        EditText edCapacidadeTanuqe = (EditText) findViewById(R.id.ed_capacidade_tanque);
+        EditText edCapacidadeTanuqe = (EditText) view.findViewById(R.id.ed_capacidade_tanque);
         String capacidade = edCapacidadeTanuqe.getText().toString();
-        if(!capacidade.trim().isEmpty()){
+        if (!capacidade.trim().isEmpty()) {
             try {
-                float cap  = Float.valueOf(capacidade);
-                Log.e("OrigCap:", cap+"");
-                MinhaGasosaPreference.putCapacidadeDoTanque(cap, getApplicationContext());
-            }catch (Exception e){
-                Log.e("Treta", "Treta!");
+                float cap = Float.valueOf(capacidade);
+                MinhaGasosaPreference.putCapacidadeDoTanque(cap, getContext());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        MinhaGasosaPreference.setDone(true, getApplicationContext());
-        Intent i = new Intent(this, HomeActivity.class);
-        this.startActivity(i);
+        MinhaGasosaPreference.setDone(true, getContext());
+        Fragment fragment = new HomeFragment();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
 
     /**
-     *  metodo que popula as versoes do carro para o banco de dados
+     * metodo que popula as versoes do carro para o banco de dados
+     *
      * @param cDao
      */
     private void popularVersoes(final CarroDao cDao) {
@@ -286,11 +293,11 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < listaCarros.size(); i++) {
             listaVersoes[i] = listaCarros.get(i).toString();
         }
-        spinnerVersao.setAdapter(new ArrayAdapter<String>(this,
+        spinnerVersao.setAdapter(new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, listaVersoes));
 
-        String selectedVersion = MinhaGasosaPreference.getVersao(getApplicationContext());
-        if(selectedVersion != null){
+        String selectedVersion = MinhaGasosaPreference.getVersao(getContext());
+        if (selectedVersion != null) {
             spinnerMarca.setSelection(Arrays.asList(listaVersoes).indexOf(selectedVersion), true);
         }
 
@@ -310,19 +317,20 @@ public class MainActivity extends AppCompatActivity {
                 "WHERE CARRO.MARCA ='" + marca + "' AND MODELO._id = CARRO.MODELO_ID " +
                 "GROUP BY MODELO.MODELO ORDER BY MODELO.MODELO ASC";
         ArrayList<Modelo> listaModelos = (ArrayList<Modelo>) listModelos(session, select);
-        spinnerModelo.setAdapter(new ArrayAdapter<Modelo>(this,
+        spinnerModelo.setAdapter(new ArrayAdapter<Modelo>(getContext(),
                 android.R.layout.simple_spinner_item, listaModelos));
 
-        String selectedModelo = MinhaGasosaPreference.getModelo(getApplicationContext());
+        String selectedModelo = MinhaGasosaPreference.getModelo(getContext());
 
-        if(selectedModelo != null){
+        if (selectedModelo != null) {
             spinnerMarca.setSelection(listaModelos.indexOf(selectedModelo), true);
             popularVersoes(cDao);
         }
     }
 
     /**
-     *  metodo que popula o modelo e o carro no banco
+     * metodo que popula o modelo e o carro no banco
+     *
      * @param mDao
      * @param cDao
      */
@@ -358,15 +366,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
             progress.hide();
-            Intent i = new Intent(self, MainActivity.class);
-            self.startActivity(i);
+//            Intent i = new Intent(self, MainActivity.class);
+//            self.startActivity(i);
+            Fragment fragment = new CarSettingsFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Bundle argsCar = new Bundle();
+            argsCar.putBoolean("fromHome", true);
+            fragment.setArguments(argsCar);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     *
      * @param fileName
      * @return
      */
@@ -374,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
         String json = null;
         try {
 
-            InputStream is = getAssets().open(fileName);
+            InputStream is = getActivity().getAssets().open(fileName);
 
             int size = is.available();
 
@@ -396,7 +410,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param session
      * @param select
      * @return
@@ -421,34 +434,29 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * metodo que retorna o valor maximo que deve ser gasto
+     *
      * @return
      */
     public final float getValorMaximo() {
-        return MinhaGasosaPreference.getValorMaximoParaGastar(MainActivity.this);
+        return MinhaGasosaPreference.getValorMaximoParaGastar(getActivity());
     }
 
     @Override
-    public final boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.distance_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    public final void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.distance_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_route:
-                // Potency value at sharedPreferences
-                Log.e("MinhaGasosa", "ValorArmazenadoPotencia = " + String.valueOf(MinhaGasosaPreference.getPotency(
-                        getApplicationContext())));
-                Log.e("MinhaGasosa", "IsPotencia = " + String.valueOf(MinhaGasosaPreference.getWithPotency(
-                        getApplicationContext())));
-                salvarInformacoesCarro(cDao);
-                return true;
-            case android.R.id.home:
-                onBackPressed();
+                salvarInformacoesCarro(cDao, getView());
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

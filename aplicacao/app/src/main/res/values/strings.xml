@@ -25,6 +25,7 @@
     <string name="distancia_total">sharedPotencia</string>
     <string name="shared_valor_maximo_gastar">valorMaximoQueQuerGastar</string>
     <string name="shared_capacidade_tanque">capacidadeDoTanque</string>
+    <string name="shared_preco_secundario">precoSecundario</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="confirm">Confirmar</string>
     <string name="title_activity_routes">Criar rota</string>
@@ -215,4 +216,11 @@
     <string name="wrong_prices">Reportar Preços Incorretos</string>
     <string name="add_comment">Adicionar comentário</string>
     <string name="more_commets">Mais Comentários</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

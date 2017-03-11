@@ -15,16 +15,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.activites.maps.RouteMapsActivity;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
-import static com.minhagasosa.Utils.calculaDistanciaTotal;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Date;
+
+import static com.minhagasosa.Utils.calculaDistanciaTotal;
 
 
 /**
@@ -185,6 +186,8 @@ public class RoutesActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG_ROUTES_ACTIVITY, "no menu, algo foi inválido");
             }
+        }else if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }

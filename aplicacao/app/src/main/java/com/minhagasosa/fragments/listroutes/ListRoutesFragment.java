@@ -1,11 +1,16 @@
-package com.minhagasosa;
+package com.minhagasosa.fragments.listroutes;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.minhagasosa.R;
+import com.minhagasosa.RotaAdapter;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
@@ -15,13 +20,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ListRoutesActivity extends AppCompatActivity {
+public class ListRoutesFragment extends Fragment {
 
     @Override
-    protected final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_routes);
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        getActivity().setTitle("Listagem de Rotas");
+        View view = inflater.inflate(R.layout.activity_list_routes, container, false);
+
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession session = daoMaster.newSession();
@@ -30,13 +37,15 @@ public class ListRoutesActivity extends AppCompatActivity {
         Date today = new Date();
         List<Rota> rotasMes = new ArrayList<Rota>();
         for (Rota r:
-             rotas) {
+                rotas) {
             if(today.getMonth() == r.getData().getMonth() && today.getYear() == r.getData().getYear()){
                 rotasMes.add(r);
             }
         }
-        ListView lv = (ListView) findViewById(R.id.lvRotas);
-        ListAdapter la = new RotaAdapter(this, R.layout.route_adapter, rotasMes);
+        ListView lv = (ListView) view.findViewById(R.id.lvRotas);
+        ListAdapter la = new RotaAdapter(getContext(), R.layout.route_adapter, rotasMes);
         lv.setAdapter(la);
+        return view;
     }
+
 }

@@ -1,57 +1,49 @@
-package com.minhagasosa;
+package com.minhagasosa.fragments.Home;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.facebook.login.LoginManager;
 import com.github.mikephil.charting.charts.PieChart;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.minhagasosa.activites.maps.GasMapsActivity;
+import com.minhagasosa.ChartView;
+import com.minhagasosa.MyReceiver;
+import com.minhagasosa.R;
+import com.minhagasosa.RoutesActivity;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
+
 /**
- * Classe Inicial do app.
+ * A simple {@link Fragment} subclass.
  */
-public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class HomeFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+
 
     private String Home = "HomeActivity";
     private String R$ = "R$ ";
@@ -132,76 +124,64 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private PendingIntent pendingIntent;
 
-    private GoogleApiClient mGoogleApiClient;
-    private SharedPreferences sharedPreferences;
+
 
     @Override
-    protected final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        secundarioText = (TextView) findViewById(R.id.textView8);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_home, container, false);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        secundarioText = (TextView) view.findViewById(R.id.textView8);
         secundarioText.setVisibility(View.GONE);
-        secundarioPriceText = (TextView) findViewById(R.id.textView9);
+        secundarioPriceText = (TextView) view.findViewById(R.id.textView9);
         secundarioPriceText.setVisibility(View.GONE);
-        priceFuelEditText2 = (EditText) findViewById(R.id.editText);
+        priceFuelEditText2 = (EditText) view.findViewById(R.id.editText);
         priceFuelEditText2.setVisibility(View.GONE);
-        porcentagem1 = (TextView) findViewById(R.id.textView10);
+        porcentagem1 = (TextView) view.findViewById(R.id.textView10);
         porcentagem1.setVisibility(View.GONE);
-        porcentagem2 = (TextView) findViewById(R.id.textView11);
+        porcentagem2 = (TextView) view.findViewById(R.id.textView11);
         porcentagem2.setVisibility(View.GONE);
-        consumoS = (TextView) findViewById(R.id.tv_consumo_semanal_valor);
-        consumoM = (TextView) findViewById(R.id.tv_consumo_mensal_valor);
-        porcento1 = (TextView) findViewById(R.id.textView2);
+        consumoS = (TextView) view.findViewById(R.id.tv_consumo_semanal_valor);
+        consumoM = (TextView) view.findViewById(R.id.tv_consumo_mensal_valor);
+        porcento1 = (TextView) view.findViewById(R.id.textView2);
         porcento1.setVisibility(View.GONE);
-        porcento2 = (TextView) findViewById(R.id.textView12);
+        porcento2 = (TextView) view.findViewById(R.id.textView12);
         porcento2.setVisibility(View.GONE);
-        porcentagem2 = (TextView) findViewById(R.id.textView11);
-        spinnerPorcentagem1 = (Spinner) findViewById(R.id.spinner);
-        spinnerPorcentagem1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, porcento));
+        porcentagem2 = (TextView) view.findViewById(R.id.textView11);
+        spinnerPorcentagem1 = (Spinner) view.findViewById(R.id.spinner);
+        spinnerPorcentagem1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem1.setVisibility(View.GONE);
-        spinnerPorcentagem2 = (Spinner) findViewById(R.id.spinner2);
-        spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, porcento));
+        spinnerPorcentagem2 = (Spinner) view.findViewById(R.id.spinner2);
+        spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem2.setVisibility(View.GONE);
-        layoutMain = (ScrollView) findViewById(R.id.layout_main);
-
-        sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
+        layoutMain = (ScrollView) view.findViewById(R.id.layout_main);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {Intent intent = new Intent(HomeActivity.this, RoutesActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RoutesActivity.class);
                 startActivity(intent);
             }
         });
-        priceFuelEditText = (EditText) findViewById(R.id.editTextPrice);
-        priceFuelEditText.setText(String.valueOf(MinhaGasosaPreference.getPrice(getApplicationContext())));
+        priceFuelEditText = (EditText) view.findViewById(R.id.editTextPrice);
+        priceFuelEditText.setText(String.valueOf(MinhaGasosaPreference.getPrice(getContext())));
         priceFuelEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
+
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
+
             @Override
             public void afterTextChanged(final Editable s) {
                 if (s.toString().isEmpty()) {
-                    MinhaGasosaPreference.putPrice(0, getApplicationContext());
+                    MinhaGasosaPreference.putPrice(0, getContext());
                 } else {
                     MinhaGasosaPreference.putPrice(Float.valueOf(s.toString()),
-                            getApplicationContext());
+                            getContext());
                 }
                 gerarPrevisao();
             }
@@ -211,10 +191,12 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
                 //empty
             }
+
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 gerarPrevisao();
             }
+
             @Override
             public void afterTextChanged(final Editable s) {
                 gerarPrevisao();
@@ -225,6 +207,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
+
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
             }
@@ -234,25 +217,33 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 gerarPrevisao();
             }
+
             @Override
             public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
-        checkFlex = (CheckBox) findViewById(R.id.checkBox);
-        boolean isChecked = MinhaGasosaPreference.getCarroIsFlex(getApplicationContext());
+        checkFlex = (CheckBox) view.findViewById(R.id.checkBox);
+        boolean isChecked = MinhaGasosaPreference.getCarroIsFlex(getContext());
         checkFlex.setChecked(isChecked);
         updateIsCheck(isChecked);
         checkFlex.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MinhaGasosaPreference.setCarroIsFlex(isChecked, getApplicationContext());
+                MinhaGasosaPreference.setCarroIsFlex(isChecked, getContext());
                 updateIsCheck(isChecked);
             }
         });
         recuperaValorMaximo();
-        PieChart pieChart = (PieChart) findViewById(R.id.chart);
-        chartView = new ChartView(this, pieChart);
+        PieChart pieChart = (PieChart) view.findViewById(R.id.chart);
+        chartView = new ChartView(getContext(), pieChart);
         startTheNotificationLauncher();
+
+        View viewKeyboard = getActivity().getCurrentFocus();
+        if (viewKeyboard != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        return view;
     }
 
     private void updateIsCheck(boolean isChecked) {
@@ -290,9 +281,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        Intent intent = new Intent(HomeActivity.this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager am = (AlarmManager) HomeActivity.this.getSystemService(HomeActivity.this.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
@@ -300,16 +291,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
      * Metodo que recupera o maximo maximo gasto
      */
     private void recuperaValorMaximo() {
-        valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
-    }
-
-    @Override
-    protected final void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == VALOR_MAXIMO_REQUEST && resultCode == RESULT_OK) {
-                valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(HomeActivity.this);
-                addAvisoConsumo();
-
-        }
+        valorMaximoGastar = MinhaGasosaPreference.getValorMaximoParaGastar(getActivity());
+        Log.e("valorMAXIMOOO", String.valueOf(valorMaximoGastar));
     }
 
     /**
@@ -329,7 +312,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             Log.d(Home, "Consumo: " + consumoUrbano);
 
             float valorPrevistoSemana = calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano);
+            Log.e("valorPrevisaoSemanal ", String.valueOf(valorPrevistoSemana));
             previsaoConsumoMensal = calculaPrevisaoMesNorlmal(precoPrincipal, distancias, consumoUrbano);
+            Log.e("valorPrevisaoMensa  ", String.valueOf(previsaoConsumoMensal));
+
             consumoS.setText(R$ + df.format(valorPrevistoSemana));
             consumoM.setText(R$ + df.format(previsaoConsumoMensal));
         } else {
@@ -379,7 +365,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
      * @param previsaoConsumoMensal
      */
     private void addAvisoConsumo(final float previsaoConsumoMensal) {
+        recuperaValorMaximo();
         if (previsaoConsumoMensal >= valorMaximoGastar) {
+            Log.e("Valor Planejamento ", String.valueOf(valorMaximoGastar));
             mostraAviso(layoutMain, "Atenção! Você pode estar gastando mais do que " + valorMaximoGastar);
         }
     }
@@ -436,15 +424,21 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
      */
 
     private float getDistanciaTotal() {
-        return MinhaGasosaPreference.getDistanciaTotal(getApplicationContext());
+        float f = MinhaGasosaPreference.getDistanciaTotal(getContext());
+                Log.e("Distancia totaaaall ", String.valueOf(f));
+
+        return MinhaGasosaPreference.getDistanciaTotal(getContext());
     }
 
     /**
      * @return
      */
     private float getConsumoUrbano() {
+        float f = MinhaGasosaPreference.
+                getConsumoUrbanoPrimario(getContext());
+        Log.e("Consumo Urbanooooo ", String.valueOf(f));
         return MinhaGasosaPreference.
-                getConsumoUrbanoPrimario(getApplicationContext());
+                getConsumoUrbanoPrimario(getContext());
     }
 
     /**
@@ -502,7 +496,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
      */
     public final float getConsumoUrbanoSecundario() {
         return MinhaGasosaPreference.
-                getConsumoUrbanoSecundario(getApplicationContext());
+                getConsumoUrbanoSecundario(getContext());
     }
 
     /**
@@ -525,186 +519,16 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 precoPrincipal, precoSecundario) * 4;
     }
 
-    @Override
-    public final boolean onCreateOptionsMenu(final Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-
-        return true;
-    }
 
     @Override
-    public final boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.set_car) {
-            Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("fromHome", true);
-            startActivity(i);
-        } else if (item.getItemId() == R.id.set_planning) {
-            float dist = getDistanciaTotal();
-            float consumo = getConsumoUrbano();
-            Intent intent = new Intent(this, PlanningActivity.class);
-            intent.putExtra("distance", dist);
-            intent.putExtra("consumo", consumo);
-            startActivityForResult(intent, VALOR_MAXIMO_REQUEST);
-        } else if (item.getItemId() == R.id.menu_item_comparar) {
-            Intent intent = new Intent(this, ComparaGastosActivity.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.menu_item_detalhamento_semanal) {
-            Intent intent = new Intent(this, DetalhamentoSemanalActivity.class);
-            startActivity(intent);
-        } else if(item.getItemId() == R.id.list_routes){
-            Intent intent = new Intent(this, ListRoutesActivity.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.menu_item_vantagem) {
-            showDialogVantagemCombustivel();
-        } else if(item.getItemId() == R.id.logout){
-            signOut();
-
-            Intent i = new Intent(this, LoginActivity.class);
-            i.putExtra("fromHome", true);
-            startActivity(i);
-        } else if(item.getItemId() == R.id.gasStations){
-            Intent intent = new Intent(this, GasMapsActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showDialogVantagemCombustivel() {
-        AlertDialog.Builder builder = new  AlertDialog.Builder(this);
-        builder.setTitle("Vantagem combustível");
-        String combustivel = "";
-        final float preco = MinhaGasosaPreference.getPrice(this);
-        int resultado = 0;
-        boolean isFlex = MinhaGasosaPreference.getCarroIsFlex(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.vantagem_dialog_layout, null);
-        final EditText precoAlcoolEditText = (EditText) dialoglayout.findViewById(R.id.editTextAlcool);
-        final TextView message = (TextView) dialoglayout.findViewById(R.id.mensagem);
-        TextView messageAlcool = (TextView) dialoglayout.findViewById(R.id.mensagemAlcool);
-        final Button buttonCalcular = (Button) dialoglayout.findViewById(R.id.buttonCalcular);
-        if(isFlex){
-            precoAlcoolEditText.setVisibility(View.GONE);
-            messageAlcool.setVisibility(View.GONE);
-            buttonCalcular.setVisibility(View.GONE);
-            double precoGasolina = preco;
-            double precoAlcool = getPrecoSecundario();
-            if (precoAlcool == 0) {
-                calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool, buttonCalcular);
-            } else {
-                double calculoCombustivel = (precoAlcool/precoGasolina)*100;
-                resultado = (int) calculoCombustivel;
-                if(resultado <= 70){
-                    combustivel += "Álcool";
-                } else {
-                    combustivel += "Gasolina";
-                }
-                message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
-            }
-
-        } else {
-            calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool,
-                    buttonCalcular);
-        }
-        builder.setView(dialoglayout);
-        builder.setPositiveButton(getString(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        View view = HomeActivity.this.getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager)getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
-                        dialog.dismiss();
-                    }
-                });
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void calculaSemCombustivelSecundario(final float preco, final EditText precoAlcoolEditText, final TextView message, TextView messageAlcool, Button buttonCalcular) {
-        precoAlcoolEditText.setVisibility(View.VISIBLE);
-        messageAlcool.setVisibility(View.VISIBLE);
-        buttonCalcular.setVisibility(View.VISIBLE);
-        message.setText("Informe o valor do combustível secundário para calcular");
-        buttonCalcular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String combustivel = "";
-                if (!precoAlcoolEditText.getText().toString().isEmpty()) {
-                    double precoGasolina = preco;
-                    if (preco == 0) {
-                        Toast.makeText(getApplicationContext(), "Você precisa informar o valor da gasolina", Toast.LENGTH_SHORT).show();
-                    } else {
-                        double precoAlcool = Float.valueOf(precoAlcoolEditText.getText().toString());
-                        double calculoCombustivel = (precoAlcool / precoGasolina) * 100;
-                        int resultado = (int) calculoCombustivel;
-                        if (resultado <= 70) {
-                            combustivel += "Álcool";
-                        } else {
-                            combustivel += "Gasolina";
-                        }
-                        message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
-                    }
-                }
-            }
-        });
-        precoAlcoolEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()) {
-                    message.setText("Informe o valor do combustível secundário para calcular");
-                }
-            }
-        });
-    }
-
-    @Override
-    protected final void onResume() {
+    public final void onResume() {
         super.onResume();
         chartView.iniciaDistancias();
-    }
-
-    private void signOut() {
-        sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String login = sharedPreferences.getString(LoginActivity.USER_LOGIN, "");
-
-        if (login.equals(LoginActivity.FACEBOOK_LOGIN)) {
-            LoginManager.getInstance().logOut();
-        } else if (login.equals(LoginActivity.GOOGLE_LOGIN)){
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                    new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(Status status) {}
-                    });
-        }
-
-        editor.putString(LoginActivity.USER_NOME, "");
-        editor.putString(LoginActivity.USER_URL_PHOTO, "");
-        editor.putString(LoginActivity.USER_EMAIL, "");
-        editor.putString(LoginActivity.USER_ID, "0");
-        editor.putBoolean(LoginActivity.USER_STATUS, false);
-        editor.putString(LoginActivity.USER_LOGIN, LoginActivity.NO_SOCIAL_LOGIN);
-
-        editor.apply();
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 }

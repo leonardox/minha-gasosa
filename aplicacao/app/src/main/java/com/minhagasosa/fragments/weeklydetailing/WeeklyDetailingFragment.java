@@ -1,41 +1,33 @@
-package com.minhagasosa;
+package com.minhagasosa.fragments.weeklydetailing;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.minhagasosa.ChartView;
 import com.minhagasosa.R;
-import com.minhagasosa.Utils;
-import com.minhagasosa.dao.DaoMaster;
-import com.minhagasosa.dao.DaoSession;
 
 import java.util.GregorianCalendar;
 
-public class DetalhamentoSemanalActivity extends AppCompatActivity {
+public class WeeklyDetailingFragment extends Fragment {
     private ChartView chartViewCurrentMonth;
     private ChartView chartViewLastMonth;
     private boolean isFromLastYear = false;
 
     @Override
-    protected final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhamento_semanal);
-        ActionBar action = getSupportActionBar();
-        if(action != null){
-            action.setTitle("Detalhamento Semanal");
-        }
-
-        PieChart pieChartCurrentMonth = (PieChart) findViewById(R.id.chart_current_month);
-        chartViewCurrentMonth = new ChartView(this, pieChartCurrentMonth);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        getActivity().setTitle("Detalhamento Semanal");
+        View view = inflater.inflate(R.layout.activity_detalhamento_semanal, container, false);
+        PieChart pieChartCurrentMonth = (PieChart) view.findViewById(R.id.chart_current_month);
+        chartViewCurrentMonth = new ChartView(getContext(), pieChartCurrentMonth);
         chartViewCurrentMonth.iniciaDistanciasSemanalmente();
 
-        PieChart pieChartLastMonth = (PieChart) findViewById(R.id.chart_last_month);
-        chartViewLastMonth = new ChartView(this, pieChartLastMonth);
+        PieChart pieChartLastMonth = (PieChart) view.findViewById(R.id.chart_last_month);
+        chartViewLastMonth = new ChartView(getContext(), pieChartLastMonth);
 
         GregorianCalendar calendar = new GregorianCalendar();
         String month = getLastMonth(calendar);
@@ -45,6 +37,7 @@ public class DetalhamentoSemanalActivity extends AppCompatActivity {
         }
 
         chartViewLastMonth.iniciaDistancias(month, year);
+        return view;
     }
 
 
