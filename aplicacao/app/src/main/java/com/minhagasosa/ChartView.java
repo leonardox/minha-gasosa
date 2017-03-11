@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -42,7 +41,7 @@ public class ChartView {
         this.mChart = chart;
     }
 
-    void iniciaDistanciasSemanalmente() {
+    public void iniciaDistanciasSemanalmente() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -55,7 +54,7 @@ public class ChartView {
     }
 
 
-    void iniciaDistancias() {
+    public void iniciaDistancias() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -67,7 +66,7 @@ public class ChartView {
         iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
     }
 
-    void iniciaDistancias(String month, String year) {
+    public void iniciaDistancias(String month, String year) {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);

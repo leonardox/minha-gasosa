@@ -23,23 +23,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity
-            android:name=".HomeActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RoutesActivity"
             android:label="@string/title_activity_routes"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.minhagasosa.HomeActivity" />
         </activity>
 
         <!--
@@ -72,47 +61,15 @@
             android:screenOrientation="portrait"
             android:label="@string/indica_rota"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".PlanningActivity"
-            android:label="@string/title_activity_planning"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ComparaGastosActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.minhagasosa.HomeActivity" />
-        </activity>
-        <activity
-            android:name=".DetalhamentoSemanalActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.minhagasosa.HomeActivity" />
-        </activity>
-
         <receiver android:name=".MyReceiver" />
 
-        <activity
-            android:name=".ListRoutesActivity"
-            android:label="@string/title_activity_planning"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
+
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -129,15 +86,14 @@
         </activity>
         <activity
             android:name=".activites.maps.GasStationListActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_gas_station_list">
-        </activity>
+            android:label="@string/title_activity_gas_station_list"></activity>
         <activity
             android:name=".CommentListActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_comment_list">
+            android:label="@string/title_activity_comment_list"></activity>
+        <activity
+            android:name=".activites.NavigationActivity"
+            android:label="@string/title_activity_navigation"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

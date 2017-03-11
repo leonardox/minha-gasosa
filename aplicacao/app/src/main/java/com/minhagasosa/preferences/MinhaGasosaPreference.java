@@ -207,4 +207,16 @@ public final class MinhaGasosaPreference {
                 Context.MODE_PRIVATE);
         return preferences.getFloat(context.getString(R.string.shared_capacidade_tanque), (float)-1.0);
     }
+
+    public static void putPrecoSecundario(float valor, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putFloat(context.getString(R.string.shared_preco_secundario), valor);
+        editor.commit();
+    }
+
+    public static float getPrecoSecundario(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getFloat(context.getString(R.string.shared_preco_secundario), (float) - 1.0);
+    }
 }
