@@ -221,7 +221,8 @@ public class RouteMapsActivity extends FragmentActivity
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
                 origin.latitude + "," + origin.longitude + "&destination=" + dest.latitude + "," + dest.longitude +
-                "&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
+                "&mode=driving&departure_time=now&traffic_model=pessimistic&units=imperial&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
+                //"&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
 
         return url;
     }
@@ -384,6 +385,7 @@ public class RouteMapsActivity extends FragmentActivity
                         firstTime = false;
                         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                        mMap.setTrafficEnabled(true);
                     }
                 }
             };
@@ -503,6 +505,7 @@ public class RouteMapsActivity extends FragmentActivity
             MarkerOptions markerOptions = new MarkerOptions();
             String distance = "";
             String duration = "";
+            //String durationInTraffic = "";
 
 
             if (result.size() < 1) {
@@ -528,8 +531,13 @@ public class RouteMapsActivity extends FragmentActivity
                         continue;
                     } else if (j == 1) { // Get duration from the list
                         duration = (String) point.get("duration");
+                        //duration = (String) point.get("duration_in_traffic");
                         continue;
                     }
+//                    } else if (j == 2) {
+//                        durationInTraffic = (String) point.get("duration_in_traffic");
+//                        continue;
+//                    }
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
