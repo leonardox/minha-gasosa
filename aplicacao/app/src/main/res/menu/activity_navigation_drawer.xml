@@ -4,15 +4,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_subdirectory_arrow_right_white_24dp"
-            android:title="Home" />
+            android:icon="@drawable/ic_home"
+            android:title="Previsões e adição de rotas" />
         <item
             android:id="@+id/nav_list_routes"
-            android:icon="@drawable/ic_subdirectory_arrow_right_white_24dp"
+            android:icon="@drawable/ic_lista_de_rotas"
             android:title="Listar rotas" />
         <item
             android:id="@+id/nav_set_planning"
-            android:icon="@drawable/ic_local_gas_station_white_24dp"
+            android:icon="@drawable/ic_planejamento_de_gastos"
             android:title="Planejamento de gastos" />
 
         <item
@@ -33,21 +33,22 @@
 
         <item
             android:id="@+id/nav_gasStations"
-            android:icon="@drawable/ic_import_export_white_18dp"
+            android:icon="@drawable/ic_local_gas_station_white_24dp"
             android:title="@string/postos_de_gasolina" />
 
         <item
             android:id="@+id/nav_menu_item_detalhamento_semanal"
+            android:icon="@drawable/ic_detalhamento_semanal"
             android:title="Detalhamento semanal" />
 
 
     </group>
 
-    <item>
+    <item android:title="Social">
         <menu>
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_import_export_white_18dp"
+                android:icon="@drawable/ic_sair"
                 android:title="Sair" />
         </menu>
     </item>
