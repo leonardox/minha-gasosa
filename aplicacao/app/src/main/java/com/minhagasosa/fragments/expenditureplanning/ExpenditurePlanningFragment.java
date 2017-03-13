@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minhagasosa.R;
 import com.minhagasosa.fragments.Home.HomeFragment;
@@ -34,6 +35,7 @@ public class ExpenditurePlanningFragment extends Fragment {
         Log.e("Distania: ", distancia + "");
         Log.e("Consumo: ", consumo+"");
         Log.e("Capacidade: ", capacidade+"");
+
         if(distancia > 0 && capacidade != -1 && consumo != -1){
             TextView edVezes = (TextView) view.findViewById(R.id.ed_tanque_vezes);
             float vezes = (distancia/consumo)/capacidade;
@@ -45,14 +47,20 @@ public class ExpenditurePlanningFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                float valor = Float.parseFloat(editValor.getText().toString());
-                MinhaGasosaPreference.putValorMaximoParaGastar(valor, getActivity());
-                Fragment fragment;
-                FragmentTransaction ft;
-                fragment = new HomeFragment();
-                ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
+                if(!editValor.getText().toString().equals("")) {
+                    float valor = Float.parseFloat(editValor.getText().toString());
+                    MinhaGasosaPreference.putValorMaximoParaGastar(valor, getActivity());
+                    Fragment fragment;
+                    FragmentTransaction ft;
+                    fragment = new HomeFragment();
+                    ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.commit();
+                }else{
+                    Toast.makeText(getContext(),"Valor inválido",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
