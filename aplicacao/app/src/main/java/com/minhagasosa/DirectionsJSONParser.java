@@ -25,6 +25,7 @@ public class DirectionsJSONParser {
 		JSONArray jSteps = null;	
 		JSONObject jDistance = null;
 		JSONObject jDuration = null;
+		JSONObject jTrafficTime = null;
 		
 		try {			
 			
@@ -48,12 +49,17 @@ public class DirectionsJSONParser {
 					jDuration = ((JSONObject) jLegs.get(j)).getJSONObject("duration");
 					HashMap<String, String> hmDuration = new HashMap<String, String>();
 					hmDuration.put("duration", jDuration.getString("text"));
-					
+
+					jTrafficTime = ((JSONObject) jLegs.get(j)).getJSONObject("duration_in_traffic");
+					HashMap<String, String> hmTraffic = new HashMap<String, String>();
+					hmTraffic.put("traffic", jTrafficTime.getString("text"));
 					/** Adding distance object to the path */
 					path.add(hmDistance);
 					
 					/** Adding duration object to the path */
-					path.add(hmDuration);					
+					path.add(hmDuration);
+
+					path.add(hmTraffic);
 					
 					
 					jSteps = ( (JSONObject)jLegs.get(j)).getJSONArray("steps");

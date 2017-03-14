@@ -18,8 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +78,9 @@ public class RouteMapsActivity extends FragmentActivity
     /**
      * Atributo marca de destino
      */
+
+    String trafficTime = "";
+
     private Marker mDestinyMark;
     /**
      * Atributo desenho da rota de ida no mapa
@@ -104,12 +111,47 @@ public class RouteMapsActivity extends FragmentActivity
      */
     private FloatingActionButton mFab;
     boolean firstTime = true;
-
+    int selectedRoute = 0;
+    Spinner routesSpinner;
+    Activity self;
+    TextView etTraffic;
+    boolean justUpdated = true;
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mIdaEvolta = false;
+        self = this;
+        routesSpinner = (Spinner) findViewById(R.id.spinner_select_route);
+        etTraffic = (TextView) findViewById(R.id.tv_route_time);
+        routesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(!justUpdated){
+                    selectedRoute = i;
+                    System.out.println("selected route: " + selectedRoute) ;
+                    if (mDesenhoRotaIda != null) mDesenhoRotaIda.remove();
+                    mDesenhoRotaIda = null;
+                    if (mDesenhoRotaVolta != null) mDesenhoRotaVolta.remove();
+                    mDesenhoRotaVolta = null;
+                    mDistanciaIda = -1;
+                    mDistanciaVolta = -1;
+                    DownloadTask dt = new DownloadTask(self, false);
+                    System.out.println("Executing dt?");
+                    if(mOriginMark != null && mDestinyMark != null){
+                        System.out.println("Executing dt!!");
+                        String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
+                        dt.execute(url);
+                    }
+                }
+                justUpdated = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -221,8 +263,8 @@ public class RouteMapsActivity extends FragmentActivity
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
                 origin.latitude + "," + origin.longitude + "&destination=" + dest.latitude + "," + dest.longitude +
-                "&mode=driving&departure_time=now&traffic_model=pessimistic&units=imperial&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
-                //"&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
+                "&mode=driving&sensor=false&alternatives=true&departure_time=1489432889023&traffic_model=pessimistic&units=imperial&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
+        //"&sensor=false&mode=driving&alternatives=true&key=AIzaSyBayi_9rQWAHjoXrMYIL58KvhMVZ_GZbc0";
 
         return url;
     }
@@ -277,6 +319,14 @@ public class RouteMapsActivity extends FragmentActivity
 
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setRequestProperty("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            urlConnection.setRequestProperty("accept-language", "pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4");
+            urlConnection.setRequestProperty("cache-control", "max-age=0");
+            urlConnection.setRequestProperty("upgrade-insecure-requests", "1");
+            urlConnection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
+            urlConnection.setRequestProperty("x-chrome-uma-enabled", "1");
+            urlConnection.setRequestProperty("x-client-data", "CKS1yQEIl7bJAQiitskBCMS2yQEI+pzKAQipncoB");
 
             // Connecting to url
             urlConnection.connect();
@@ -348,6 +398,7 @@ public class RouteMapsActivity extends FragmentActivity
                     mFab.setClickable(true);
                     mDestinyMark = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.Destiny)));
                     //Toast.makeText(RouteMapsActivity.this, R.string.destiny_message, Toast.LENGTH_SHORT).show();
+                    System.out.println("Add Download task");
                     DownloadTask dt = new DownloadTask(ac, false);
                     String url = getDirectionsUrl(mOriginMark.getPosition(), mDestinyMark.getPosition());
                     dt.execute(url);
@@ -435,6 +486,8 @@ public class RouteMapsActivity extends FragmentActivity
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 
+            System.out.println("JsonOut" + result.trim());
+
             ParserTask parserTask = new ParserTask(mContext, mIsVolta);
 
             // Invokes the thread for parsing the JSON data
@@ -474,9 +527,10 @@ public class RouteMapsActivity extends FragmentActivity
             List<List<HashMap<String, String>>> routes = null;
 
             try {
+
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
-
+                System.out.println("Routes: " + jObject.getJSONArray("routes").length());
                 // Starts parsing data
                 routes = parser.parse(jObject);
                 runOnUiThread(new Runnable() {
@@ -508,57 +562,75 @@ public class RouteMapsActivity extends FragmentActivity
             //String durationInTraffic = "";
 
 
-            if (result.size() < 1) {
+            if (result == null || result.size() < 1) {
                 Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            points = new ArrayList<LatLng>();
+            lineOptions = new PolylineOptions();
 
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+            List<String> availableRoutes = new ArrayList<String>();
+            for(int i = 0; i < result.size(); i++){
+                availableRoutes.add("Rota " + (i+1));
+            }
+            final ArrayAdapter adapter = new ArrayAdapter<String>(
+                    self, android.R.layout.simple_spinner_item, availableRoutes);
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+            // Fetching i-th route
+            List<HashMap<String, String>> path = result.get(selectedRoute);
 
-                    if (j == 0) {   // Get distance from the list
-                        distance = (String) point.get("distance");
-                        continue;
-                    } else if (j == 1) { // Get duration from the list
-                        duration = (String) point.get("duration");
-                        //duration = (String) point.get("duration_in_traffic");
-                        continue;
-                    }
-//                    } else if (j == 2) {
-//                        durationInTraffic = (String) point.get("duration_in_traffic");
-//                        continue;
-//                    }
+            // Fetching all the points in i-th route
+            for (int j = 0; j < path.size(); j++) {
+                final HashMap<String, String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
+                if (j == 0) {   // Get distance from the list
+                    distance = (String) point.get("distance");
+                    continue;
+                } else if (j == 1) { // Get duration from the list
+                    duration = (String) point.get("duration");
+                    //duration = (String) point.get("duration_in_traffic");
+                    continue;
+                }else if (j == 2) {
+                    trafficTime = (String) point.get("traffic");
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            etTraffic.setText(point.get("traffic"));
+//                        }
+//                    });
+                    //durationInTraffic = (String) point.get("duration_in_traffic");
+                    continue;
                 }
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(2);
-                if (!mIsVolta) {
-                    lineOptions.color(Color.RED);
-                } else {
-                    lineOptions.color(Color.CYAN);
-                }
+                System.out.println("Traffic: " + trafficTime);
+
+                double lat = Double.parseDouble(point.get("lat"));
+                double lng = Double.parseDouble(point.get("lng"));
+                LatLng position = new LatLng(lat, lng);
+
+                points.add(position);
+            }
+
+            // Adding all the points in the route to LineOptions
+            lineOptions.addAll(points);
+            lineOptions.width(4);
+            if (!mIsVolta) {
+                lineOptions.color(Color.RED);
+            } else {
+                lineOptions.color(Color.CYAN);
             }
             Log.e("Distance: " + distance, "Duration: " + duration);
             //tvDistanceDuration.setText("Distance: "+distance + ", Duration: "+duration);
             // Drawing polyline in the Google Map for the i-th route
             //if(mDesenhoRotaIda != null && !mIsVolta) mDesenhoRotaIda.remove();
+            etTraffic.setText(trafficTime + " com o trânsito atual.");
+            justUpdated = true;
+            routesSpinner.setAdapter(adapter);
+            justUpdated = true;
+            routesSpinner.setSelection(selectedRoute);
+
+
             if (!mIsVolta) {
                 mDesenhoRotaIda = mMap.addPolyline(lineOptions);
                 if (mIdaEvolta) {
@@ -569,6 +641,13 @@ public class RouteMapsActivity extends FragmentActivity
             } else {
                 mDesenhoRotaVolta = mMap.addPolyline(lineOptions);
             }
+
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    etTraffic.setText(trafficTime);
+//                    routesSpinner.setAdapter(adapter);
+//                }
+//            });
 
         }
     }
