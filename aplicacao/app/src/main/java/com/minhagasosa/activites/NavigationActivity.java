@@ -67,6 +67,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header=navigationView.getHeaderView(0);
+
+//        LinearLayout view = (LinearLayout)findViewById(R.id.teste);
+        TextView mUse = (TextView) header.findViewById(R.id.user);
+        //mUse.setText("sdsdsd")
+        sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
+        mUse.setText(sharedPreferences.getString("USER_NOME", "usuário"));
+
         sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
 
 
