@@ -202,7 +202,7 @@ this.gasPrice = gasPrice;
 * The Gas Plus Price
 */
 public float getGasPlusPrice() {
-        return gasPrice;
+        return gasPlusPrice;
     }
 
 

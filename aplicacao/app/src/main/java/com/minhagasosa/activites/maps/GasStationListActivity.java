@@ -98,12 +98,14 @@ public class GasStationListActivity extends BaseActivity {
                         try { // SET GAS PLUS
                             Float gasPlusPrice = new Float(gasStation.get(position).getGasPlusPrice());
                             gasPlusText = "Gas Plus price: " + Float.toString(gasPlusPrice) + " R$.";
+
                         } catch (Exception e) {
                         }
 
                         try { // SET ALCOOL
                             Float alcoolPrice = new Float(gasStation.get(position).getAlcoolPrice());
                             alcoholText = "Alcohol price: " + Float.toString(alcoolPrice) + " R$. \n";
+
                         } catch (Exception e) {
                         }
                         text2.setText(alcoholText + gasText + gasPlusText);
