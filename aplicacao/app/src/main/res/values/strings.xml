@@ -15,6 +15,7 @@
 
     <!--Shared Preferences-->
     <string name="is_flex">is_flex</string>
+    <string name="is_first_time">is_flex</string>
     <string name="consumoUrbanoPrimario">consumoUrbanoPrimario</string>
     <string name="consumoRodoviarioPrimario">consumoRodoviarioPrimario</string>
     <string name="consumoUrbanoSecundario">consumoUrbanoSecundario</string>
@@ -22,7 +23,7 @@
     <string name="capacidade_tanque_shp">capacidadeTanque</string>
     <string name="com_potencia">com_potencia</string>
     <string name="sharedPotencia">sharedPotencia</string>
-    <string name="distancia_total">sharedPotencia</string>
+    <string name="distancia_total">distanciaTotal</string>
     <string name="shared_valor_maximo_gastar">valorMaximoQueQuerGastar</string>
     <string name="shared_capacidade_tanque">capacidadeDoTanque</string>
     <string name="shared_preco_secundario">precoSecundario</string>

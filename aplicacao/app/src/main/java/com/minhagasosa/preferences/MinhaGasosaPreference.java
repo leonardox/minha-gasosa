@@ -53,11 +53,25 @@ public final class MinhaGasosaPreference {
         editor.commit();
     }
 
+
     public static float getPrice(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
         return preferences.getFloat(context.getString(R.string.shared_price), 0);
 
+    }
+
+
+    public static void setFirstTime(boolean is_first_time, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putBoolean(context.getString(R.string.is_first_time), is_first_time);
+        editor.commit();
+    }
+
+    public static boolean getFirstTime(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getBoolean(context.getString(R.string.is_first_time), true);
     }
 
     public static void setCarroIsFlex(boolean is_flex, Context context) {

@@ -4,12 +4,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,6 +35,7 @@ import com.minhagasosa.ChartView;
 import com.minhagasosa.MyReceiver;
 import com.minhagasosa.R;
 import com.minhagasosa.RoutesActivity;
+import com.minhagasosa.fragments.carsettings.CarSettingsFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -162,6 +165,21 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
                 startActivity(intent);
             }
         });
+
+        boolean firstTime = MinhaGasosaPreference.getFirstTime(getContext());
+        if(firstTime) {
+            MinhaGasosaPreference.setFirstTime(false , getContext());
+            Fragment fragment;
+            FragmentTransaction ft;
+            fragment = new CarSettingsFragment();
+            ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+
+
+
         priceFuelEditText = (EditText) view.findViewById(R.id.editTextPrice);
         priceFuelEditText.setText(String.valueOf(MinhaGasosaPreference.getPrice(getContext())));
         priceFuelEditText.addTextChangedListener(new TextWatcher() {
@@ -245,6 +263,8 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         }
         return view;
     }
+
+
 
     private void updateIsCheck(boolean isChecked) {
         if (isChecked) {
