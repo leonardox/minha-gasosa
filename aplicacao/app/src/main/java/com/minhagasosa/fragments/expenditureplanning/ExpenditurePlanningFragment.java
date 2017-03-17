@@ -27,6 +27,9 @@ public class ExpenditurePlanningFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_planning, container, false);
 
         final EditText editValor = (EditText) view.findViewById(R.id.ed_valor_maximo);
+        float valor = MinhaGasosaPreference.getValorMaximoParaGastar(getContext());
+
+        editValor.setText(String.valueOf(valor));
         Bundle bundle = getArguments();
         Button button = (Button) view.findViewById(R.id.buttonOK);
         float distancia = bundle.getFloat("distance", -1);
