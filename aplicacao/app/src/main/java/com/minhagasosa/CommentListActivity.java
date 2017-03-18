@@ -84,7 +84,7 @@ public class CommentListActivity extends BaseActivity implements CommentAdapter2
     @Override
     public void onLoadMore() {
         Log.d("CommentListActivity","onLoadMore");
-        Toast.makeText(getApplicationContext(), "Carregar mais!!!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Carregar mais!!!", Toast.LENGTH_SHORT).show();
 //        mAdapter.setProgressMore(true);
 //        new Handler().postDelayed(new Runnable() {
 //            @Override

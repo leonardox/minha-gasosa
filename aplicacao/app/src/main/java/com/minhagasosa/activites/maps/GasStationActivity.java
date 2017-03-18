@@ -74,6 +74,7 @@ public class GasStationActivity extends BaseActivity {
     private GasStation mGas;
     private final int CARD_ICON_WIDTH = 85;
 
+    private Button more_comments;
 
     List<Comments> comments;
     ListView m_listServices;
@@ -109,7 +110,7 @@ public class GasStationActivity extends BaseActivity {
 
 
         final GasStationActivity activity = this;
-        final Button more_comments = (Button) findViewById(R.id.more_comments);
+        more_comments = (Button) findViewById(R.id.more_comments);
         more_comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +150,8 @@ public class GasStationActivity extends BaseActivity {
         TextView tvCredit = (TextView) findViewById(R.id.tvCredit);
         TextView tvDebit = (TextView) findViewById(R.id.tvDebit);
         TextView tvEndereco = (TextView) findViewById(R.id.tv_endereco);
+        TextView tvWorkingHours = (TextView) findViewById(R.id.tv_working);
+
 
         // Set price
         try { // SET GAS
@@ -170,6 +173,13 @@ public class GasStationActivity extends BaseActivity {
             tvAlcoolPrice.setText("R$ " + String.format("%.2f", alcoolPrice));
         } catch (Exception e) {
             tvAlcoolPrice.setText("Indisponivel");
+        }
+
+        try { // SET WORKING HOURS
+            String workingHours = new String(mGas.getWorkingHours());
+            tvWorkingHours.setText("Aberto " + workingHours.toLowerCase());
+        } catch (Exception e) {
+            tvWorkingHours.setText("Indisponivel");
         }
 
         getComments();
@@ -366,6 +376,10 @@ public class GasStationActivity extends BaseActivity {
 
             }
         }
+        if (servicesStrings.size() == 0){
+            servicesStrings.add("Nenhum serviço cadastrado.");
+            m_listServices.getLayoutParams().height = LayoutParams.MATCH_PARENT;
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, servicesStrings);
         m_listServices.setAdapter(adapter);
@@ -380,18 +394,27 @@ public class GasStationActivity extends BaseActivity {
                     comments = response.body();
 
                     int total_size = comments.size();
-                    if (total_size >= 5) {
-                        int indice_inicial = comments.size() - 4;
-                        comments = comments.subList(indice_inicial, total_size);
-                    }
-
-                    Collections.reverse(comments);
-                    MyAdapter adapter = new MyAdapter(comments);
                     RecyclerView rv = (RecyclerView) findViewById(R.id.rv_recycler_view);
-                    rv.setHasFixedSize(true);
-                    rv.setAdapter(adapter);
-                    rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rv.setItemAnimator(new DefaultItemAnimator());
+                    TextView nenhum_comentario = (TextView) findViewById(R.id.nenhum_comentario);
+                    if (total_size == 0) {
+                        rv.setVisibility(View.GONE);
+                        nenhum_comentario.setVisibility(View.VISIBLE);
+                        more_comments.setVisibility(View.GONE);
+                    } else {
+                        if (total_size >= 5) {
+                            int indice_inicial = comments.size() - 4;
+                            comments = comments.subList(indice_inicial, total_size);
+                            more_comments.setVisibility(View.VISIBLE);
+                        } else {
+                            more_comments.setVisibility(View.GONE);
+                        }
+                        Collections.reverse(comments);
+                        MyAdapter adapter = new MyAdapter(comments);
+                        rv.setHasFixedSize(true);
+                        rv.setAdapter(adapter);
+                        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        rv.setItemAnimator(new DefaultItemAnimator());
+                    }
                 }
             }
 

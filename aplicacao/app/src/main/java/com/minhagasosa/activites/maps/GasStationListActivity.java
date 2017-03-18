@@ -36,6 +36,7 @@ public class GasStationListActivity extends BaseActivity {
 
     private ArrayAdapter adapter;
     private ListView list;
+    private boolean desableButtons = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,7 @@ public class GasStationListActivity extends BaseActivity {
                         startActivity(i);
                     }
                 });
-
+                desableButtons = true;
             }
 
             @Override
@@ -142,47 +143,51 @@ public class GasStationListActivity extends BaseActivity {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.button_alcohol:
-                    for(int i = 0; i < gasStation.size(); i++){
+            if (! desableButtons) {
+                Toast.makeText(getBaseContext(), "Aguarde enquanto os postos são carregados",Toast.LENGTH_SHORT).show();
+            } else {
+                switch (v.getId()) {
+                    case R.id.button_alcohol:
+                        for(int i = 0; i < gasStation.size(); i++){
+                            for(int j = 0; j < gasStation.size() - 1; j++){
+                                if(gasStation.get(j).getAlcoolPrice() > gasStation.get(j + 1).getAlcoolPrice()){
+                                    GasStation aux = gasStation.get(j);
+                                    gasStation.set(j, gasStation.get(j + 1));
+                                    gasStation.set(j + 1, aux);
+                                }
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getBaseContext(), "Organizados pelo preço do alcool",Toast.LENGTH_SHORT).show();
+                        //Log.e("Log", "Alcool");
+                        break;
+                    case R.id.button_gas:
+                        for(int i = 0; i < gasStation.size(); i++){
+                            for(int j = 0; j < gasStation.size() - 1; j++){
+                                if(gasStation.get(j).getGasPrice() > gasStation.get(j + 1).getGasPrice()){
+                                    GasStation aux = gasStation.get(j);
+                                    gasStation.set(j, gasStation.get(j + 1));
+                                    gasStation.set(j + 1, aux);
+                                }
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina",Toast.LENGTH_SHORT).show();
+                        //Log.e("Log", "Gasolina");
+                        break;
+                    case R.id.button_gas_plus:
                         for(int j = 0; j < gasStation.size() - 1; j++){
-                            if(gasStation.get(j).getAlcoolPrice() > gasStation.get(j + 1).getAlcoolPrice()){
+                            if(gasStation.get(j).getGasPlusPrice() > gasStation.get(j + 1).getGasPlusPrice()){
                                 GasStation aux = gasStation.get(j);
                                 gasStation.set(j, gasStation.get(j + 1));
                                 gasStation.set(j + 1, aux);
                             }
                         }
-                    }
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getBaseContext(), "Organizados pelo preço do alcool",Toast.LENGTH_SHORT).show();
-                    //Log.e("Log", "Alcool");
-                    break;
-                case R.id.button_gas:
-                    for(int i = 0; i < gasStation.size(); i++){
-                        for(int j = 0; j < gasStation.size() - 1; j++){
-                            if(gasStation.get(j).getGasPrice() > gasStation.get(j + 1).getGasPrice()){
-                                GasStation aux = gasStation.get(j);
-                                gasStation.set(j, gasStation.get(j + 1));
-                                gasStation.set(j + 1, aux);
-                            }
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina",Toast.LENGTH_SHORT).show();
-                    //Log.e("Log", "Gasolina");
-                    break;
-                case R.id.button_gas_plus:
-                    for(int j = 0; j < gasStation.size() - 1; j++){
-                        if(gasStation.get(j).getGasPlusPrice() > gasStation.get(j + 1).getGasPlusPrice()){
-                            GasStation aux = gasStation.get(j);
-                            gasStation.set(j, gasStation.get(j + 1));
-                            gasStation.set(j + 1, aux);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina aditivada",Toast.LENGTH_SHORT).show();
-                    //Log.e("Log", "Gasolina Aditivada");
-                    break;
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getBaseContext(), "Organizados pelo preço da gasolina aditivada",Toast.LENGTH_SHORT).show();
+                        //Log.e("Log", "Gasolina Aditivada");
+                        break;
+                }
             }
         }
     };

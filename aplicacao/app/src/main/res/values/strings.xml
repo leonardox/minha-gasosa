@@ -224,4 +224,11 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="comentarios">Comentarios</string>
+    <string name="servicos_oferecidos">Serviços Oferecidos</string>
+    <string name="formas_de_pagamento">Formas de Pagamento</string>
+    <string name="credito">Crédito</string>
+    <string name="precos">Preços</string>
+    <string name="avaliacao_dos_usuarios">Avaliação Dos Usuários:</string>
+    <string name="nenhum_comentario_cadastrado">Nenhum comentario cadastrado.</string>
 </resources>
