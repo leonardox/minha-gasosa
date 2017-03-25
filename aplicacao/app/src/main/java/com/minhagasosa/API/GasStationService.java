@@ -47,4 +47,7 @@ public interface GasStationService {
     @GET("gas/comment/{id}")
     public Call<List<Comments>> getComments(
             @Path("id") String gasId);
+    @GET("gas/{id}")
+    public Call<GasStation> getGasStation(
+            @Path("id") String gasId);
 }
