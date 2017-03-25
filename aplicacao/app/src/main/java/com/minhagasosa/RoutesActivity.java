@@ -166,10 +166,10 @@ public class RoutesActivity extends AppCompatActivity {
                     DecimalFormat df = new DecimalFormat("##.##");
                     df.setRoundingMode(RoundingMode.DOWN);
                     if(ida != -1){
-                        distanceGoingWrapper.getEditText().setText(df.format(ida/1000.0).replace(",", "."));
+                        distanceGoingWrapper.getEditText().setText(String.valueOf(ida));
                     }
                     if(volta != -1){
-                        distanceBackWrapper.getEditText().setText(df.format(volta/1000.0).replace(",", "."));
+                        distanceBackWrapper.getEditText().setText(String.valueOf(volta));
                     }
                 }
                 break;

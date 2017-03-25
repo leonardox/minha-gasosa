@@ -25,6 +25,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,6 +79,8 @@ public class GasStationActivity extends BaseActivity {
 
     List<Comments> comments;
     ListView m_listServices;
+
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -92,13 +95,32 @@ public class GasStationActivity extends BaseActivity {
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
-
-        mGas = (GasStation) bundle.getParcelable("gas");
         mGasService = retrofit.create(GasStationService.class);
+        final GasStation g = (GasStation) bundle.getParcelable("gas");
+        mGas = g;
 
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         setContentView(R.layout.activity_gas_station);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        initMembers();
+        mGasService.getGasStation(g.getId()).enqueue(new Callback<GasStation>() {
+            @Override
+            public void onResponse(Call<GasStation> call, Response<GasStation> response) {
+                mGas = response.body();
+                initMembers();
+            }
+
+            @Override
+            public void onFailure(Call<GasStation> call, Throwable t) {
+                mGas = g;
+                initMembers();
+            }
+        });
+
+
+
+    }
+
+    private void initMembers() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -349,21 +371,6 @@ public class GasStationActivity extends BaseActivity {
 //        listViewComments.setAdapter(adapter);
 
         fabMenu.setClosedOnTouchOutside(true);
-//
-//        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (fabMenu.isOpened()) {
-//                    Toast.makeText(getApplicationContext(), fabMenu.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
-//                }
-//
-//                fabMenu.toggle(true);
-//            }
-//        });
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 

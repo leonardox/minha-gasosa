@@ -104,6 +104,7 @@ public class GasMapsActivity extends BaseFragmentActivity
 
     boolean firstTime = true;
 
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
