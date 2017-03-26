@@ -38,21 +38,23 @@ public class myCarFragment extends Fragment {
         Button button = (Button) view.findViewById(R.id.buttonAlterarCarro);
 
         String marca = MinhaGasosaPreference.getMarca(getContext());
-        Log.d("marca mycar", marca);
         String modelo = MinhaGasosaPreference.getModelo(getContext());
-        Log.d("modelo mycar", modelo);
         String versao = MinhaGasosaPreference.getVersao(getContext());
-        Log.d("versao mycar", versao);
 
         if (marca != null){
             tvMarca.setText(marca);
+        }else{
+            tvMarca.setText("");
         }
         if (modelo != null) {
             tvModelo.setText(modelo);
-
+        }else{
+            tvModelo.setText("");
         }
         if(versao != null){
             tvVersao.setText(versao);
+        }else{
+            tvVersao.setText("");
         }
 
         if (marca == null || modelo == null|| versao == null){

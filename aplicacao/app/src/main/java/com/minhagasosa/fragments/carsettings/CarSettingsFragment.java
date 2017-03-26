@@ -195,10 +195,6 @@ public class CarSettingsFragment extends Fragment {
                 } else {
                     MinhaGasosaPreference.putWithPotency(true, getContext());
                     MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getContext());
-                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getContext());
                 }
             }
 
@@ -252,23 +248,32 @@ public class CarSettingsFragment extends Fragment {
         if (carro.getIsFlex() != null) {
             MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getContext());
         }
-        if (!MinhaGasosaPreference.getWithPotency(getContext())) {
-            if (carro.getConsumoUrbanoGasolina() != null) {
-                MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
-                        getContext());
-            }
-            if (carro.getConsumoRodoviarioGasolina() != null) {
-                MinhaGasosaPreference.setConsumoRodoviarioPrimario(carro.getConsumoRodoviarioGasolina(),
-                        getContext());
-            }
-            if (carro.getConsumoUrbanoAlcool() != null) {
-                MinhaGasosaPreference.setConsumoUrbanoSecundario(carro.getConsumoUrbanoAlcool(),
-                        getContext());
-            }
-            if (carro.getConsumoRodoviarioAlcool() != null) {
-                MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
-                        getContext());
-            }
+        if (carro.getConsumoUrbanoGasolina() != null) {
+            MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
+                    getContext());
+        }else{
+            MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getContext());
+
+        }
+        if (carro.getConsumoRodoviarioGasolina() != null) {
+            MinhaGasosaPreference.setConsumoRodoviarioPrimario(carro.getConsumoRodoviarioGasolina(),
+                    getContext());
+        }else {
+            MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getContext());
+        }
+        if (carro.getConsumoUrbanoAlcool() != null) {
+            MinhaGasosaPreference.setConsumoUrbanoSecundario(carro.getConsumoUrbanoAlcool(),
+                    getContext());
+        }else {
+            MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getContext());
+
+        }
+        if (carro.getConsumoRodoviarioAlcool() != null) {
+            MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
+                    getContext());
+        }else {
+            MinhaGasosaPreference.setConsumoRodoviarioSecundario(11.5f, getContext());
+
         }
         EditText edCapacidadeTanuqe = (EditText) view.findViewById(R.id.ed_capacidade_tanque);
         String capacidade = edCapacidadeTanuqe.getText().toString();
