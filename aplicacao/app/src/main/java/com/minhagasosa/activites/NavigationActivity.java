@@ -38,10 +38,10 @@ import com.minhagasosa.LoginActivity;
 import com.minhagasosa.R;
 import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.fragments.Home.HomeFragment;
-import com.minhagasosa.fragments.carsettings.CarSettingsFragment;
 import com.minhagasosa.fragments.comparison.ComparisonFragment;
 import com.minhagasosa.fragments.expenditureplanning.ExpenditurePlanningFragment;
 import com.minhagasosa.fragments.listroutes.ListRoutesFragment;
+import com.minhagasosa.fragments.myCar.myCarFragment;
 import com.minhagasosa.fragments.weeklydetailing.WeeklyDetailingFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
@@ -158,7 +158,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 ft.commit();
                 break;
             case R.id.nav_set_car:
-                fragment = new CarSettingsFragment();
+                fragment = new myCarFragment();
                 ft = getSupportFragmentManager().beginTransaction();
                 Bundle argsCar = new Bundle();
                 argsCar.putBoolean("fromHome", true);

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 import com.minhagasosa.R;
 import com.minhagasosa.dao.Carro;
 import com.minhagasosa.dao.CarroDao;
@@ -122,10 +124,12 @@ public class CarSettingsFragment extends Fragment {
                 android.R.layout.simple_spinner_item, marcas));
 
         String selectedMarca = MinhaGasosaPreference.getMarca(getContext());
+
         if (selectedMarca != null) {
+            Log.d("tenta carregar marca", selectedMarca);
             spinnerMarca.setSelection(Arrays.asList(marcas).indexOf(selectedMarca), true);
             popularModelos(session);
-        }
+        } else Log.d("tenta carregar marca", "null");
 
         spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -202,15 +206,14 @@ public class CarSettingsFragment extends Fragment {
             public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
+        String selectedPotencia = String.valueOf(MinhaGasosaPreference.getPotency(getContext()));
         String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
         spinnerPotencia.setAdapter(new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, potencias));
-
-        String selectedPotencia = MinhaGasosaPreference.getVersao(getContext());
         if (selectedPotencia != null) {
-            spinnerMarca.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
-        }
-
+            Log.d("tenta carregar potencia", selectedPotencia);
+            spinnerPotencia.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
+        } else Log.d("tenta carregar potencia", "null");
 
         return view;
     }
@@ -221,31 +224,35 @@ public class CarSettingsFragment extends Fragment {
      * @param cDao
      */
     private void salvarInformacoesCarro(final CarroDao cDao, View view) {
+
+        String marca = (String) spinnerMarca.getSelectedItem();
+        Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
+        long modeloId = modelo.getId();
+        String versao = (String) spinnerVersao.getSelectedItem();
+        Query query = cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(modeloId),
+                CarroDao.Properties.MARCA.eq(marca),
+                CarroDao.Properties.VERSION.eq(versao)).build();
+        Carro carro = (Carro) query.list().get(0);
+
+        if (carro.getMarca() != null) {
+            MinhaGasosaPreference.setMarca(carro.getMarca(), getContext());
+            Log.d("Salvando Marca", carro.getMarca());
+        }
+
+        if (carro.getModelo().getMODELO() != null) {
+            MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO(), getContext());
+            Log.d("Salvando Modelo", carro.getModelo().toString());
+        }
+
+        if (carro.getVersion() != null) {
+            MinhaGasosaPreference.setVersao(carro.getVersion(), getContext());
+            Log.d("Salvando Versao", carro.getVersion());
+        }
+
+        if (carro.getIsFlex() != null) {
+            MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getContext());
+        }
         if (!MinhaGasosaPreference.getWithPotency(getContext())) {
-            String marca = (String) spinnerMarca.getSelectedItem();
-            Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
-            long modeloId = modelo.getId();
-            String versao = (String) spinnerVersao.getSelectedItem();
-            Query query = cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(modeloId),
-                    CarroDao.Properties.MARCA.eq(marca),
-                    CarroDao.Properties.VERSION.eq(versao)).build();
-            Carro carro = (Carro) query.list().get(0);
-
-            if (carro.getMarca() != null) {
-                MinhaGasosaPreference.setMarca(carro.getMarca(), getContext());
-            }
-
-            if (carro.getModelo().getMODELO() != null) {
-                MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO(), getContext());
-            }
-
-            if (carro.getVersion() != null) {
-                MinhaGasosaPreference.setVersao(carro.getVersion(), getContext());
-            }
-
-            if (carro.getIsFlex() != null) {
-                MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getContext());
-            }
             if (carro.getConsumoUrbanoGasolina() != null) {
                 MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
                         getContext());
@@ -296,12 +303,16 @@ public class CarSettingsFragment extends Fragment {
         spinnerVersao.setAdapter(new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, listaVersoes));
 
-        String selectedVersion = MinhaGasosaPreference.getVersao(getContext());
-        if (selectedVersion != null) {
-            spinnerMarca.setSelection(Arrays.asList(listaVersoes).indexOf(selectedVersion), true);
+        if (selectedModel.equals(MinhaGasosaPreference.getModelo(getContext()))) {
+
+            String selectedVersion = MinhaGasosaPreference.getVersao(getContext());
+            if (selectedVersion != null) {
+                Log.d("tenta carregar verao", selectedVersion);
+                spinnerMarca.setSelection(Arrays.asList(listaVersoes).indexOf(selectedVersion), true);
+            } else Log.d("tenta carregar versao", "null");
+
+
         }
-
-
     }
 
     /**
@@ -320,11 +331,15 @@ public class CarSettingsFragment extends Fragment {
         spinnerModelo.setAdapter(new ArrayAdapter<Modelo>(getContext(),
                 android.R.layout.simple_spinner_item, listaModelos));
 
-        String selectedModelo = MinhaGasosaPreference.getModelo(getContext());
 
-        if (selectedModelo != null) {
-            spinnerMarca.setSelection(listaModelos.indexOf(selectedModelo), true);
-            popularVersoes(cDao);
+        if (marca.equals(MinhaGasosaPreference.getMarca(getContext()))) {
+
+            String selectedModelo = MinhaGasosaPreference.getModelo(getContext());
+            if (selectedModelo != null) {
+                Log.d("tenta carregar modelo", selectedModelo);
+                spinnerMarca.setSelection(listaModelos.indexOf(selectedModelo), true);
+                popularVersoes(cDao);
+            } else Log.d("tenta carregar modelo", "null");
         }
     }
 
