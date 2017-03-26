@@ -150,7 +150,7 @@ public class ChartView {
 
         mChart.setRotationAngle(0);
         // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
+        mChart.setRotationEnabled(false);
         mChart.setHighlightPerTapEnabled(true);
 
         // mChart.setUnit(" €");
