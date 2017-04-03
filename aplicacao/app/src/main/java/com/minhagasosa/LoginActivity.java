@@ -109,7 +109,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         getSupportActionBar().hide();
 
         signInGoogleButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInGoogleButton.setOnClickListener(this);
+        //signInGoogleButton.setOnClickListener(this);
+        signInGoogleButton.setVisibility(View.GONE);
 
         signInFacebookButton = (LoginButton) findViewById(R.id.login_button);
 
