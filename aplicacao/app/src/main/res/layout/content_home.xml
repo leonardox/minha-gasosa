@@ -33,6 +33,7 @@
             android:layout_marginTop="5dp"
             android:checked="false"
             android:text="Flex"
+            android:visibility="gone"
             android:textSize="14sp" />
 
         <TextView

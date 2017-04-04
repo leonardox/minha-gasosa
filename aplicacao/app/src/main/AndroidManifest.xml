@@ -63,7 +63,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <receiver android:name=".MyReceiver" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -87,12 +90,18 @@
         </activity>
         <activity
             android:name=".activites.maps.GasStationListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_gas_station_list"></activity>
         <activity
             android:name=".CommentListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_comment_list"></activity>
         <activity
             android:name=".activites.NavigationActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

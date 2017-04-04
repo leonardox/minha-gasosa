@@ -195,7 +195,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
 
             @Override
             public void afterTextChanged(final Editable s) {
-                if (s.toString().isEmpty()) {
+                if ((s.toString().isEmpty()) || (s.toString().equals("."))) {
                     MinhaGasosaPreference.putPrice(0, getContext());
                 } else {
                     MinhaGasosaPreference.putPrice(Float.valueOf(s.toString()),
@@ -244,6 +244,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         boolean isChecked = MinhaGasosaPreference.getCarroIsFlex(getContext());
         checkFlex.setChecked(isChecked);
         updateIsCheck(isChecked);
+        checkFlex.setVisibility(View.GONE);
         checkFlex.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -423,7 +424,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
      * @return
      */
     private float getPrecoPrincipal() {
-        if (!priceFuelEditText.getText().toString().isEmpty()) {
+        if (!(priceFuelEditText.getText().toString().isEmpty()) && !(priceFuelEditText.getText().toString().equals(".")) ) {
             return Float.parseFloat(priceFuelEditText.getText().toString());
         }
         return 0.0f;

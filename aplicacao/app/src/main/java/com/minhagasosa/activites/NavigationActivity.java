@@ -294,7 +294,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
                 String combustivel = "";
-                if (!precoAlcoolEditText.getText().toString().isEmpty()) {
+                if (!(precoAlcoolEditText.getText().toString().isEmpty()) && !(precoAlcoolEditText.getText().toString().equals("."))) {
                     double precoGasolina = preco;
                     if (preco == 0) {
                         Toast.makeText(getApplicationContext(), "Você precisa informar o valor da gasolina", Toast.LENGTH_SHORT).show();

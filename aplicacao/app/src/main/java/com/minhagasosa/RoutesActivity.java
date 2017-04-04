@@ -205,11 +205,11 @@ public class RoutesActivity extends AppCompatActivity {
         if (titleRoute != null && distanceGoing != null && distanceBack != null && repeatTimes != null) {
             if (titleRoute.trim().isEmpty()) {
                 routeTitleWrapper.setError(getString(R.string.invalid_name));
-            } else if (distanceGoing.trim().isEmpty()) {
+            } else if ((distanceGoing.trim().isEmpty()) || (distanceGoing.equals("."))) {
                 distanceGoingWrapper.setError(getString(R.string.invalid_distance));
-            } else if (checkBoxRoute.isChecked() && distanceBack.trim().isEmpty()) {
+            } else if (checkBoxRoute.isChecked() && (distanceBack.trim().isEmpty() || (distanceBack.equals(".")))) {
                 distanceBackWrapper.setError(getString(R.string.invalid_distance));
-            } else if (checkRepeat.isChecked() && repeatTimes.trim().isEmpty()) {
+            } else if (checkRepeat.isChecked() && (repeatTimes.trim().isEmpty() || (repeatTimes.contains(".")))) {
                 timesRouteWrapper.setError(getString(R.string.invalid_value));
             } else {
                 return true;

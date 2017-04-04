@@ -50,7 +50,7 @@ public class ExpenditurePlanningFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if(!editValor.getText().toString().equals("")) {
+                if(!(editValor.getText().toString().isEmpty()) && !(editValor.getText().toString().equals(".")) ) {
                     float valor = Float.parseFloat(editValor.getText().toString());
                     MinhaGasosaPreference.putValorMaximoParaGastar(valor, getActivity());
                     Fragment fragment;
