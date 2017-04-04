@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private boolean logado;
     private ProfileTracker profileTracker;
     private AccessTokenTracker accessTokenTracker;
-    private SignInButton signInGoogleButton;
+    //private SignInButton signInGoogleButton;
     private LoginButton signInFacebookButton;
     private String tipoAcesso;
     private boolean skip = false;
@@ -108,9 +108,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
-        signInGoogleButton = (SignInButton) findViewById(R.id.sign_in_button);
+        //signInGoogleButton = (SignInButton) findViewById(R.id.sign_in_button);
         //signInGoogleButton.setOnClickListener(this);
-        signInGoogleButton.setVisibility(View.GONE);
+        //signInGoogleButton.setVisibility(View.GONE);
 
         signInFacebookButton = (LoginButton) findViewById(R.id.login_button);
 
@@ -134,7 +134,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     } else {
                         signInFacebookButton.setVisibility(View.VISIBLE);
                     }
-                    signInGoogleButton.setVisibility(SignInButton.VISIBLE);
+                   // signInGoogleButton.setVisibility(SignInButton.VISIBLE);
                 }
 
                 if (haveFacebook()) {
@@ -147,7 +147,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     }
 
     private void skipSplash() {
-        signInGoogleButton.setVisibility(SignInButton.INVISIBLE);
+        //signInGoogleButton.setVisibility(SignInButton.INVISIBLE);
         signInFacebookButton.setVisibility(View.VISIBLE);
         updateUI();
     }
@@ -538,7 +538,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
             if (!isConsentScreenOpened) {
                 if (tryLogin) {
-                    signInGoogleButton.setVisibility(SignInButton.VISIBLE);
+                   // signInGoogleButton.setVisibility(SignInButton.VISIBLE);
                     if (haveFacebook()) {
                         signInFacebookButton.setVisibility(View.VISIBLE);
                     } else {

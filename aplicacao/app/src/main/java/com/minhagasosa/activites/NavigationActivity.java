@@ -73,7 +73,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         TextView mUse = (TextView) header.findViewById(R.id.user);
         //mUse.setText("sdsdsd")
         sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
-        mUse.setText(sharedPreferences.getString("USER_NOME", "usuário"));
+        mUse.setText(sharedPreferences.getString("USER_NOME", "usuário60"));
 
         sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
 

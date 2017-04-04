@@ -61,7 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             if (mDataset.get(position).getCreationDate() != null) {
                 holder.mDate.setText(mDataset.get(position).getCreationDate());
             }else{
-                holder.mDate.setText("Enviado: 23/10/2016 as 14:37");
+                holder.mDate.setText("Enviado: 04/04/2017");
             }
         }
 
