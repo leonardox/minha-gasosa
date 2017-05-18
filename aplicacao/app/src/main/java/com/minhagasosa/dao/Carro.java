@@ -148,7 +148,7 @@ public class Carro {
             Modelo modeloNew = targetDao.load(__key);
             synchronized (this) {
                 modelo = modeloNew;
-            	modelo__resolvedKey = __key;
+                modelo__resolvedKey = __key;
             }
         }
         return modelo;
@@ -166,7 +166,7 @@ public class Carro {
     public final void delete() {
         if (myDao == null) {
             throw new DaoException(EntityDetached);
-        }    
+        }
         myDao.delete(this);
     }
 
@@ -174,7 +174,7 @@ public class Carro {
     public final void update() {
         if (myDao == null) {
             throw new DaoException(EntityDetached);
-        }    
+        }
         myDao.update(this);
     }
 
@@ -182,7 +182,7 @@ public class Carro {
     public final void refresh() {
         if (myDao == null) {
             throw new DaoException(EntityDetached);
-        }    
+        }
         myDao.refresh(this);
     }
 
