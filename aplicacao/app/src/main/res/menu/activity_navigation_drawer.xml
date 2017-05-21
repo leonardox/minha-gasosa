@@ -7,6 +7,11 @@
             android:icon="@drawable/ic_home"
             android:title="Previsões e adição de rotas" />
         <item
+            android:id="@+id/nav_refuel"
+            android:icon="@drawable/ic_local_gas_station_white_24dp"
+            android:title="Abastecimentos" />
+
+        <item
             android:id="@+id/nav_list_routes"
             android:icon="@drawable/ic_lista_de_rotas"
             android:title="Listar rotas" />

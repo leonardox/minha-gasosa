@@ -38,6 +38,7 @@ import com.minhagasosa.LoginActivity;
 import com.minhagasosa.R;
 import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.fragments.Home.HomeFragment;
+import com.minhagasosa.fragments.Refuel.RefuelFragment;
 import com.minhagasosa.fragments.comparison.ComparisonFragment;
 import com.minhagasosa.fragments.expenditureplanning.ExpenditurePlanningFragment;
 import com.minhagasosa.fragments.listroutes.ListRoutesFragment;
@@ -139,6 +140,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
                 break;
+            case R.id.nav_refuel:
+                fragment = new RefuelFragment();
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+                break;
             case R.id.nav_list_routes:
                 fragment = new ListRoutesFragment();
                 ft = getSupportFragmentManager().beginTransaction();
@@ -197,6 +204,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     private void signOut() {

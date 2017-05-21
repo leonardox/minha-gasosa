@@ -1,44 +1,40 @@
 package com.minhagasosa.fragments.Refuel;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.minhagasosa.ChartView;
-import com.minhagasosa.MyReceiver;
+import com.minhagasosa.NewRefuelActivity;
 import com.minhagasosa.R;
-import com.minhagasosa.RoutesActivity;
-import com.minhagasosa.fragments.carsettings.CarSettingsFragment;
+import com.minhagasosa.RotaAdapter;
+import com.minhagasosa.dao.Abastecimento;
+import com.minhagasosa.dao.AbastecimentoDao;
+import com.minhagasosa.dao.DaoMaster;
+import com.minhagasosa.dao.DaoSession;
+import com.minhagasosa.dao.Rota;
+import com.minhagasosa.dao.RotaDao;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
-import java.text.DecimalFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 
 /**
@@ -46,26 +42,73 @@ import java.util.Calendar;
  */
 public class RefuelFragment extends Fragment{
 
+    @BindView(R.id.etDate) EditText etDate;
+    @BindView(R.id.etTotal) EditText etTotal;
+    @BindView(R.id.etLitres) EditText etLitres;
+    @BindView(R.id.etKM) EditText etKm;
+    @BindView(R.id.etPrice) EditText etPrice;
+    @BindView(R.id.cbFullTank) CheckBox cbFull;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    private Unbinder unbinder;
     private ChartView chartView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_home, container, false);
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-
+        View view = inflater.inflate(R.layout.activity_refuel, container, false);
         PieChart pieChart = (PieChart) view.findViewById(R.id.chart);
         chartView = new ChartView(getContext(), pieChart);
-        View viewKeyboard = getActivity().getCurrentFocus();
-        if (viewKeyboard != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        unbinder = ButterKnife.bind(this, view);
+        loadRefuel();
+        disableTexts();
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Refuel Fragment", "Reload: " +MinhaGasosaPreference.getReloadRefuel(getContext()));
+            loadRefuel();
+    }
 
 
+    @OnClick(R.id.fab)
+    void newRefuel(){
+        Intent intent = new Intent(getActivity(), NewRefuelActivity.class);
+        startActivity(intent);
+    }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    private void disableTexts(){
+        etDate.setEnabled(false);
+        etKm.setEnabled(false);
+        etLitres.setEnabled(false);
+        etPrice.setEnabled(false);
+        etTotal.setEnabled(false);
+        cbFull.setEnabled(false);
+    }
+
+    private void loadRefuel(){
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+        AbastecimentoDao aDao = session.getAbastecimentoDao();
+        List<Abastecimento> abastecimentos  = aDao.loadAll();
+        if (abastecimentos.size()>0){
+            Abastecimento last = abastecimentos.get(abastecimentos.size()-1);
+            etDate.setText(last.getDataAbastecimento().toString());
+            etKm.setText(last.getOdometro().toString());
+            etLitres.setText(last.getLitros().toString());
+            etPrice.setText(last.getPrecoCombustivel().toString());
+            etTotal.setText(last.getPrecoTotal().toString());
+            Log.d("Refuel RESTORED", "" + last.getTanqueCheio());
+            cbFull.setChecked(last.getTanqueCheio());
+        }
+    }
 }

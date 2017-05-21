@@ -11,6 +11,7 @@ import com.minhagasosa.R;
 public final class MinhaGasosaPreference {
 
     final private static String PREFERENCE = "com.minhagasosa.preference";
+    final private static String RELOAD_REFUEL_FRAGMENT = "reload_refuel_fragment";
     private MinhaGasosaPreference() {
 
     }
@@ -232,5 +233,18 @@ public final class MinhaGasosaPreference {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
         return preferences.getFloat(context.getString(R.string.shared_preco_secundario), (float) - 1.0);
+    }
+
+
+    public static void setReloadRefuel(Context context, boolean val) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putBoolean(RELOAD_REFUEL_FRAGMENT, val);
+        editor.commit();
+    }
+
+    public static boolean getReloadRefuel(Context context) {
+        final SharedPreferences preferces = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferces.getBoolean(RELOAD_REFUEL_FRAGMENT, false);
     }
 }

@@ -25,11 +25,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".RoutesActivity"
-            android:label="@string/title_activity_routes"
             android:configChanges="orientation"
+            android:label="@string/title_activity_routes"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--
      The API key for Google Maps-based APIs is defined as a string resource.
@@ -52,27 +51,33 @@
         <activity
             android:name=".activites.maps.RouteMapsActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label="@string/indica_rota"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewRefuelActivity"
+            android:configChanges="orientation"
+            android:label="Novo Abastecimento"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activites.maps.GasMapsActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label="@string/indica_rota"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <receiver android:name=".MyReceiver" />
 
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -84,27 +89,26 @@
         <activity
             android:name=".activites.maps.GasStationActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
+            android:label="@string/title_activity_gas_station"
             android:noHistory="true"
-            android:label="@string/title_activity_gas_station">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.maps.GasStationListActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_gas_station_list"></activity>
+            android:label="@string/title_activity_gas_station_list"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CommentListActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_comment_list"></activity>
+            android:label="@string/title_activity_comment_list"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.NavigationActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_navigation"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>
