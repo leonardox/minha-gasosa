@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "965753229599",
+    "firebase_url": "https://minha-gasosa.firebaseio.com",
+    "project_id": "minha-gasosa",
+    "storage_bucket": "minha-gasosa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965753229599:android:b91ee50264265b3f",
+        "android_client_info": {
+          "package_name": "com.minhagasosa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965753229599-sf05jbondigub8pj9bv5jpfsrf9vnpi8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minhagasosa",
+            "certificate_hash": "edd2a21d72e1d5b3d758e4573ab933f95c3b57ab"
+          }
+        },
+        {
+          "client_id": "965753229599-vv6kt05mdep293q7dp622imlidt5d539.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5lfNd4L4YCaOdOuQewZRsghSYtJSI8A8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965753229599-vv6kt05mdep293q7dp622imlidt5d539.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
