@@ -4,7 +4,7 @@ package com.minhagasosa.dao;
 /**
  * Entity mapped to table ABASTECIMENTO.
  */
-public class Abastecimento {
+public class Abastecimento implements Comparable<Abastecimento> {
 
     private Long id;
     private java.util.Date dataAbastecimento;
@@ -85,6 +85,20 @@ public class Abastecimento {
 
     public void setTanqueCheio(Boolean tanqueCheio) {
         this.tanqueCheio = tanqueCheio;
+    }
+
+    @Override
+    public String toString() {
+        return id +", " +dataAbastecimento.getDay()+"/"+
+                dataAbastecimento.getMonth()+"/"+
+                dataAbastecimento.getYear()+
+                ", Total: " + precoTotal +
+                 ", " + litros + " litros." ;
+    }
+
+    @Override
+    public int compareTo(Abastecimento mAbastecimento) {
+        return getDataAbastecimento().compareTo(mAbastecimento.getDataAbastecimento());
     }
 
 }

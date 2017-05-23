@@ -35,6 +35,7 @@ import com.minhagasosa.ChartView;
 import com.minhagasosa.MyReceiver;
 import com.minhagasosa.NewRefuelActivity;
 import com.minhagasosa.R;
+import com.minhagasosa.RoutesActivity;
 import com.minhagasosa.fragments.carsettings.CarSettingsFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
@@ -161,7 +162,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NewRefuelActivity.class);
+                Intent intent = new Intent(getActivity(), RoutesActivity.class);
                 startActivity(intent);
             }
         });
