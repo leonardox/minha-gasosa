@@ -1,5 +1,7 @@
 package com.minhagasosa.utils;
 
+import android.util.Log;
+
 import com.minhagasosa.dao.Abastecimento;
 
 import java.util.Collections;
@@ -18,7 +20,7 @@ public class GenerateData{
 		}
 	public double getKmTotal(int inicio, int fim){
 			double result = abastecimentos.get(fim).getOdometro() - abastecimentos.get(inicio).getOdometro();
-			System.out.println("inicio"+inicio+" " +  abastecimentos.get(inicio).getOdometro() + ", fim :"+fim+":" + abastecimentos.get(fim).getOdometro() + " km total: " +result);
+			Log.d("GERANDO","inicio"+inicio+" " +  abastecimentos.get(inicio).getOdometro() + ", fim :"+fim+":" + abastecimentos.get(fim).getOdometro() + " km total: " +result);
 			return result;
 		}
 
@@ -58,9 +60,9 @@ public class GenerateData{
 			double total = 0;
 			for (int i = inicio +1; i <= fim; i++) {
 				total += abastecimentos.get(i).getLitros();
-				System.out.println("litros: " + total);
+				Log.d("GERANDO","litros: " + total);
 			}
-			System.out.println("total litros: " + total);
+		Log.d("GERANDO","total litros: " + total);
 			return total;
 		}
 		

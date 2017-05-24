@@ -238,7 +238,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             }
         };
 
-        // Ensure that our profile is up to date
+        // Ensure that our profile is up to etDate
         Profile.fetchProfileForCurrentAccessToken();
         setFacebookProfile(Profile.getCurrentProfile());
     }

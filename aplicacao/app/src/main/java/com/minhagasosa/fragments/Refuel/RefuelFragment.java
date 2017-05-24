@@ -36,7 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import butterknife.Unbinder;
-import de.greenrobot.dao.query.Query;
 
 import static butterknife.OnItemSelected.Callback.NOTHING_SELECTED;
 
@@ -160,15 +159,8 @@ public class RefuelFragment extends Fragment {
 
     @OnItemSelected(R.id.spinnerRefuel)
     public void itemSelected (Spinner spn, int position) {
-        String label = spn.getItemAtPosition(position).toString();
-        int id = Integer.parseInt(label.split(",")[0]);
-        for (Abastecimento abs: abastecimentos){
-            if (abs.getId() == id){
-                loadData(abs);
-                Toast.makeText(getContext(), "You selected: " + abs.toString(), Toast.LENGTH_LONG).show();
-                break;
-            }
-        }
+        loadData(data.get(position));
+        Toast.makeText(getContext(), "You selected: " + data.get(position).toString(), Toast.LENGTH_LONG).show();
     }
 
     @OnItemSelected(value = R.id.spinnerRefuel,
@@ -177,7 +169,12 @@ public class RefuelFragment extends Fragment {
     }
 
     private void loadSpinnerData() {
-        ArrayAdapter<Abastecimento> dataAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, abastecimentos);
+        data = new ArrayList<>();
+        for (Abastecimento a: abastecimentos) {
+            data.add(a.getCopy());
+        }
+        Collections.reverse(data);
+        ArrayAdapter<Abastecimento> dataAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, data);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
