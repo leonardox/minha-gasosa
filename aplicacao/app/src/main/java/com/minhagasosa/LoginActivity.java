@@ -49,6 +49,7 @@ import com.minhagasosa.Transfer.City;
 import com.minhagasosa.Transfer.State;
 import com.minhagasosa.Transfer.TUser;
 import com.minhagasosa.activites.BaseActivity;
+import com.minhagasosa.activites.EndpointFactory;
 import com.minhagasosa.activites.NavigationActivity;
 import com.minhagasosa.fragments.Home.HomeFragment;
 
@@ -61,6 +62,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -153,6 +155,21 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     }
 
     private void updateUI() {
+        SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
+        String fbToken = sharedPreferences.getString(MyFirebaseInstanceIDService.FIREBASE_TOKEN, "");
+        Retrofit retrofit  = EndpointFactory.buildEndpoint(getBaseContext());
+        UsersService usersService = retrofit.create(UsersService.class);
+        usersService.updateUserToken(fbToken).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("Firebase", "Token updated on server");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Firebase", "Error updating token updated on server");
+            }
+        });
         if (!isActivityRunning(NavigationActivity.class) && !closed) {
             startActivity(new Intent(this, NavigationActivity.class));
         }
