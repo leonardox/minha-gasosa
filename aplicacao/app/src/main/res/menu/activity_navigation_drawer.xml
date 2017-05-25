@@ -20,22 +20,7 @@
             android:icon="@drawable/ic_planejamento_de_gastos"
             android:title="Planejamento de gastos" />
 
-        <item
-            android:id="@+id/nav_set_car"
-            android:icon="@drawable/ic_time_to_leave_white_24dp"
-            android:title="Configurar Carro" />
-
         <!-- todo alterar a imagem desse item do menu -->
-        <item
-            android:id="@+id/nav_menu_item_comparar"
-            android:icon="@drawable/ic_rv_hookup_white_24dp"
-            android:title="Comparação" />
-
-        <item
-            android:id="@+id/nav_menu_item_vantagem"
-            android:icon="@drawable/ic_import_export_white_18dp"
-            android:title="Vantagem Combustível" />
-
         <item
             android:id="@+id/nav_gasStations"
             android:icon="@drawable/ic_local_gas_station_white_24dp"

@@ -36,7 +36,7 @@ import com.minhagasosa.MyReceiver;
 import com.minhagasosa.NewRefuelActivity;
 import com.minhagasosa.R;
 import com.minhagasosa.RoutesActivity;
-import com.minhagasosa.fragments.carsettings.CarSettingsFragment;
+import com.minhagasosa.fragments.Refuel.RefuelFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.text.DecimalFormat;
@@ -172,14 +172,11 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
             MinhaGasosaPreference.setFirstTime(false , getContext());
             Fragment fragment;
             FragmentTransaction ft;
-            fragment = new CarSettingsFragment();
+            fragment = new RefuelFragment();
             ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
         }
-
-
-
 
         priceFuelEditText = (EditText) view.findViewById(R.id.editTextPrice);
         priceFuelEditText.setText(String.valueOf(MinhaGasosaPreference.getPrice(getContext())));

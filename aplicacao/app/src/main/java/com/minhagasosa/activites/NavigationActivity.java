@@ -39,10 +39,8 @@ import com.minhagasosa.R;
 import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.fragments.Home.HomeFragment;
 import com.minhagasosa.fragments.Refuel.RefuelFragment;
-import com.minhagasosa.fragments.comparison.ComparisonFragment;
 import com.minhagasosa.fragments.expenditureplanning.ExpenditurePlanningFragment;
 import com.minhagasosa.fragments.listroutes.ListRoutesFragment;
-import com.minhagasosa.fragments.myCar.myCarFragment;
 import com.minhagasosa.fragments.weeklydetailing.WeeklyDetailingFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
@@ -70,9 +68,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
         View header=navigationView.getHeaderView(0);
 
-//        LinearLayout view = (LinearLayout)findViewById(R.id.teste);
         TextView mUse = (TextView) header.findViewById(R.id.user);
-        //mUse.setText("sdsdsd")
         sharedPreferences = getSharedPreferences(LoginActivity.PREFERENCE_NAME, MODE_PRIVATE);
         mUse.setText(sharedPreferences.getString("USER_NOME", "usuário60"));
 
@@ -164,24 +160,15 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
                 break;
-            case R.id.nav_set_car:
-                fragment = new myCarFragment();
-                ft = getSupportFragmentManager().beginTransaction();
-                Bundle argsCar = new Bundle();
-                argsCar.putBoolean("fromHome", true);
-                fragment.setArguments(argsCar);
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-                break;
-            case R.id.nav_menu_item_comparar:
-                fragment = new ComparisonFragment();
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-                break;
-            case R.id.nav_menu_item_vantagem:
-                showDialogVantagemCombustivel();
-                break;
+      //   case R.id.nav_set_car:
+//                fragment = new myCarFragment();
+//                ft = getSupportFragmentManager().beginTransaction();
+//                Bundle argsCar = new Bundle();
+//                argsCar.putBoolean("fromHome", true);
+//                fragment.setArguments(argsCar);
+//                ft.replace(R.id.content_frame, fragment);
+//                ft.commit();
+//                break;
             case R.id.nav_gasStations:
                 Intent intent = new Intent(this, GasMapsActivity.class);
                 startActivity(intent);
@@ -239,104 +226,4 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     }
 
-    private void showDialogVantagemCombustivel() {
-        AlertDialog.Builder builder = new  AlertDialog.Builder(this);
-        builder.setTitle("Vantagem combustível");
-        String combustivel = "";
-        final float preco = MinhaGasosaPreference.getPrice(this);
-        int resultado = 0;
-        boolean isFlex = MinhaGasosaPreference.getCarroIsFlex(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.vantagem_dialog_layout, null);
-        final EditText precoAlcoolEditText = (EditText) dialoglayout.findViewById(R.id.editTextAlcool);
-        final TextView message = (TextView) dialoglayout.findViewById(R.id.mensagem);
-        TextView messageAlcool = (TextView) dialoglayout.findViewById(R.id.mensagemAlcool);
-        final Button buttonCalcular = (Button) dialoglayout.findViewById(R.id.buttonCalcular);
-        if(isFlex){
-            precoAlcoolEditText.setVisibility(View.GONE);
-            messageAlcool.setVisibility(View.GONE);
-            buttonCalcular.setVisibility(View.GONE);
-            double precoGasolina = preco;
-            double precoAlcool = MinhaGasosaPreference.getPrecoSecundario(getBaseContext());
-            if (precoAlcool == 0) {
-                calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool, buttonCalcular);
-            } else {
-                double calculoCombustivel = (precoAlcool/precoGasolina)*100;
-                resultado = (int) calculoCombustivel;
-                if(resultado <= 70){
-                    combustivel += "Álcool";
-                } else {
-                    combustivel += "Gasolina";
-                }
-                message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
-            }
-
-        } else {
-            calculaSemCombustivelSecundario(preco, precoAlcoolEditText, message, messageAlcool,
-                    buttonCalcular);
-        }
-        builder.setView(dialoglayout);
-        builder.setPositiveButton(getString(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        View view = NavigationActivity.this.getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager)getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
-                        dialog.dismiss();
-                    }
-                });
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void calculaSemCombustivelSecundario(final float preco, final EditText precoAlcoolEditText, final TextView message, TextView messageAlcool, Button buttonCalcular) {
-        precoAlcoolEditText.setVisibility(View.VISIBLE);
-        messageAlcool.setVisibility(View.VISIBLE);
-        buttonCalcular.setVisibility(View.VISIBLE);
-        message.setText("Informe o valor do combustível secundário para calcular");
-        buttonCalcular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String combustivel = "";
-                if (!(precoAlcoolEditText.getText().toString().isEmpty()) && !(precoAlcoolEditText.getText().toString().equals("."))) {
-                    double precoGasolina = preco;
-                    if (preco == 0) {
-                        Toast.makeText(getApplicationContext(), "Você precisa informar o valor da gasolina", Toast.LENGTH_SHORT).show();
-                    } else {
-                        double precoAlcool = Float.valueOf(precoAlcoolEditText.getText().toString());
-                        double calculoCombustivel = (precoAlcool / precoGasolina) * 100;
-                        int resultado = (int) calculoCombustivel;
-                        if (resultado <= 70) {
-                            combustivel += "Álcool";
-                        } else {
-                            combustivel += "Gasolina";
-                        }
-                        message.setText("Baseado no preço do combustível inserido, é mais vantajoso utilizar " + combustivel);
-                    }
-                }
-            }
-        });
-        precoAlcoolEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()) {
-                    message.setText("Informe o valor do combustível secundário para calcular");
-                }
-            }
-        });
-    }
 }
