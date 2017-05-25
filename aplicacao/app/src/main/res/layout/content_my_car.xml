@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:weightSum="1"
+    tools:showIn="@layout/activity_my_car">
+
+    <TextView
+        android:layout_weight="0.03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Meu Carro:"
+        android:id="@+id/textViewMessageFuel"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+<LinearLayout
+    android:layout_weight="0.03"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_weight="0.3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_directions_car_black_48dp"
+
+        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.18">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marca:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modelo:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Versão:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.52">
+        <TextView
+            android:id="@+id/marca_do_carro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marca:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/modelo_do_carro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modelo:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/versao_do_carro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Versão:"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.13"
+        android:layout_gravity="center"
+        android:text="Alterar Carro"
+        android:id="@+id/buttonAlterarCarro"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+
+</LinearLayout>

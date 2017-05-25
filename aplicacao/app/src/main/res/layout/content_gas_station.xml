@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.minhagasosa.activites.maps.GasStationActivity"
+    tools:showIn="@layout/activity_gas_station">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/layout_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/avaliacao_dos_usuarios"
+                android:textStyle="bold"
+                android:typeface="serif" />
+
+            <RatingBar
+                android:id="@+id/rating"
+                style="?android:attr/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="0.1" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05sp"
+                android:background="@android:color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_endereco"
+                    android:drawablePadding="10sp"
+                    android:drawableLeft="@drawable/placeholder"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/text_margin"
+                    android:text="Endereço dasd asd asd asd asd asd asd
+                    asd asd asd asd asd asd asd asdas asd asda sdas das " />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:drawablePadding="10sp"
+                    android:id="@+id/tv_phone"
+                    android:drawableLeft="@drawable/call_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/text_margin"
+                    android:text="(99)99999-9999" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:drawablePadding="10sp"
+                    android:id="@+id/tv_working"
+                    android:drawableLeft="@drawable/wall_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/text_margin"
+                    android:text="Aberto das 7:00 ás 21:00 horas" />
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05sp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/precos"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/text_margin"
+                        android:text="@string/gasolina_comum" />
+
+                <TextView
+                    android:id="@+id/tv_gasPage_gasPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="x,xx"
+                    android:layout_marginLeft="@dimen/text_margin"
+                    android:layout_marginRight="@dimen/text_margin"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/gasolina_aditivada" />
+
+            <TextView
+                android:id="@+id/tv_gasPage_gasPlusPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:textSize="18sp"
+                android:text="x,xx"
+                android:layout_marginLeft="@dimen/text_margin"
+                android:layout_marginRight="@dimen/text_margin"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/text_margin"
+                    android:text="@string/alcool" />
+
+                <TextView
+                    android:id="@+id/tv_gasPage_alcoolPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/text_margin"
+                    android:textSize="18sp"
+                    android:text="x,xx"
+                    android:layout_marginLeft="@dimen/text_margin"
+                    android:layout_marginRight="@dimen/text_margin"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/formas_de_pagamento"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:text="@string/credito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/tvCredit" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/layoutCredito"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/banes"
+                        android:id="@+id/imageView3" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/amex"
+                        android:id="@+id/imageView2" />
+                </GridLayout>
+
+                <TextView
+                    android:text="Débito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/tvDebit" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/layoutDebito"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/banes"
+                        android:id="@+id/imageView5" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/amex"
+                        android:id="@+id/imageView7" />
+                </GridLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:text="@string/servicos_oferecidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:id="@+id/tvServices" />
+
+            <ListView
+                android:id="@+id/services_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.05sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:text="@string/comentarios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:id="@+id/comments" />
+
+            <TextView
+                android:text="@string/nenhum_comentario_cadastrado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible"
+                android:textColor="@color/black"
+                android:textSize="13dp"
+                android:id="@+id/nenhum_comentario" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <Button
+                    android:text="@string/more_commets"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/more_comments"
+                    android:textColor="@android:color/white"
+                    android:background="@color/com_facebook_blue"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.v4.widget.NestedScrollView>

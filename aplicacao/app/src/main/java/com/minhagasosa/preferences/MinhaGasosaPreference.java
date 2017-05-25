@@ -8,10 +8,13 @@ import com.minhagasosa.R;
 /**
  * Created by Vinicius Silva on 06/04/2016.
  */
-public class MinhaGasosaPreference {
+public final class MinhaGasosaPreference {
 
     final private static String PREFERENCE = "com.minhagasosa.preference";
+    final private static String RELOAD_REFUEL_FRAGMENT = "reload_refuel_fragment";
+    private MinhaGasosaPreference() {
 
+    }
 
     private static SharedPreferences.Editor getSharedPreference(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
@@ -51,11 +54,25 @@ public class MinhaGasosaPreference {
         editor.commit();
     }
 
+
     public static float getPrice(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getFloat(context.getString(R.string.shared_price), -1);
+        return preferences.getFloat(context.getString(R.string.shared_price), 0);
 
+    }
+
+
+    public static void setFirstTime(boolean is_first_time, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putBoolean(context.getString(R.string.is_first_time), is_first_time);
+        editor.commit();
+    }
+
+    public static boolean getFirstTime(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getBoolean(context.getString(R.string.is_first_time), true);
     }
 
     public static void setCarroIsFlex(boolean is_flex, Context context) {
@@ -82,11 +99,49 @@ public class MinhaGasosaPreference {
         return preferences.getFloat(context.getString(R.string.consumoUrbanoPrimario), -1);
     }
 
+    public static void setMarca(String marca, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.marcaDoCarro), marca);
+        editor.commit();
+    }
+
+    public static String getMarca(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.marcaDoCarro), null);
+    }
+
+    public static void setModelo(String modelo, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.modeloDoCarro), modelo);
+        editor.commit();
+    }
+
+    public static String getModelo(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.modeloDoCarro), null);
+    }
+
+    public static void setVersao(String versao, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putString(context.getString(R.string.versaoDoCarro), versao);
+        editor.commit();
+    }
+
+    public static String getVersao(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getString(context.getString(R.string.versaoDoCarro), null);
+    }
+
     public static void setConsumoUrbanoSecundario(float consumo, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
         editor.putFloat(context.getString(R.string.consumoUrbanoSecundario), consumo);
         editor.commit();
     }
+
+
 
     public static float getConsumoUrbanoSecundario(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
@@ -166,5 +221,30 @@ public class MinhaGasosaPreference {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
         return preferences.getFloat(context.getString(R.string.shared_capacidade_tanque), (float)-1.0);
+    }
+
+    public static void putPrecoSecundario(float valor, Context context) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putFloat(context.getString(R.string.shared_preco_secundario), valor);
+        editor.commit();
+    }
+
+    public static float getPrecoSecundario(Context context) {
+        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferences.getFloat(context.getString(R.string.shared_preco_secundario), (float) - 1.0);
+    }
+
+
+    public static void setReloadRefuel(Context context, boolean val) {
+        SharedPreferences.Editor editor = getSharedPreference(context);
+        editor.putBoolean(RELOAD_REFUEL_FRAGMENT, val);
+        editor.commit();
+    }
+
+    public static boolean getReloadRefuel(Context context) {
+        final SharedPreferences preferces = context.getSharedPreferences(PREFERENCE,
+                Context.MODE_PRIVATE);
+        return preferces.getBoolean(RELOAD_REFUEL_FRAGMENT, false);
     }
 }

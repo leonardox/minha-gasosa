@@ -1,0 +1,227 @@
+    <div id="navbar" class="navbar-collapse collapse navbar-inverse">
+          <ul class="nav navbar-nav">
+            <li><a href="/admin/owner/home">Inicio</a></li>
+            <li><a href="#contact">Editar perfil</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a> Bem vindo, {{owner.username}}!</a></li>
+            <li><a href="/admin/owner/logout">Sair</a></li>
+          </ul>
+    </div>
+
+<div class="row" style="margin-top:10px; padding: 15px;">
+    <div class="col-md-12" style="background: #ccc; border-radius: 8px;">
+        <div id="map" class="col-md-4" style="margin-top: 1%;"></div>
+        <form action="/api/gas{{#if gas}}/{{gas._id}}{{/if}}" method="post">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input class="form-control" name="name" placeholder="Nome" value="{{gas.name}}">
+                    <input class="form-control" name="lat" type="number" placeholder="Latitude" readonly value="{{gas.location.lat}}">
+                    <input class="form-control" name="lng" type="number" placeholder="Longitude" readonly value="{{gas.location.lng}}">
+                    <label for="selectState" class="form-align">Estado</label>
+                    <select class="form-control form-align" id="selectState">
+                    </select>
+
+                    <input class="form-control" name="workingHours" placeholder="Horário de Funcionamento" value="{{gas.workingHours}}">
+
+                    <label for="selectState" class="form-align">Opções de cartão de crédito:</label>
+
+                    <div class="form-group">
+                        {{#each credit}}
+                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifIn this ../gas.payamentsCredit }}check{{/ifIn}}"><input type="checkbox" {{#ifIn this ../gas.payamentsCredit }}checked{{/ifIn}} name="payamentsCredit" id="item4" value="{{this}}" class="hidden" autocomplete="off"></label></div>
+                        {{/each}}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="form-align">Serviços Oferecidos</label>
+                        <br>
+                        {{#each services}}
+                            <input type="checkbox" name="services" value="{{val}}" {{#ifIn this ../gas.services }}checked{{/ifIn}}> {{text}} <br>
+                        {{/each}}
+                    </div>
+
+                    <input class="form-control" type="submit" value="Enviar">
+                </div>
+            </div>
+            <div  class="col-md-4" style="margin-right: 0px; padding-right: 1%;">
+                <div class="form-group">
+                    <input class="form-control currency" name="gasPrice" value="{{gas.gasPrice}}" placeholder="Preço da Gasolina Comum (Litro)" >
+                    <input class="form-control currency" name="gasPlusPrice" placeholder="Preço da Gasolina Aditivada (Litro)" value="{{gas.gasPlusPrice}}">
+                    <input class="form-control currency" name="alcoolPrice" placeholder="Preço do Alcool (Litro)" value="{{gas.alcoolPrice}}">
+                    <label for="selectCity" class="form-align">Cidade</label>
+                    <select class="form-control form-align" name="city" id="selectCity"></select>
+                    <input class="form-control phone" name="phoneNumber" placeholder="Telefone" value="{{gas.phoneNumber}}">
+                    <label for="" class="form-align">Opções de cartão de débito:</label>
+                    <div class="content row">
+                        {{#each debit}}
+                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 outer mgt"><label class="btn btn-primary btn2"><img src="/{{this}}.png" alt="..." class="img-thumbnail img-check {{#ifInDebit this ../gas.payamentsDebit }}check{{/ifInDebit}}"><input type="checkbox" {{#ifInDebit this ../gas.payamentsDebit }}checked{{/ifInDebit}} name="payamentsDebit" id="item4" value="{{removeD this}}" class="hidden" autocomplete="off"></label></div>
+                        {{/each}}
+                    </div>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var map;1
+
+
+    function setLatLngForm(event) {
+        $("input[name=lat]").val(event.latLng.lat());
+        $("input[name=lng]").val(event.latLng.lng());
+    }
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 0, lng: 0},
+            zoom: 13
+        });
+
+        $(document).ready(function () {
+
+            $(".img-check").click(function(){
+                $(this).toggleClass("check");
+            });
+
+            $('.phone').mask('(00) 0000-0000');
+
+            $('.currency').maskMoney({
+            });
+
+            var currentState;
+            var currentCity;
+            var currentPos = {};
+
+
+
+            {{#if gas}}
+                currentState = "{{gas.city.state}}";
+                currentCity = "{{gas.city._id}}";
+                currentPos.lat = {{gas.location.lat}};
+                currentPos.lng = {{gas.location.lng}};
+            {{/if}}
+
+            if(map && currentPos.lat){
+                map.setCenter(currentPos);
+            }
+
+            var selectStates = $('#selectState');
+            $.getJSON( "/states", function( data ) {
+                $.each(data, function() {
+                    selectStates.append(new Option(this.nome, this._id));
+                });
+                if(currentState){
+                    selectStates.val(currentState).trigger('change');
+                    selectCities.val(currentCity);
+                }
+
+            });
+
+            var selectCities = $('#selectCity');
+
+            selectStates.on('change', function() {
+                var value = $(this).val();
+                selectCities.find('option').remove();
+                $.getJSON( "/cities?state=" + value, function( data ) {
+                    $.each(data, function() {
+                        selectCities.append(new Option(this.nome, this._id));
+                    });
+                    if(currentCity){
+                        selectCities.val(currentCity);
+                    }
+                });
+            });
+
+        });
+
+        var marker;
+
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+
+            map.setCenter(pos);
+          });
+        }
+
+        var currentPos = {};
+
+        {{#if gas}}
+            currentPos.lat = {{gas.location.lat}};
+            currentPos.lng = {{gas.location.lng}};
+        {{/if}}
+
+        if(map && currentPos.lat){
+            if(!marker){
+                marker = new google.maps.Marker({
+                    draggable: true,
+                    position: currentPos,
+                    map: map
+                });
+                marker.addListener('drag', setLatLngForm);
+            }
+        }
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            if (!marker) {
+                marker = new google.maps.Marker({
+                    draggable: true,
+                    position: event.latLng,
+                    map: map
+                });
+                setLatLngForm(event);
+                marker.addListener('drag', setLatLngForm);
+            }else{
+                setLatLngForm(event);
+                marker.addListener('drag', setLatLngForm);
+            }
+        });
+        
+
+    }
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJT1auBxK1AokhgPUMlqzLRcyMUDVMw3E&callback=initMap">
+</script>
+
+<style>
+#map {
+    height: 400px;
+}
+
+.btn2{
+    padding: 0px;
+}
+
+.check
+{
+    opacity:0.5;
+    color:#996;
+
+}
+
+input {
+    margin: 10px;
+}
+
+.mgt{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.modal {
+    /* new custom width */
+    /* must be half of the width, minus scrollbar on the left (30px) */
+}
+
+.form-align{
+    margin-left: 10px;
+}
+</style>

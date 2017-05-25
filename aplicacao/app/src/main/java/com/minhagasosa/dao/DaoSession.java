@@ -21,7 +21,7 @@ import com.minhagasosa.dao.RotaDao;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -29,10 +29,12 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig modeloDaoConfig;
     private final DaoConfig carroDaoConfig;
     private final DaoConfig rotaDaoConfig;
+    private final DaoConfig abastecimentoDaoConfig;
 
     private final ModeloDao modeloDao;
     private final CarroDao carroDao;
     private final RotaDao rotaDao;
+    private final AbastecimentoDao abastecimentoDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -47,31 +49,41 @@ public class DaoSession extends AbstractDaoSession {
         rotaDaoConfig = daoConfigMap.get(RotaDao.class).clone();
         rotaDaoConfig.initIdentityScope(type);
 
+        abastecimentoDaoConfig = daoConfigMap.get(AbastecimentoDao.class).clone();
+        abastecimentoDaoConfig.initIdentityScope(type);
+
         modeloDao = new ModeloDao(modeloDaoConfig, this);
         carroDao = new CarroDao(carroDaoConfig, this);
         rotaDao = new RotaDao(rotaDaoConfig, this);
+        abastecimentoDao = new AbastecimentoDao(abastecimentoDaoConfig, this);
 
         registerDao(Modelo.class, modeloDao);
         registerDao(Carro.class, carroDao);
         registerDao(Rota.class, rotaDao);
+        registerDao(Abastecimento.class, abastecimentoDao);
     }
-    
-    public void clear() {
+
+    public final void clear() {
         modeloDaoConfig.getIdentityScope().clear();
         carroDaoConfig.getIdentityScope().clear();
         rotaDaoConfig.getIdentityScope().clear();
+        abastecimentoDaoConfig.getIdentityScope().clear();
     }
 
-    public ModeloDao getModeloDao() {
+    public final ModeloDao getModeloDao() {
         return modeloDao;
     }
 
-    public CarroDao getCarroDao() {
+    public final CarroDao getCarroDao() {
         return carroDao;
     }
 
-    public RotaDao getRotaDao() {
+    public final RotaDao getRotaDao() {
         return rotaDao;
+    }
+
+    public AbastecimentoDao getAbastecimentoDao() {
+        return abastecimentoDao;
     }
 
 }

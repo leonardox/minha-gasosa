@@ -3,6 +3,7 @@ package com.minhagasosa;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -39,6 +41,19 @@ public class ChartView {
         this.mChart = chart;
     }
 
+    public void iniciaDistanciasSemanalmente() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession session = daoMaster.newSession();
+
+        String dataAtual = new Date(System.currentTimeMillis()).toString();
+
+        Utils.calculaDistanciaTotalSemanalmente(session, null, null, mContext);
+        iniciaValoresGrafico(Utils.calculaPrincipaisRotasSemanalmente(session, null, null), getDistanciaTotal());
+    }
+
+
     public void iniciaDistancias() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -46,8 +61,6 @@ public class ChartView {
         DaoSession session = daoMaster.newSession();
 
         String dataAtual = new Date(System.currentTimeMillis()).toString();
-        String ano = dataAtual.substring(24);// Pega o ano atual
-        String mes = dataAtual.substring(4, 7);// Pega o mes atual
 
         calculaDistanciaTotal(session, null, null, mContext);
         iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
@@ -112,8 +125,9 @@ public class ChartView {
     private void addChart() {
         //mChart = (PieChart) findViewById(R.id.chart1);
         mChart.setUsePercentValues(true);
-        mChart.setDescription("");
+        mChart.getDescription().setEnabled(false);
         mChart.getLegend().setEnabled(false);
+
         mChart.setExtraOffsets(5, 10, 5, 5);
 
         mChart.setDragDecelerationFrictionCoef(0.95f);
@@ -136,7 +150,7 @@ public class ChartView {
 
         mChart.setRotationAngle(0);
         // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
+        mChart.setRotationEnabled(false);
         mChart.setHighlightPerTapEnabled(true);
 
         // mChart.setUnit(" €");
@@ -145,14 +159,24 @@ public class ChartView {
         // add a selection listener
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
+//            @Override
+//            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+//                // display msg when value selected
+//                if (e == null)
+//                    return;
+//
+//                Toast.makeText(mContext,
+//                        xData[e.getXIndex()] + " = " + e.getY() + "%", Toast.LENGTH_SHORT).show();
+//            }
+
             @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                // display msg when value selected
+            public void onValueSelected(Entry e, Highlight h) {
                 if (e == null)
                     return;
-
-                Toast.makeText(mContext,
-                        xData[e.getXIndex()] + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
+                Log.i("VAL SELECTED",
+                        "Value: " + e.getY() + ", index: " + h.getX()
+                                + ", DataSet index: " + h.getDataSetIndex());
+                Toast.makeText(mContext, xData[h.getDataSetIndex()] + " = " + e.getY() + "KM", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -174,15 +198,18 @@ public class ChartView {
     }
 
     private void addDataToUseInPieChart() {
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+        ArrayList<PieEntry> yVals1 = new ArrayList<>();
 
-        for (int i = 0; i < yData.length; i++)
-            yVals1.add(new Entry(yData[i], i));
+        for (int i = 0; i < yData.length; i++) {
+            yVals1.add(new PieEntry(yData[i], xData[i]));
+            Log.d("Adicionando", yData[i]  + " " + xData[i] + "");
+        }
 
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        for (int i = 0; i < xData.length; i++)
-            xVals.add(xData[i]);
+//        ArrayList<String> xVals = new ArrayList<String>();
+//
+//        for (int i = 0; i < xData.length; i++) {
+//            xVals.add(xData[i]);
+//        }
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yVals1, "");
@@ -200,7 +227,7 @@ public class ChartView {
         dataSet.setColors(colors);
 
         // instantiate pie data object now
-        PieData data = new PieData(xVals, dataSet);
+        PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.GRAY);

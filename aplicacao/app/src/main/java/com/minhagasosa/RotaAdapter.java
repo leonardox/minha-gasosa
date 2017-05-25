@@ -25,7 +25,7 @@ public class RotaAdapter extends ArrayAdapter<Rota> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public final View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;
 

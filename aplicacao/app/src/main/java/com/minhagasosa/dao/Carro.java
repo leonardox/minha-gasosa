@@ -19,6 +19,7 @@ public class Carro {
     private Boolean isFlex;
     private String version;
     private Long modeloId;
+    private String EntityDetached = "Entity is detached from DAO context";
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -51,109 +52,109 @@ public class Carro {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    public void __setDaoSession(DaoSession daoSession) {
+    public final void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getCarroDao() : null;
     }
 
-    public Long getId() {
+    public final Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public final void setId(Long id) {
         this.id = id;
     }
 
-    public String getMarca() {
+    public final String getMarca() {
         return marca;
     }
 
-    public void setMarca(String marca) {
+    public final void setMarca(String marca) {
         this.marca = marca;
     }
 
-    public String getAno() {
+    public final String getAno() {
         return ano;
     }
 
-    public void setAno(String ano) {
+    public final void setAno(String ano) {
         this.ano = ano;
     }
 
-    public Float getConsumoUrbanoGasolina() {
+    public final Float getConsumoUrbanoGasolina() {
         return consumoUrbanoGasolina;
     }
 
-    public void setConsumoUrbanoGasolina(Float consumoUrbanoGasolina) {
+    public final void setConsumoUrbanoGasolina(Float consumoUrbanoGasolina) {
         this.consumoUrbanoGasolina = consumoUrbanoGasolina;
     }
 
-    public Float getConsumoRodoviarioGasolina() {
+    public final Float getConsumoRodoviarioGasolina() {
         return consumoRodoviarioGasolina;
     }
 
-    public void setConsumoRodoviarioGasolina(Float consumoRodoviarioGasolina) {
+    public final void setConsumoRodoviarioGasolina(Float consumoRodoviarioGasolina) {
         this.consumoRodoviarioGasolina = consumoRodoviarioGasolina;
     }
 
-    public Float getConsumoUrbanoAlcool() {
+    public final Float getConsumoUrbanoAlcool() {
         return consumoUrbanoAlcool;
     }
 
-    public void setConsumoUrbanoAlcool(Float consumoUrbanoAlcool) {
+    public final void setConsumoUrbanoAlcool(Float consumoUrbanoAlcool) {
         this.consumoUrbanoAlcool = consumoUrbanoAlcool;
     }
 
-    public Float getConsumoRodoviarioAlcool() {
+    public final Float getConsumoRodoviarioAlcool() {
         return consumoRodoviarioAlcool;
     }
 
-    public void setConsumoRodoviarioAlcool(Float consumoRodoviarioAlcool) {
+    public final void setConsumoRodoviarioAlcool(Float consumoRodoviarioAlcool) {
         this.consumoRodoviarioAlcool = consumoRodoviarioAlcool;
     }
 
-    public Boolean getIsFlex() {
+    public final Boolean getIsFlex() {
         return isFlex;
     }
 
-    public void setIsFlex(Boolean isFlex) {
+    public final void setIsFlex(Boolean isFlex) {
         this.isFlex = isFlex;
     }
 
-    public String getVersion() {
+    public final String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public final void setVersion(String version) {
         this.version = version;
     }
 
-    public Long getModeloId() {
+    public final Long getModeloId() {
         return modeloId;
     }
 
-    public void setModeloId(Long modeloId) {
+    public final void setModeloId(Long modeloId) {
         this.modeloId = modeloId;
     }
 
     /** To-one relationship, resolved on first access. */
-    public Modelo getModelo() {
+    public final Modelo getModelo() {
         Long __key = this.modeloId;
         if (modelo__resolvedKey == null || !modelo__resolvedKey.equals(__key)) {
             if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
+                throw new DaoException(EntityDetached);
             }
             ModeloDao targetDao = daoSession.getModeloDao();
             Modelo modeloNew = targetDao.load(__key);
             synchronized (this) {
                 modelo = modeloNew;
-            	modelo__resolvedKey = __key;
+                modelo__resolvedKey = __key;
             }
         }
         return modelo;
     }
 
-    public void setModelo(Modelo modelo) {
+    public final void setModelo(Modelo modelo) {
         synchronized (this) {
             this.modelo = modelo;
             modeloId = modelo == null ? null : modelo.getId();
@@ -162,26 +163,26 @@ public class Carro {
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
-    public void delete() {
+    public final void delete() {
         if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }    
+            throw new DaoException(EntityDetached);
+        }
         myDao.delete(this);
     }
 
     /** Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context. */
-    public void update() {
+    public final void update() {
         if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }    
+            throw new DaoException(EntityDetached);
+        }
         myDao.update(this);
     }
 
     /** Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context. */
-    public void refresh() {
+    public final void refresh() {
         if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }    
+            throw new DaoException(EntityDetached);
+        }
         myDao.refresh(this);
     }
 

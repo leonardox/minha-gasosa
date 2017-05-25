@@ -14,14 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
+import com.minhagasosa.activites.maps.RouteMapsActivity;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.dao.RotaDao;
-import static com.minhagasosa.Utils.calculaDistanciaTotal;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Date;
+
+import static com.minhagasosa.Utils.calculaDistanciaTotal;
 
 
 /**
@@ -64,7 +68,7 @@ public class RoutesActivity extends AppCompatActivity {
     /**
      * requisicao da rota do mapa.
      */
-    private final int MAPA_ROTA_REQUEST = 102;
+    private static final int MAPA_ROTA_REQUEST = 102;
 
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
@@ -95,7 +99,7 @@ public class RoutesActivity extends AppCompatActivity {
         botaoMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Intent i = new Intent(RoutesActivity.this, MapsActivity.class);
+                Intent i = new Intent(RoutesActivity.this, RouteMapsActivity.class);
                 startActivityForResult(i, MAPA_ROTA_REQUEST);
             }
         });
@@ -161,8 +165,12 @@ public class RoutesActivity extends AppCompatActivity {
                     float volta = res.getFloat("volta" , -1);
                     DecimalFormat df = new DecimalFormat("##.##");
                     df.setRoundingMode(RoundingMode.DOWN);
-                    if(ida != -1) distanceGoingWrapper.getEditText().setText(df.format(ida/1000.0));
-                    if(volta != -1) distanceBackWrapper.getEditText().setText(df.format(volta/1000.0));
+                    if(ida != -1){
+                        distanceGoingWrapper.getEditText().setText(String.valueOf(ida));
+                    }
+                    if(volta != -1){
+                        distanceBackWrapper.getEditText().setText(String.valueOf(volta));
+                    }
                 }
                 break;
         }
@@ -178,6 +186,8 @@ public class RoutesActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG_ROUTES_ACTIVITY, "no menu, algo foi inválido");
             }
+        }else if (item.getItemId() == android.R.id.home){
+            super.onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -195,11 +205,11 @@ public class RoutesActivity extends AppCompatActivity {
         if (titleRoute != null && distanceGoing != null && distanceBack != null && repeatTimes != null) {
             if (titleRoute.trim().isEmpty()) {
                 routeTitleWrapper.setError(getString(R.string.invalid_name));
-            } else if (distanceGoing.trim().isEmpty()) {
+            } else if ((distanceGoing.trim().isEmpty()) || (distanceGoing.equals("."))) {
                 distanceGoingWrapper.setError(getString(R.string.invalid_distance));
-            } else if (checkBoxRoute.isChecked() && distanceBack.trim().isEmpty()) {
+            } else if (checkBoxRoute.isChecked() && (distanceBack.trim().isEmpty() || (distanceBack.equals(".")))) {
                 distanceBackWrapper.setError(getString(R.string.invalid_distance));
-            } else if (checkRepeat.isChecked() && repeatTimes.trim().isEmpty()) {
+            } else if (checkRepeat.isChecked() && (repeatTimes.trim().isEmpty() || (repeatTimes.contains(".")))) {
                 timesRouteWrapper.setError(getString(R.string.invalid_value));
             } else {
                 return true;
@@ -255,7 +265,7 @@ public class RoutesActivity extends AppCompatActivity {
      * @return
      */
     public final float getDistanceGoing() {
-        return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
+        return Float.parseFloat(distanceGoingWrapper.getEditText().getText().toString());
     }
 
     /**
@@ -265,9 +275,9 @@ public class RoutesActivity extends AppCompatActivity {
      */
     public final float getDistanceBack() {
         if (checkBoxRoute.isChecked()) {
-            return Integer.parseInt(distanceBackWrapper.getEditText().getText().toString());
+            return Float.parseFloat(distanceBackWrapper.getEditText().getText().toString());
         }
-        return Integer.parseInt(distanceGoingWrapper.getEditText().getText().toString());
+        return Float.parseFloat(distanceGoingWrapper.getEditText().getText().toString());
     }
 
     /**
